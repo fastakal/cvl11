@@ -84,10 +84,59 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 	printf("GOT IMG MSG\n");
 
+	// Define a vector of circles, for the example.
+	vector<Vec3f> circles;
+
+	// CONTOURS
+	/*
+	 vector<vector<Point> > contours;
+	 vector<vector<Point> > contours0;
+	 vector<Vec4i> hierarchy;
+	 cv::namedWindow( "contours", 1 );
+	 */
+
 	// read mono image data
 	Mat img;
+	Mat temp;
+
+	// Create a font to be used...
+	CvFont font;
+	cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0, 0, 1, CV_AA);
 
 	if (client->readMonoImage(msg, img)) {
+		// Gaussian blur the input image to reduce noise.
+		GaussianBlur(img, img, Size(3, 3), 1, 0, BORDER_DEFAULT);
+		img.copyTo(temp);
+
+		// Contours, didn't work for the moment, the contours' vector has only one contour, which is the frame of the image, that's it.
+		/*
+		 //Extract the contours
+		 findContours( temp, contours0, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+		 contours.resize(contours0.size());
+
+		 for( size_t k = 0; k < contours0.size(); k++ )
+		 approxPolyDP(Mat(contours0[k]), contours[k], 3, true);
+
+		 Mat cnt_img = Mat::zeros(480, 640, CV_8UC3);
+		 drawContours(cnt_img, contours, -1, Scalar(255, 255, 255), 3, CV_AA, hierarchy, 2);
+		 imshow("contours", cnt_img);
+		 */
+		// Using hough transform, detect circles.
+		HoughCircles(img, circles, CV_HOUGH_GRADIENT, 2, 120.0, 200, 100);
+
+		// Loop to draw the circle on img.
+		for (size_t i = 0; i < circles.size(); i++) {
+			Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+			int radius = cvRound(circles[i][2]);
+			// draw the circle center
+			circle(img, center, 3, Scalar(255, 255, 255), -1, 8, 0);
+			// draw the circle outline
+			circle(img, center, radius, Scalar(255, 255, 255), 3, 8, 0);
+		}
+
+		// Add text for info.
+		putText(img, "Get a circle to be detected", Point(30, 30), 2, 1,
+				Scalar(255, 255, 255, 0), 1, 8);
 
 		struct timeval tv;
 		gettimeofday(&tv, NULL);

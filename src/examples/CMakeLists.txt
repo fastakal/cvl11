@@ -23,3 +23,15 @@ PIXHAWK_LINK_LIBRARIES(example-process-image
   mavconn_shm
   lcm
 )
+
+PIXHAWK_EXECUTABLE(sinanzExample sinanzExample.cc)
+PIXHAWK_LINK_LIBRARIES(sinanzExample
+  ${GLIB2_LIBRARY}
+  ${GTHREAD2_LIBRARY}
+  ${OPENCV_CORE_LIBRARY_OPTIMIZED}
+  ${OPENCV_IMGPROC_LIBRARY_OPTIMIZED}
+  ${OPENCV_HIGHGUI_LIBRARY_OPTIMIZED}
+  mavconn_lcm
+  mavconn_shm
+  lcm
+)
