@@ -1,0 +1,194 @@
+\hypertarget{classMyEllipses}{
+\section{MyEllipses Class Reference}
+\label{classMyEllipses}\index{MyEllipses@{MyEllipses}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classMyEllipses_a6e030ecf1da66ef051c9bae6698adc9f}{
+{\bfseries MyEllipses} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$$>$ lLines, cv::Mat lImage, cv::Mat eImage)}
+\label{classMyEllipses_a6e030ecf1da66ef051c9bae6698adc9f}
+
+\item 
+void \hyperlink{classMyEllipses_ae3b80d1c6fa91ea4f79a248692221def}{ExtractPointsFromLines} ()
+\item 
+void \hyperlink{classMyEllipses_a2a70622b31382d0963636f1395431d8f}{fitEllipses} ()
+\item 
+void \hyperlink{classMyEllipses_a86c9f35038267eefb37377a564e19708}{eliminateEllipses} ()
+\item 
+bool \hyperlink{classMyEllipses_ab6caac8fbf9d5437ef23d28010049f54}{validateEllipse} (cv::RotatedRect anEllipse)
+\item 
+bool \hyperlink{classMyEllipses_a22d5aa9a9f25e43a05230de8b375e4ae}{errorMeasureEllipse} (cv::RotatedRect anEllipse, cv::vector$<$ cv::Point $>$ setOfPoints)
+\item 
+void \hyperlink{classMyEllipses_a5da32ae0839fbbeb68eb100bc6e1a957}{plotEllipsesOnEdgeImage} ()
+\item 
+void \hyperlink{classMyEllipses_ab67f344f29c74a3e59b32afcaa0e6547}{rejectEllipsesFromEdgeImage} ()
+\item 
+int \hyperlink{classMyEllipses_ae28837a96d0486b71aaf7796b34aae3f}{getPointsValue} (int x, int y)
+\item 
+cv::RotatedRect \hyperlink{classMyEllipses_a2e1afdde16509b2fe105fa9ecbd8e17c}{getBestEllipse} (cv::vector$<$ cv::RotatedRect $>$ filtEl, cv::vector$<$ double $>$ qualityOfEllipses)
+\item 
+void \hyperlink{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}{plotChosenEllipseOnEdgeImage} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classMyEllipses_a5d00af69849dd1e6ef741605333a579f}{
+cv::Mat {\bfseries edgeImage}}
+\label{classMyEllipses_a5d00af69849dd1e6ef741605333a579f}
+
+\item 
+\hypertarget{classMyEllipses_a5e1fa370060bcb1aa5fa66488aba7da7}{
+cv::Mat {\bfseries linesImage}}
+\label{classMyEllipses_a5e1fa370060bcb1aa5fa66488aba7da7}
+
+\item 
+\hypertarget{classMyEllipses_a229b20b81bda1271ed7af085b482f84a}{
+cv::Mat {\bfseries ellipsesImage}}
+\label{classMyEllipses_a229b20b81bda1271ed7af085b482f84a}
+
+\item 
+\hypertarget{classMyEllipses_a82a483859edc940b8100c08e351bda43}{
+cv::Mat {\bfseries filteredEllipsesImage}}
+\label{classMyEllipses_a82a483859edc940b8100c08e351bda43}
+
+\item 
+\hypertarget{classMyEllipses_a9c6cb1c01422433b73e4e8f801ca1ca4}{
+cv::Mat {\bfseries edgeImagePlusEllipses}}
+\label{classMyEllipses_a9c6cb1c01422433b73e4e8f801ca1ca4}
+
+\item 
+\hypertarget{classMyEllipses_a4711376cc7c9a40d95e5e9e1cf4aae13}{
+cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ {\bfseries linkedLines}}
+\label{classMyEllipses_a4711376cc7c9a40d95e5e9e1cf4aae13}
+
+\item 
+\hypertarget{classMyEllipses_a37c38bb0d7736ec0e1de6aa0bcf06c2e}{
+cv::vector$<$ cv::RotatedRect $>$ {\bfseries fittedEllipses}}
+\label{classMyEllipses_a37c38bb0d7736ec0e1de6aa0bcf06c2e}
+
+\item 
+\hypertarget{classMyEllipses_a9bb3cf9c6a77592fe5b08e5a7f454ade}{
+cv::vector$<$ cv::vector$<$ cv::Point $>$ $>$ {\bfseries linkedPoints}}
+\label{classMyEllipses_a9bb3cf9c6a77592fe5b08e5a7f454ade}
+
+\item 
+\hypertarget{classMyEllipses_a388a023ca6bd554712729db978d77179}{
+cv::vector$<$ cv::RotatedRect $>$ {\bfseries filteredEllipses}}
+\label{classMyEllipses_a388a023ca6bd554712729db978d77179}
+
+\item 
+\hypertarget{classMyEllipses_a2c6dd2ca86f919f0ff51a44edba915ca}{
+cv::vector$<$ cv::vector$<$ cv::Point $>$ $>$ {\bfseries filteredPoints}}
+\label{classMyEllipses_a2c6dd2ca86f919f0ff51a44edba915ca}
+
+\item 
+\hypertarget{classMyEllipses_a66d782a43dfb9f682ea8a3dcf018f9f5}{
+cv::RotatedRect {\bfseries chosenEllipse}}
+\label{classMyEllipses_a66d782a43dfb9f682ea8a3dcf018f9f5}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMyEllipses_a86c9f35038267eefb37377a564e19708}{
+\index{MyEllipses@{MyEllipses}!eliminateEllipses@{eliminateEllipses}}
+\index{eliminateEllipses@{eliminateEllipses}!MyEllipses@{MyEllipses}}
+\subsubsection[{eliminateEllipses}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::eliminateEllipses (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_a86c9f35038267eefb37377a564e19708}
+A function that takes the fittedEllipses variable, and filters them according to the following criterias: A potential hoop ellipse should have a ratio between axes that is bigger than 0.5. \hypertarget{classMyEllipses_a22d5aa9a9f25e43a05230de8b375e4ae}{
+\index{MyEllipses@{MyEllipses}!errorMeasureEllipse@{errorMeasureEllipse}}
+\index{errorMeasureEllipse@{errorMeasureEllipse}!MyEllipses@{MyEllipses}}
+\subsubsection[{errorMeasureEllipse}]{\setlength{\rightskip}{0pt plus 5cm}bool MyEllipses::errorMeasureEllipse (
+\begin{DoxyParamCaption}
+\item[{cv::RotatedRect}]{anEllipse, }
+\item[{cv::vector$<$ cv::Point $>$}]{setOfPoints}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_a22d5aa9a9f25e43a05230de8b375e4ae}
+Another function to validate ellipses. Based on having an error measure of points of contours with respect to their respective position on the fitted ellipse. \hypertarget{classMyEllipses_ae3b80d1c6fa91ea4f79a248692221def}{
+\index{MyEllipses@{MyEllipses}!ExtractPointsFromLines@{ExtractPointsFromLines}}
+\index{ExtractPointsFromLines@{ExtractPointsFromLines}!MyEllipses@{MyEllipses}}
+\subsubsection[{ExtractPointsFromLines}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::ExtractPointsFromLines (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_ae3b80d1c6fa91ea4f79a248692221def}
+This function simply takes one point out of each line. Thus returning a vector of vector of points. This is needed for fitting the ellipses as we need points not lines. \hypertarget{classMyEllipses_a2a70622b31382d0963636f1395431d8f}{
+\index{MyEllipses@{MyEllipses}!fitEllipses@{fitEllipses}}
+\index{fitEllipses@{fitEllipses}!MyEllipses@{MyEllipses}}
+\subsubsection[{fitEllipses}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::fitEllipses (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_a2a70622b31382d0963636f1395431d8f}
+This function fits ellipses to each set of points (contour) and plots them as well to ellipsesImage.
+
+This function fits ellipses to each set of points (contour). \hypertarget{classMyEllipses_a2e1afdde16509b2fe105fa9ecbd8e17c}{
+\index{MyEllipses@{MyEllipses}!getBestEllipse@{getBestEllipse}}
+\index{getBestEllipse@{getBestEllipse}!MyEllipses@{MyEllipses}}
+\subsubsection[{getBestEllipse}]{\setlength{\rightskip}{0pt plus 5cm}cv::RotatedRect MyEllipses::getBestEllipse (
+\begin{DoxyParamCaption}
+\item[{cv::vector$<$ cv::RotatedRect $>$}]{ellipses, }
+\item[{cv::vector$<$ double $>$}]{qualityOfEllipses}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_a2e1afdde16509b2fe105fa9ecbd8e17c}
+A function that takes a list of ellipses with their respective quality and returns the best one. \hypertarget{classMyEllipses_ae28837a96d0486b71aaf7796b34aae3f}{
+\index{MyEllipses@{MyEllipses}!getPointsValue@{getPointsValue}}
+\index{getPointsValue@{getPointsValue}!MyEllipses@{MyEllipses}}
+\subsubsection[{getPointsValue}]{\setlength{\rightskip}{0pt plus 5cm}int MyEllipses::getPointsValue (
+\begin{DoxyParamCaption}
+\item[{int}]{x, }
+\item[{int}]{y}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_ae28837a96d0486b71aaf7796b34aae3f}
+A function that takes a position (x and y) and returns 1 if the value in that neighbourhood is 255, 0 otherwise. \hypertarget{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}{
+\index{MyEllipses@{MyEllipses}!plotChosenEllipseOnEdgeImage@{plotChosenEllipseOnEdgeImage}}
+\index{plotChosenEllipseOnEdgeImage@{plotChosenEllipseOnEdgeImage}!MyEllipses@{MyEllipses}}
+\subsubsection[{plotChosenEllipseOnEdgeImage}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::plotChosenEllipseOnEdgeImage (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}
+Plots the chosen ellipse. \hypertarget{classMyEllipses_a5da32ae0839fbbeb68eb100bc6e1a957}{
+\index{MyEllipses@{MyEllipses}!plotEllipsesOnEdgeImage@{plotEllipsesOnEdgeImage}}
+\index{plotEllipsesOnEdgeImage@{plotEllipsesOnEdgeImage}!MyEllipses@{MyEllipses}}
+\subsubsection[{plotEllipsesOnEdgeImage}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::plotEllipsesOnEdgeImage (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_a5da32ae0839fbbeb68eb100bc6e1a957}
+A function that will take the edge image and plot the ellipses on it. \hypertarget{classMyEllipses_ab67f344f29c74a3e59b32afcaa0e6547}{
+\index{MyEllipses@{MyEllipses}!rejectEllipsesFromEdgeImage@{rejectEllipsesFromEdgeImage}}
+\index{rejectEllipsesFromEdgeImage@{rejectEllipsesFromEdgeImage}!MyEllipses@{MyEllipses}}
+\subsubsection[{rejectEllipsesFromEdgeImage}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::rejectEllipsesFromEdgeImage (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_ab67f344f29c74a3e59b32afcaa0e6547}
+A function that will take the edge image and the ellipses, then will calculate how many edge points lie on the ellipses in respect to the whole tested points. \hypertarget{classMyEllipses_ab6caac8fbf9d5437ef23d28010049f54}{
+\index{MyEllipses@{MyEllipses}!validateEllipse@{validateEllipse}}
+\index{validateEllipse@{validateEllipse}!MyEllipses@{MyEllipses}}
+\subsubsection[{validateEllipse}]{\setlength{\rightskip}{0pt plus 5cm}bool MyEllipses::validateEllipse (
+\begin{DoxyParamCaption}
+\item[{cv::RotatedRect}]{anEllipse}
+\end{DoxyParamCaption}
+)}}
+\label{classMyEllipses_ab6caac8fbf9d5437ef23d28010049f54}
+A function that validates an ellipse according to the criteria in \hyperlink{classMyEllipses_a86c9f35038267eefb37377a564e19708}{eliminateEllipses()}, used by eliminateEllilpses(). 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+MyEllipses.h\item 
+MyEllipses.cpp\end{DoxyCompactItemize}

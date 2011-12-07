@@ -1,0 +1,159 @@
+\hypertarget{classContoursAndLines}{
+\section{ContoursAndLines Class Reference}
+\label{classContoursAndLines}\index{ContoursAndLines@{ContoursAndLines}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classContoursAndLines_a852f13ca6a3e3ec9034db16e51629cdc}{
+{\bfseries ContoursAndLines} (Mat edge, int minLength, int maxLength, int approxOrder, int lineSize)}
+\label{classContoursAndLines_a852f13ca6a3e3ec9034db16e51629cdc}
+
+\item 
+\hypertarget{classContoursAndLines_a9856f1b866243c3230011a3c57ba1f8a}{
+vector$<$ vector$<$ Point $>$ $>$ {\bfseries getContours} ()}
+\label{classContoursAndLines_a9856f1b866243c3230011a3c57ba1f8a}
+
+\item 
+\hypertarget{classContoursAndLines_a7b8d19a71f89583401c9933fecb2fca5}{
+void {\bfseries setContours} (vector$<$ vector$<$ Point $>$ $>$ cont)}
+\label{classContoursAndLines_a7b8d19a71f89583401c9933fecb2fca5}
+
+\item 
+\hypertarget{classContoursAndLines_a58cc2d49afa467805b3798ac15d21aab}{
+Mat {\bfseries getContoursImage} ()}
+\label{classContoursAndLines_a58cc2d49afa467805b3798ac15d21aab}
+
+\item 
+\hypertarget{classContoursAndLines_a35aa427298b3b6cb296c9881b191ee79}{
+void {\bfseries setContoursImage} (Mat img)}
+\label{classContoursAndLines_a35aa427298b3b6cb296c9881b191ee79}
+
+\item 
+\hypertarget{classContoursAndLines_a50c228e4855daf69218517b84e04c859}{
+vector$<$ vector$<$ Vec4f $>$ $>$ {\bfseries getLines} ()}
+\label{classContoursAndLines_a50c228e4855daf69218517b84e04c859}
+
+\item 
+\hypertarget{classContoursAndLines_af8f81452b7e24bbabb4ae7657caffd4a}{
+void {\bfseries setLines} (vector$<$ vector$<$ Vec4f $>$$>$ l)}
+\label{classContoursAndLines_af8f81452b7e24bbabb4ae7657caffd4a}
+
+\item 
+void \hyperlink{classContoursAndLines_a0b5dd7edb7059cc7aa5a4296ffb4317c}{findContours} ()
+\item 
+void \hyperlink{classContoursAndLines_af2ae9375067d26c49dcd7fa52c85444a}{approximateContour} (vector$<$ vector$<$ Point $>$$>$ input\_\-contours, int minimumLength, int maximumLength, int approxOrder)
+\item 
+void \hyperlink{classContoursAndLines_aea09b8c601e2b9e24128fc506e4438dd}{plotMyContours} (vector$<$ vector$<$ Point $>$$>$ contours)
+\item 
+void \hyperlink{classContoursAndLines_a02a092093a9f66feb5714fede7b1be16}{decomposeContours} (vector$<$ vector$<$ Point $>$ $>$ contours, int lineSize)
+\item 
+void \hyperlink{classContoursAndLines_a8cec007cc0061798867936ebb400687a}{plotLines} (vector$<$ vector$<$ Vec4f $>$$>$ lines1, int lineSize, Mat output\_\-image)
+\item 
+Mat \hyperlink{classContoursAndLines_abb87059453ad6a0eaf22e98100606870}{plot1Line} (Vec4f line1, int lineSize, Scalar color, Mat output\_\-image)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classContoursAndLines_a0407956646772fbf4bf17fac631f1a28}{
+Mat {\bfseries edgeImage}}
+\label{classContoursAndLines_a0407956646772fbf4bf17fac631f1a28}
+
+\item 
+\hypertarget{classContoursAndLines_adf0046eb0ff3b4fb27ee30ce73471d53}{
+Mat {\bfseries linesImage}}
+\label{classContoursAndLines_adf0046eb0ff3b4fb27ee30ce73471d53}
+
+\item 
+\hypertarget{classContoursAndLines_aaa800d7a9f280fbfe086f3916650d039}{
+vector$<$ vector$<$ Point $>$ $>$ {\bfseries contours}}
+\label{classContoursAndLines_aaa800d7a9f280fbfe086f3916650d039}
+
+\item 
+\hypertarget{classContoursAndLines_a4abcbda23b9f8c411dbfedcbfdd38b2f}{
+vector$<$ vector$<$ Point $>$ $>$ {\bfseries approximatedContours}}
+\label{classContoursAndLines_a4abcbda23b9f8c411dbfedcbfdd38b2f}
+
+\item 
+\hypertarget{classContoursAndLines_a5a48086141ba799f5f495f78edafa3b1}{
+Mat {\bfseries contoursImage}}
+\label{classContoursAndLines_a5a48086141ba799f5f495f78edafa3b1}
+
+\item 
+\hypertarget{classContoursAndLines_a27b0e699b483619e46b908191acbccb9}{
+vector$<$ vector$<$ Vec4f $>$ $>$ {\bfseries lines}}
+\label{classContoursAndLines_a27b0e699b483619e46b908191acbccb9}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classContoursAndLines_af2ae9375067d26c49dcd7fa52c85444a}{
+\index{ContoursAndLines@{ContoursAndLines}!approximateContour@{approximateContour}}
+\index{approximateContour@{approximateContour}!ContoursAndLines@{ContoursAndLines}}
+\subsubsection[{approximateContour}]{\setlength{\rightskip}{0pt plus 5cm}void ContoursAndLines::approximateContour (
+\begin{DoxyParamCaption}
+\item[{vector$<$ vector$<$ Point $>$$>$}]{input\_\-contours, }
+\item[{int}]{minimumLength, }
+\item[{int}]{maximumLength, }
+\item[{int}]{approxOrder}
+\end{DoxyParamCaption}
+)}}
+\label{classContoursAndLines_af2ae9375067d26c49dcd7fa52c85444a}
+A function that approximates the contours using the opencv function approximatePolyDP and minimum and maximum length of the contours. \hypertarget{classContoursAndLines_a02a092093a9f66feb5714fede7b1be16}{
+\index{ContoursAndLines@{ContoursAndLines}!decomposeContours@{decomposeContours}}
+\index{decomposeContours@{decomposeContours}!ContoursAndLines@{ContoursAndLines}}
+\subsubsection[{decomposeContours}]{\setlength{\rightskip}{0pt plus 5cm}void ContoursAndLines::decomposeContours (
+\begin{DoxyParamCaption}
+\item[{vector$<$ vector$<$ Point $>$ $>$}]{contours, }
+\item[{int}]{lineSize}
+\end{DoxyParamCaption}
+)}}
+\label{classContoursAndLines_a02a092093a9f66feb5714fede7b1be16}
+A function that cuts contours into series of contours of small (but large enough) sizes. This function is needed before calling findLines function, so that we approximate correctly the contours (to avoid approximating half of the ellipse by one single line). \hypertarget{classContoursAndLines_a0b5dd7edb7059cc7aa5a4296ffb4317c}{
+\index{ContoursAndLines@{ContoursAndLines}!findContours@{findContours}}
+\index{findContours@{findContours}!ContoursAndLines@{ContoursAndLines}}
+\subsubsection[{findContours}]{\setlength{\rightskip}{0pt plus 5cm}void ContoursAndLines::findContours (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classContoursAndLines_a0b5dd7edb7059cc7aa5a4296ffb4317c}
+A function that gets the contours from an edge image using the opencv function findContours with predefined parameters. \hypertarget{classContoursAndLines_abb87059453ad6a0eaf22e98100606870}{
+\index{ContoursAndLines@{ContoursAndLines}!plot1Line@{plot1Line}}
+\index{plot1Line@{plot1Line}!ContoursAndLines@{ContoursAndLines}}
+\subsubsection[{plot1Line}]{\setlength{\rightskip}{0pt plus 5cm}Mat ContoursAndLines::plot1Line (
+\begin{DoxyParamCaption}
+\item[{Vec4f}]{current\_\-line, }
+\item[{int}]{lineSize, }
+\item[{Scalar}]{color, }
+\item[{Mat}]{output\_\-image}
+\end{DoxyParamCaption}
+)}}
+\label{classContoursAndLines_abb87059453ad6a0eaf22e98100606870}
+A function that plots one line, with an input size, to an output image. Used by \hyperlink{classContoursAndLines_a8cec007cc0061798867936ebb400687a}{plotLines()}. \hypertarget{classContoursAndLines_a8cec007cc0061798867936ebb400687a}{
+\index{ContoursAndLines@{ContoursAndLines}!plotLines@{plotLines}}
+\index{plotLines@{plotLines}!ContoursAndLines@{ContoursAndLines}}
+\subsubsection[{plotLines}]{\setlength{\rightskip}{0pt plus 5cm}void ContoursAndLines::plotLines (
+\begin{DoxyParamCaption}
+\item[{vector$<$ vector$<$ Vec4f $>$$>$}]{lines1, }
+\item[{int}]{lineSize, }
+\item[{Mat}]{output\_\-image}
+\end{DoxyParamCaption}
+)}}
+\label{classContoursAndLines_a8cec007cc0061798867936ebb400687a}
+A function that plots the lines. \hypertarget{classContoursAndLines_aea09b8c601e2b9e24128fc506e4438dd}{
+\index{ContoursAndLines@{ContoursAndLines}!plotMyContours@{plotMyContours}}
+\index{plotMyContours@{plotMyContours}!ContoursAndLines@{ContoursAndLines}}
+\subsubsection[{plotMyContours}]{\setlength{\rightskip}{0pt plus 5cm}void ContoursAndLines::plotMyContours (
+\begin{DoxyParamCaption}
+\item[{vector$<$ vector$<$ Point $>$$>$}]{contours}
+\end{DoxyParamCaption}
+)}}
+\label{classContoursAndLines_aea09b8c601e2b9e24128fc506e4438dd}
+A function to create an image containing the contours. 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+ContoursAndLines.h\item 
+ContoursAndLines.cpp\end{DoxyCompactItemize}

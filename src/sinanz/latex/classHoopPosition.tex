@@ -1,0 +1,122 @@
+\hypertarget{classHoopPosition}{
+\section{HoopPosition Class Reference}
+\label{classHoopPosition}\index{HoopPosition@{HoopPosition}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHoopPosition_a16bf0bae8de490c22bee97dd6b4a7eb9}{
+{\bfseries HoopPosition} (cv::Mat, cv::Mat dispImage, cv::RotatedRect el, int numberOfPointsForDepth)}
+\label{classHoopPosition_a16bf0bae8de490c22bee97dd6b4a7eb9}
+
+\item 
+cv::vector$<$ cv::Vec3f $>$ \hyperlink{classHoopPosition_a20ee55da5edf2dcc8f6025bee7c732f9}{findPointsValues} (int numberOfPoints)
+\item 
+cv::Vec3f \hyperlink{classHoopPosition_a557a2efd60c963b5c608adec34d8a4c3}{get3DPoint} (int x, int y)
+\item 
+\hypertarget{classHoopPosition_afa5de685d826744f74e0c4c446f7a9ac}{
+void {\bfseries fitPlane} ()}
+\label{classHoopPosition_afa5de685d826744f74e0c4c446f7a9ac}
+
+\item 
+\hypertarget{classHoopPosition_ae739175a0973a6a2bc3ac7621f60328f}{
+void {\bfseries plotFittedPlate} ()}
+\label{classHoopPosition_ae739175a0973a6a2bc3ac7621f60328f}
+
+\item 
+\hypertarget{classHoopPosition_aa4fa3114c3f3dac87c569e9212948afc}{
+void {\bfseries addFittedPlaneToImage} ()}
+\label{classHoopPosition_aa4fa3114c3f3dac87c569e9212948afc}
+
+\item 
+cv::Mat \hyperlink{classHoopPosition_a2c5b2c808f5d6f5eb07ddddc8cca349a}{rotatePlaneImage} (cv::Mat \&planeImage, double angle)
+\item 
+cv::Mat \hyperlink{classHoopPosition_a0fb499507d77004d72777c0981d31cd5}{fillPlaneImage} (cv::Mat \&planeImage)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHoopPosition_a0e936b9d6c792b73dbce44352be59756}{
+cv::Mat {\bfseries depthImage}}
+\label{classHoopPosition_a0e936b9d6c792b73dbce44352be59756}
+
+\item 
+\hypertarget{classHoopPosition_a667a7bce18b5eea72c46b50e4d5a9e5c}{
+cv::Mat {\bfseries disparityImage}}
+\label{classHoopPosition_a667a7bce18b5eea72c46b50e4d5a9e5c}
+
+\item 
+\hypertarget{classHoopPosition_ac1928a1d7ef1a80dd8f9325f7e1ad941}{
+cv::RotatedRect {\bfseries ellipse}}
+\label{classHoopPosition_ac1928a1d7ef1a80dd8f9325f7e1ad941}
+
+\item 
+\hypertarget{classHoopPosition_a5ab8e737eb6047f73d391483c68a076c}{
+cv::vector$<$ cv::Vec3f $>$ {\bfseries depthValuesOfHoop}}
+\label{classHoopPosition_a5ab8e737eb6047f73d391483c68a076c}
+
+\item 
+\hypertarget{classHoopPosition_adad7cb5d3961670620eebe4d190bf062}{
+cv::Vec3f {\bfseries plane}}
+\label{classHoopPosition_adad7cb5d3961670620eebe4d190bf062}
+
+\item 
+\hypertarget{classHoopPosition_aac3dd07ab3c719fcd1ac4630907a7d03}{
+cv::vector$<$ cv::Vec3f $>$ {\bfseries selectedDepthPoints}}
+\label{classHoopPosition_aac3dd07ab3c719fcd1ac4630907a7d03}
+
+\item 
+\hypertarget{classHoopPosition_a9f4fde272e414b0afb69a142956117e1}{
+cv::Mat {\bfseries disparityImageWithPlane}}
+\label{classHoopPosition_a9f4fde272e414b0afb69a142956117e1}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classHoopPosition_a0fb499507d77004d72777c0981d31cd5}{
+\index{HoopPosition@{HoopPosition}!fillPlaneImage@{fillPlaneImage}}
+\index{fillPlaneImage@{fillPlaneImage}!HoopPosition@{HoopPosition}}
+\subsubsection[{fillPlaneImage}]{\setlength{\rightskip}{0pt plus 5cm}cv::Mat HoopPosition::fillPlaneImage (
+\begin{DoxyParamCaption}
+\item[{cv::Mat \&}]{planeImage}
+\end{DoxyParamCaption}
+)}}
+\label{classHoopPosition_a0fb499507d77004d72777c0981d31cd5}
+A function that fills the plane image with depth values. \hypertarget{classHoopPosition_a20ee55da5edf2dcc8f6025bee7c732f9}{
+\index{HoopPosition@{HoopPosition}!findPointsValues@{findPointsValues}}
+\index{findPointsValues@{findPointsValues}!HoopPosition@{HoopPosition}}
+\subsubsection[{findPointsValues}]{\setlength{\rightskip}{0pt plus 5cm}cv::vector$<$ cv::Vec3f $>$ HoopPosition::findPointsValues (
+\begin{DoxyParamCaption}
+\item[{int}]{numberOfPoints}
+\end{DoxyParamCaption}
+)}}
+\label{classHoopPosition_a20ee55da5edf2dcc8f6025bee7c732f9}
+A function that will take the ellipse, find the depth values of numberOfPoints $\ast$ points on its perimeter and save them to a vector of points.
+
+A function that will take the ellipse, find the depth values of points on its perimeter and save them to a vector of points. \hypertarget{classHoopPosition_a557a2efd60c963b5c608adec34d8a4c3}{
+\index{HoopPosition@{HoopPosition}!get3DPoint@{get3DPoint}}
+\index{get3DPoint@{get3DPoint}!HoopPosition@{HoopPosition}}
+\subsubsection[{get3DPoint}]{\setlength{\rightskip}{0pt plus 5cm}cv::Vec3f HoopPosition::get3DPoint (
+\begin{DoxyParamCaption}
+\item[{int}]{x, }
+\item[{int}]{y}
+\end{DoxyParamCaption}
+)}}
+\label{classHoopPosition_a557a2efd60c963b5c608adec34d8a4c3}
+A function that takes a position (x and y) and returns the value in that neighbourhood. \hypertarget{classHoopPosition_a2c5b2c808f5d6f5eb07ddddc8cca349a}{
+\index{HoopPosition@{HoopPosition}!rotatePlaneImage@{rotatePlaneImage}}
+\index{rotatePlaneImage@{rotatePlaneImage}!HoopPosition@{HoopPosition}}
+\subsubsection[{rotatePlaneImage}]{\setlength{\rightskip}{0pt plus 5cm}cv::Mat HoopPosition::rotatePlaneImage (
+\begin{DoxyParamCaption}
+\item[{cv::Mat \&}]{planeImage, }
+\item[{double}]{angle}
+\end{DoxyParamCaption}
+)}}
+\label{classHoopPosition_a2c5b2c808f5d6f5eb07ddddc8cca349a}
+Used by addFittedPlaneToImage(); 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+HoopPosition.h\item 
+HoopPosition.cpp\end{DoxyCompactItemize}

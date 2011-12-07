@@ -1,0 +1,56 @@
+\hypertarget{classsegmentedImage}{
+\section{segmentedImage Class Reference}
+\label{classsegmentedImage}\index{segmentedImage@{segmentedImage}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classsegmentedImage_ab7b842261ca5b4e83549e9b8d866f439}{
+{\bfseries segmentedImage} (Mat input, int cannyMin, int cannyMax, int dilate)}
+\label{classsegmentedImage_ab7b842261ca5b4e83549e9b8d866f439}
+
+\item 
+Mat \hyperlink{classsegmentedImage_a044e9378bc9e068f99b977ce80254f35}{getEdgeImage} ()
+\item 
+void \hyperlink{classsegmentedImage_a428bdd95c64f3c7b7ef076353a539bd2}{pre\_\-process} (Mat input\_\-img)
+\item 
+void \hyperlink{classsegmentedImage_ab1d04fda23e6ffcdc9bfb971710f4f41}{segmentThisImage} (int cannyMin, int cannyMax, int dilate)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classsegmentedImage_a044e9378bc9e068f99b977ce80254f35}{
+\index{segmentedImage@{segmentedImage}!getEdgeImage@{getEdgeImage}}
+\index{getEdgeImage@{getEdgeImage}!segmentedImage@{segmentedImage}}
+\subsubsection[{getEdgeImage}]{\setlength{\rightskip}{0pt plus 5cm}Mat segmentedImage::getEdgeImage (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classsegmentedImage_a044e9378bc9e068f99b977ce80254f35}
+Getters \hypertarget{classsegmentedImage_a428bdd95c64f3c7b7ef076353a539bd2}{
+\index{segmentedImage@{segmentedImage}!pre\_\-process@{pre\_\-process}}
+\index{pre\_\-process@{pre\_\-process}!segmentedImage@{segmentedImage}}
+\subsubsection[{pre\_\-process}]{\setlength{\rightskip}{0pt plus 5cm}void segmentedImage::pre\_\-process (
+\begin{DoxyParamCaption}
+\item[{Mat}]{input\_\-img}
+\end{DoxyParamCaption}
+)}}
+\label{classsegmentedImage_a428bdd95c64f3c7b7ef076353a539bd2}
+Pre\_\-process function: A function that does the pre-\/processing stage on the input image. For the moment, simple Guassian blurring is done only. \hypertarget{classsegmentedImage_ab1d04fda23e6ffcdc9bfb971710f4f41}{
+\index{segmentedImage@{segmentedImage}!segmentThisImage@{segmentThisImage}}
+\index{segmentThisImage@{segmentThisImage}!segmentedImage@{segmentedImage}}
+\subsubsection[{segmentThisImage}]{\setlength{\rightskip}{0pt plus 5cm}void segmentedImage::segmentThisImage (
+\begin{DoxyParamCaption}
+\item[{int}]{cannyMin, }
+\item[{int}]{cannyMax, }
+\item[{int}]{doDilate}
+\end{DoxyParamCaption}
+)}}
+\label{classsegmentedImage_ab1d04fda23e6ffcdc9bfb971710f4f41}
+A function that segments the input image by using canny edge. 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+segmentedImage.h\item 
+segmentedImage.cc\end{DoxyCompactItemize}

@@ -1,0 +1,160 @@
+\hypertarget{classLinkedLines}{
+\section{LinkedLines Class Reference}
+\label{classLinkedLines}\index{LinkedLines@{LinkedLines}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classLinkedLines_a98a7b4c38df7439900c7de0302587517}{
+{\bfseries LinkedLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ rlines)}
+\label{classLinkedLines_a98a7b4c38df7439900c7de0302587517}
+
+\item 
+\hypertarget{classLinkedLines_a1855357157ea2fa0e3df79efaf08c15f}{
+cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ {\bfseries getRawLines} ()}
+\label{classLinkedLines_a1855357157ea2fa0e3df79efaf08c15f}
+
+\item 
+\hypertarget{classLinkedLines_a81567fe814c34bb378aaf89e740f1bff}{
+cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ {\bfseries getConnectedLines} ()}
+\label{classLinkedLines_a81567fe814c34bb378aaf89e740f1bff}
+
+\item 
+\hypertarget{classLinkedLines_a052e4c4aa0182ccfe10283a13d5d4bb6}{
+cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ {\bfseries getLinkedLines} ()}
+\label{classLinkedLines_a052e4c4aa0182ccfe10283a13d5d4bb6}
+
+\item 
+\hypertarget{classLinkedLines_a1d64ace06246a0c8a936d8bb367a1a2e}{
+void {\bfseries setRawLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ rLines)}
+\label{classLinkedLines_a1d64ace06246a0c8a936d8bb367a1a2e}
+
+\item 
+\hypertarget{classLinkedLines_a0e8392e18661b14ff54c9b6ac79ef134}{
+void {\bfseries setConnectedLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ cLines)}
+\label{classLinkedLines_a0e8392e18661b14ff54c9b6ac79ef134}
+
+\item 
+\hypertarget{classLinkedLines_af4d725cfb6d041a727fe8f9abadbc300}{
+void {\bfseries setLinkedLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ lLines)}
+\label{classLinkedLines_af4d725cfb6d041a727fe8f9abadbc300}
+
+\item 
+void \hyperlink{classLinkedLines_a920f9ae9cb013c393a555c6c6c922d73}{connectRawLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ rLines, int maxDistance)
+\item 
+double \hyperlink{classLinkedLines_aefaa75421b85c98299f8d4d2a956216a}{findDistanceBetweenPoints} (cv::Point pt1, cv::Point pt2)
+\item 
+cv::Mat \hyperlink{classLinkedLines_ada95097dbf8ad3b4f1b18b42f3920a54}{plotLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ lines1, int lineSize, cv::Mat output\_\-image)
+\item 
+cv::Mat \hyperlink{classLinkedLines_a7696b39387ac832b1b174c484e1c5dcd}{plot1Line} (cv::Vec4f current\_\-line, int lineSize, cv::Scalar color, cv::Mat output\_\-image)
+\item 
+cv::vector$<$ cv::vector$<$ float $>$ $>$ \hyperlink{classLinkedLines_a96aa89f80cc4441cc4b2a4bc916c9d4a}{calculateAnglesOfConnectedLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ cLines)
+\item 
+void \hyperlink{classLinkedLines_a8c4e2755a3b9d05a6910618578caf3d2}{linkConnectedLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ cLines, double thresholdRatio)
+\item 
+\hypertarget{classLinkedLines_a0d59af2fa932c4ee8794cc77d49b213f}{
+bool {\bfseries anglesHaveSameSign} (cv::vector$<$ float $>$ anglesOfOneContour, double thresholdRatio)}
+\label{classLinkedLines_a0d59af2fa932c4ee8794cc77d49b213f}
+
+\item 
+\hypertarget{classLinkedLines_acd0687a6f9435e8e6dd09b4bb0bfa7d6}{
+bool {\bfseries anglesDiffAcceptable} (cv::vector$<$ float $>$ anglesOfOneContour)}
+\label{classLinkedLines_acd0687a6f9435e8e6dd09b4bb0bfa7d6}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classLinkedLines_aa2124077aa872cdbac8f3d4f47f5aecb}{
+cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ {\bfseries rawLines}}
+\label{classLinkedLines_aa2124077aa872cdbac8f3d4f47f5aecb}
+
+\item 
+cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ \hyperlink{classLinkedLines_aca22f3054cb33e024bada96faae9ca2f}{connectedLines}
+\item 
+\hypertarget{classLinkedLines_a26a6fd6e09564b9ed8181302db38b53f}{
+cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ {\bfseries linkedLines}}
+\label{classLinkedLines_a26a6fd6e09564b9ed8181302db38b53f}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classLinkedLines_a96aa89f80cc4441cc4b2a4bc916c9d4a}{
+\index{LinkedLines@{LinkedLines}!calculateAnglesOfConnectedLines@{calculateAnglesOfConnectedLines}}
+\index{calculateAnglesOfConnectedLines@{calculateAnglesOfConnectedLines}!LinkedLines@{LinkedLines}}
+\subsubsection[{calculateAnglesOfConnectedLines}]{\setlength{\rightskip}{0pt plus 5cm}cv::vector$<$ cv::vector$<$ float $>$ $>$ LinkedLines::calculateAnglesOfConnectedLines (
+\begin{DoxyParamCaption}
+\item[{cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$}]{cLines}
+\end{DoxyParamCaption}
+)}}
+\label{classLinkedLines_a96aa89f80cc4441cc4b2a4bc916c9d4a}
+A function that calculates the angle (slope) of a line for a cv::vector of lines. \hypertarget{classLinkedLines_a920f9ae9cb013c393a555c6c6c922d73}{
+\index{LinkedLines@{LinkedLines}!connectRawLines@{connectRawLines}}
+\index{connectRawLines@{connectRawLines}!LinkedLines@{LinkedLines}}
+\subsubsection[{connectRawLines}]{\setlength{\rightskip}{0pt plus 5cm}void LinkedLines::connectRawLines (
+\begin{DoxyParamCaption}
+\item[{cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$}]{rLines, }
+\item[{int}]{maxDistance}
+\end{DoxyParamCaption}
+)}}
+\label{classLinkedLines_a920f9ae9cb013c393a555c6c6c922d73}
+A method that will connect the rawlines into connectedlines by satisfying the following connectivity condition: A line is connected to another line if the max. distance between both is less than a threshold distance. \hypertarget{classLinkedLines_aefaa75421b85c98299f8d4d2a956216a}{
+\index{LinkedLines@{LinkedLines}!findDistanceBetweenPoints@{findDistanceBetweenPoints}}
+\index{findDistanceBetweenPoints@{findDistanceBetweenPoints}!LinkedLines@{LinkedLines}}
+\subsubsection[{findDistanceBetweenPoints}]{\setlength{\rightskip}{0pt plus 5cm}double LinkedLines::findDistanceBetweenPoints (
+\begin{DoxyParamCaption}
+\item[{cv::Point}]{pt1, }
+\item[{cv::Point}]{pt2}
+\end{DoxyParamCaption}
+)}}
+\label{classLinkedLines_aefaa75421b85c98299f8d4d2a956216a}
+A function to calculate the euclidean distance between two points. Used in \hyperlink{classLinkedLines_a920f9ae9cb013c393a555c6c6c922d73}{connectRawLines()}. \hypertarget{classLinkedLines_a8c4e2755a3b9d05a6910618578caf3d2}{
+\index{LinkedLines@{LinkedLines}!linkConnectedLines@{linkConnectedLines}}
+\index{linkConnectedLines@{linkConnectedLines}!LinkedLines@{LinkedLines}}
+\subsubsection[{linkConnectedLines}]{\setlength{\rightskip}{0pt plus 5cm}void LinkedLines::linkConnectedLines (
+\begin{DoxyParamCaption}
+\item[{cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$}]{cLines, }
+\item[{double}]{thresholdRatio}
+\end{DoxyParamCaption}
+)}}
+\label{classLinkedLines_a8c4e2755a3b9d05a6910618578caf3d2}
+A function that will link the connected lines, by satisfying the curvature condition. This function uses the \hyperlink{classLinkedLines_a96aa89f80cc4441cc4b2a4bc916c9d4a}{calculateAnglesOfConnectedLines()} and anglesHaveSameSign functions.
+
+A function that will link the connected lines, by satisfying the curvature condition. \hypertarget{classLinkedLines_a7696b39387ac832b1b174c484e1c5dcd}{
+\index{LinkedLines@{LinkedLines}!plot1Line@{plot1Line}}
+\index{plot1Line@{plot1Line}!LinkedLines@{LinkedLines}}
+\subsubsection[{plot1Line}]{\setlength{\rightskip}{0pt plus 5cm}cv::Mat LinkedLines::plot1Line (
+\begin{DoxyParamCaption}
+\item[{cv::Vec4f}]{current\_\-line, }
+\item[{int}]{lineSize, }
+\item[{cv::Scalar}]{color, }
+\item[{cv::Mat}]{output\_\-image}
+\end{DoxyParamCaption}
+)}}
+\label{classLinkedLines_a7696b39387ac832b1b174c484e1c5dcd}
+A function that plots one line, with an input size, to an output image. Used by \hyperlink{classLinkedLines_ada95097dbf8ad3b4f1b18b42f3920a54}{plotLines()}. \hypertarget{classLinkedLines_ada95097dbf8ad3b4f1b18b42f3920a54}{
+\index{LinkedLines@{LinkedLines}!plotLines@{plotLines}}
+\index{plotLines@{plotLines}!LinkedLines@{LinkedLines}}
+\subsubsection[{plotLines}]{\setlength{\rightskip}{0pt plus 5cm}cv::Mat LinkedLines::plotLines (
+\begin{DoxyParamCaption}
+\item[{cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$}]{lines1, }
+\item[{int}]{lineSize, }
+\item[{cv::Mat}]{output\_\-image}
+\end{DoxyParamCaption}
+)}}
+\label{classLinkedLines_ada95097dbf8ad3b4f1b18b42f3920a54}
+A function that plots the lines. 
+
+\subsection{Member Data Documentation}
+\hypertarget{classLinkedLines_aca22f3054cb33e024bada96faae9ca2f}{
+\index{LinkedLines@{LinkedLines}!connectedLines@{connectedLines}}
+\index{connectedLines@{connectedLines}!LinkedLines@{LinkedLines}}
+\subsubsection[{connectedLines}]{\setlength{\rightskip}{0pt plus 5cm}cv::vector$<$cv::vector$<$cv::Vec4f $>$ $>$ {\bf LinkedLines::connectedLines}}}
+\label{classLinkedLines_aca22f3054cb33e024bada96faae9ca2f}
+connectedLines are lines satisfying the connectivity condition (lines close to each other). 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+LinkedLines.h\item 
+LinkedLines.cpp\end{DoxyCompactItemize}

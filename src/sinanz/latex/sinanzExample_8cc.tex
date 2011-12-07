@@ -1,0 +1,96 @@
+\hypertarget{sinanzExample_8cc}{
+\section{sinanzExample.cc File Reference}
+\label{sinanzExample_8cc}\index{sinanzExample.cc@{sinanzExample.cc}}
+}
+
+
+LCM example.  
+
+
+{\ttfamily \#include $<$cstdio$>$}\par
+{\ttfamily \#include $<$unistd.h$>$}\par
+{\ttfamily \#include $<$glib.h$>$}\par
+{\ttfamily \#include \char`\"{}mavconn.h\char`\"{}}\par
+{\ttfamily \#include $<$opencv2/imgproc/imgproc.hpp$>$}\par
+{\ttfamily \#include $<$opencv2/highgui/highgui.hpp$>$}\par
+{\ttfamily \#include $<$signal.h$>$}\par
+{\ttfamily \#include $<$interface/shared\_\-mem/PxSHMImageClient.h$>$}\par
+{\ttfamily \#include $<$sys/time.h$>$}\par
+{\ttfamily \#include $<$time.h$>$}\par
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{sinanzExample_8cc_a92a9098df92a54409dbe1902821b0762}{
+std::string {\bfseries fileBaseName} (\char`\"{}frame\char`\"{})}
+\label{sinanzExample_8cc_a92a9098df92a54409dbe1902821b0762}
+
+\item 
+\hypertarget{sinanzExample_8cc_a00ad2b29ff32ac5658dc6c6ea7f974ee}{
+std::string {\bfseries fileExt} (\char`\"{}.png\char`\"{})}
+\label{sinanzExample_8cc_a00ad2b29ff32ac5658dc6c6ea7f974ee}
+
+\item 
+\hypertarget{sinanzExample_8cc_ad2e59c7203b3bddc1bc9a2224b52e8e7}{
+void {\bfseries signalHandler} (int signal)}
+\label{sinanzExample_8cc_ad2e59c7203b3bddc1bc9a2224b52e8e7}
+
+\item 
+\hypertarget{sinanzExample_8cc_a600a6c34bf9a3299b0206071cc526147}{
+void \hyperlink{sinanzExample_8cc_a600a6c34bf9a3299b0206071cc526147}{imageHandler} (const lcm\_\-recv\_\-buf\_\-t $\ast$rbuf, const char $\ast$channel, const mavconn\_\-mavlink\_\-msg\_\-container\_\-t $\ast$container, void $\ast$user)}
+\label{sinanzExample_8cc_a600a6c34bf9a3299b0206071cc526147}
+
+\begin{DoxyCompactList}\small\item\em Handle incoming MAVLink packets containing images. \item\end{DoxyCompactList}\item 
+\hypertarget{sinanzExample_8cc_a53620d3a0daed9c36df33bf336089d0b}{
+void $\ast$ {\bfseries lcm\_\-wait} (void $\ast$lcm\_\-ptr)}
+\label{sinanzExample_8cc_a53620d3a0daed9c36df33bf336089d0b}
+
+\item 
+\hypertarget{sinanzExample_8cc_a0ddf1224851353fc92bfbff6f499fa97}{
+int {\bfseries main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})}
+\label{sinanzExample_8cc_a0ddf1224851353fc92bfbff6f499fa97}
+
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{sinanzExample_8cc_a9cf96982557d56650f0f4cd3762f05a0}{
+struct timeval {\bfseries tv}}
+\label{sinanzExample_8cc_a9cf96982557d56650f0f4cd3762f05a0}
+
+\item 
+\hypertarget{sinanzExample_8cc_a7a9e72f297c762c6d1b36c4c1f83a7ec}{
+int {\bfseries sysid} = 42}
+\label{sinanzExample_8cc_a7a9e72f297c762c6d1b36c4c1f83a7ec}
+
+\item 
+\hypertarget{sinanzExample_8cc_af0d634d7b4bfadf921b2e991039d38a6}{
+int {\bfseries compid} = 112}
+\label{sinanzExample_8cc_af0d634d7b4bfadf921b2e991039d38a6}
+
+\item 
+\hypertarget{sinanzExample_8cc_ab3f078684998b83967d507d0f453f454}{
+bool {\bfseries verbose} = false}
+\label{sinanzExample_8cc_ab3f078684998b83967d507d0f453f454}
+
+\item 
+\hypertarget{sinanzExample_8cc_a398527b3e9e358c345c5047b16871957}{
+bool {\bfseries debug} = 0}
+\label{sinanzExample_8cc_a398527b3e9e358c345c5047b16871957}
+
+\item 
+\hypertarget{sinanzExample_8cc_add58ab8323b65c3c8862fbc0008ada05}{
+int {\bfseries imageCounter} = 0}
+\label{sinanzExample_8cc_add58ab8323b65c3c8862fbc0008ada05}
+
+\item 
+\hypertarget{sinanzExample_8cc_ac746fa6ad48d19984a159f14bec028a3}{
+bool {\bfseries quit} = false}
+\label{sinanzExample_8cc_ac746fa6ad48d19984a159f14bec028a3}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+LCM example. \begin{DoxyAuthor}{Author}
+Lorenz Meier $<$\href{mailto:mavteam@student.ethz.ch}{\tt mavteam@student.ethz.ch}$>$ 
+\end{DoxyAuthor}

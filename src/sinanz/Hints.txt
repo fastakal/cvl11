@@ -1,0 +1,35 @@
+in LinkedLines.
+The Angles method is not helping in filtering out contours.
+
+This method is helping in keeping the ellipse, but there's a MAGIC NUMBER IN IT. The ratio of zeros.
+Actually, it works very well. It takes out almost all vertical lines (due to the nan slope).
+bool LinkedLines::anglesDiffAcceptable(vector<float> anglesOfOneContour)
+
+
+Magic numbers in both criterias, the relative ratio of the axes and the area of the rotated rectangle
+bool MyEllipses::validateEllipse(cv:RotatedRect anEllipse)
+
+Rotation of the ellipse is in the inverse direction, this is y in:
+cv::Mat HoopPosition::rotatePlaneImage(cv::Mat& planeImage, double angle)
+the angle was taken to be the negative of the input (double angle).
+
+Treat the case where less than 4 points have valid depth values (pointer exception).
+cv::vector<cv::Vec3f> HoopPosition::findPointsValues(int numberOfPoints)
+TREATED: set the input image as the output if less than 4 valid points are there.
+
+// Put the plane in.
+float z = (A*((double) j)/dst.channels() + B*i + C)*2;
+
+Assuming that the depth values are real, then the fitted plane is good to go.
+A class is created that has the plane as an attribute.
+It will take care of validating the plane, finding the normal to the plane, and 
+calculating the destination point of the trajectory.
+This class is called:
+destination3dPoint.
+this class takes one parameter, the hoop object (that contains the fitted plane and the centroid/size of the hoop).
+
+
+
+ask the assistant
+in plotplane:
+float z = (A*((double) j)/dst.channels() + B*i + C)*4;

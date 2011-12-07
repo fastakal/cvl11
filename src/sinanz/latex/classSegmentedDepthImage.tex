@@ -1,0 +1,50 @@
+\hypertarget{classSegmentedDepthImage}{
+\section{SegmentedDepthImage Class Reference}
+\label{classSegmentedDepthImage}\index{SegmentedDepthImage@{SegmentedDepthImage}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSegmentedDepthImage_a45af15184009769834f70c04846259c5}{
+{\bfseries SegmentedDepthImage} (cv::Mat input, int cannyMin, int cannyMax, int dilate)}
+\label{classSegmentedDepthImage_a45af15184009769834f70c04846259c5}
+
+\item 
+void \hyperlink{classSegmentedDepthImage_ac97086cdb2c74fbd602aa48f37658468}{pre\_\-process} (cv::Mat input\_\-img)
+\item 
+void \hyperlink{classSegmentedDepthImage_ac0ad8ab07460fd0e01000672a59b7d17}{segmentDepthImage} (int cannyMin, int cannyMax, int dilate)
+\item 
+\hypertarget{classSegmentedDepthImage_a26105f01a214544a741457f9bc1e039e}{
+cv::Mat {\bfseries getEdgeImage} ()}
+\label{classSegmentedDepthImage_a26105f01a214544a741457f9bc1e039e}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classSegmentedDepthImage_ac97086cdb2c74fbd602aa48f37658468}{
+\index{SegmentedDepthImage@{SegmentedDepthImage}!pre\_\-process@{pre\_\-process}}
+\index{pre\_\-process@{pre\_\-process}!SegmentedDepthImage@{SegmentedDepthImage}}
+\subsubsection[{pre\_\-process}]{\setlength{\rightskip}{0pt plus 5cm}void SegmentedDepthImage::pre\_\-process (
+\begin{DoxyParamCaption}
+\item[{cv::Mat}]{input\_\-img}
+\end{DoxyParamCaption}
+)}}
+\label{classSegmentedDepthImage_ac97086cdb2c74fbd602aa48f37658468}
+Pre\_\-process function: A function that does the pre-\/processing stage on the input image. For the moment, simple Guassian blurring is done only. \hypertarget{classSegmentedDepthImage_ac0ad8ab07460fd0e01000672a59b7d17}{
+\index{SegmentedDepthImage@{SegmentedDepthImage}!segmentDepthImage@{segmentDepthImage}}
+\index{segmentDepthImage@{segmentDepthImage}!SegmentedDepthImage@{SegmentedDepthImage}}
+\subsubsection[{segmentDepthImage}]{\setlength{\rightskip}{0pt plus 5cm}void SegmentedDepthImage::segmentDepthImage (
+\begin{DoxyParamCaption}
+\item[{int}]{cannyMin, }
+\item[{int}]{cannyMax, }
+\item[{int}]{dilate}
+\end{DoxyParamCaption}
+)}}
+\label{classSegmentedDepthImage_ac0ad8ab07460fd0e01000672a59b7d17}
+A function that segments the input image by using canny edge. 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+SegmentedDepthImage.h\item 
+SegmentedDepthImage.cpp\end{DoxyCompactItemize}
