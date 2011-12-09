@@ -15,7 +15,6 @@ This file is inspired from the project done by Lorenz.
 #include <sys/time.h>
 #include <time.h>
 
-//using namespace cv;
 // Timer for benchmarking
 struct timeval tv;
 
@@ -44,14 +43,14 @@ bool quit = false;
  */
 void createControlPanel(){
 	namedWindow("Control Panel");
-	createTrackbar("Threshold", "Control Panel", &g_CannyThreshold, 255, 0);
-	createTrackbar("MinLengthContours", "Control Panel", &g_minimumLengthOfAcceptedContours, 500, 0);
-	createTrackbar("MaxLengthContours", "Control Panel", &g_maximumLengthOfAcceptedContours, 500, 0);
-	createTrackbar("contourApproxOrder", "Control Panel", &g_contourApproxOrder, 10, 0);
-	createTrackbar("dilate", "Control Panel", &g_dilate, 1, 0);
-	createTrackbar("Line-Size for plotting", "Control Panel", &g_line_size_for_plotting, 100, 0);
-	createTrackbar("Distance between lines", "Control Panel", &g_distance_between_lines, 100, 0);
-	createTrackbar("Angle Threshold", "Control Panel", &g_angle_threshold_ratio, 10, 0);
+	createTrackbar("Threshold", "Control Panel", 				&g_CannyThreshold, 255, 0);
+	createTrackbar("MinLengthContours", "Control Panel", 		&g_minimumLengthOfAcceptedContours, 500, 0);
+	createTrackbar("MaxLengthContours", "Control Panel", 		&g_maximumLengthOfAcceptedContours, 500, 0);
+	createTrackbar("contourApproxOrder", "Control Panel", 		&g_contourApproxOrder, 10, 0);
+	createTrackbar("dilate", "Control Panel", 					&g_dilate, 1, 0);
+	createTrackbar("Line-Size for plotting", "Control Panel", 	&g_line_size_for_plotting, 100, 0);
+	createTrackbar("Distance between lines", "Control Panel", 	&g_distance_between_lines, 100, 0);
+	createTrackbar("Angle Threshold", "Control Panel", 			&g_angle_threshold_ratio, 10, 0);
 }
 
 void
@@ -80,6 +79,31 @@ colorDepthImage(cv::Mat& imgDepth, cv::Mat& imgColoredDepth)
 	}
 }
 
+void plotInputImages(cv::Mat imgL, cv::Mat imgR, cv::Mat imgDepthColor){
+
+	int newSizeX = imgL.cols/2;
+	int newSizeY = imgL.rows/2;
+	int marginBetweenWindows = 20;
+
+	cv::namedWindow("Left Image",	0);
+	cv::namedWindow("Right Image",	0);
+	cv::namedWindow("Depth map",	0);
+
+	cv::imshow("Left Image", 	imgL);
+	cv::imshow("Right Image", 	imgR);
+	cv::imshow("Depth map",		imgDepthColor);
+
+	cvResizeWindow("Left Image", 	newSizeX, newSizeY);
+	cvResizeWindow("Right Image", 	newSizeX, newSizeY);
+	cvResizeWindow("Depth map",		newSizeX, newSizeY);
+
+	cvMoveWindow("Left Image", 		marginBetweenWindows, 0);
+	cvMoveWindow("Right Image", 	newSizeX + 2*marginBetweenWindows, 0);
+	cvMoveWindow("Depth map", 		2*(newSizeX + 2*marginBetweenWindows), 0);
+
+	cv::waitKey(1);
+}
+
 void signalHandler(int signal) {
 	if (signal == SIGINT) {
 		fprintf(stderr, "# INFO: Quitting...\n");
@@ -88,6 +112,18 @@ void signalHandler(int signal) {
 	}
 }
 
+double getTimeNow(){
+	struct 	timeval tp;
+	double sec, usec, time;
+
+	gettimeofday(&tp, NULL);
+	sec = static_cast<double>( tp.tv_sec);
+	usec = static_cast<double>( tp.tv_usec) / 1E6;
+
+	time = sec + usec;
+
+	return time;
+}
 /**
  * @brief Handle incoming MAVLink packets containing images
  *
@@ -99,72 +135,41 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	// Pointer to shared memory data
 	PxSHMImageClient* client = static_cast<PxSHMImageClient*>(user);
 
-
-
 	printf("GOT IMG MSG\n");
 
-	// read mono image data
+	// read image data
 	Mat imgL = Mat::zeros(480, 640, CV_8UC3);
 	Mat imgR = Mat::zeros(480, 640, CV_8UC3);
 	Mat imgDepth = Mat::zeros(480, 640, CV_32F);
+	cv::Mat imgDepthColor;
 	cv::Mat imgRectified;
 	cv::Mat imgToSave;
 	cv::Mat intrinsicMat;
 
+	StereoProc imgproc;
+	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
+	imgproc.getImageInfo(intrinsicMat);
+
+
 	if (client->readStereoImage(msg, imgL, imgR)) {
 
-//		client->readRGBDImage(img, imgDepth,
-//				timestamp, roll, pitch,
-//				yaw, lon, lat, alt, gx
-//				, gy, gz, intrinsicMat);
+		double startTime, endTime;
 
-		//client->readStereoImage(msg, imgL, imgR)
-		StereoProc imgproc;
-		imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
-		//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-		imgproc.getImageInfo(intrinsicMat);
+		// Timestamp after the computation.
+		startTime = getTimeNow();
+
 		// Compute Stereo and store the processed frames in buffer
 		imgproc.process(imgL, imgR, imgRectified, imgDepth);
 
-		cv::Mat imgDepthColor;
-
 		colorDepthImage(imgDepth, imgDepthColor);
+		cv::Mat img3 = cv::Mat::zeros(imgDepthColor.size(), imgDepthColor.type());
+		imgDepthColor.copyTo(img3);
 
-		cv::Mat img1 = cv::Mat::zeros(imgL.size(), CV_8UC3);
-		cv::Mat img2 = cv::Mat::zeros(imgR.size(), CV_8UC3);
-		cv::Mat img3 = cv::Mat::zeros(imgDepth.size(), CV_8UC3);
-		cv::Mat output_image;
-		imgL.copyTo(img1);
-		imgR.copyTo(img2);
-
-		int newSizeX = imgL.cols/2;
-		int newSizeY = imgL.rows/2;
-		int marginBetweenWindows = 20;
-
-		cv::namedWindow("Left Image (Forward Camera)",0);
-		cv::imshow("Left Image (Forward Camera)", imgL);
-		cvResizeWindow("Left Image (Forward Camera)", newSizeX, newSizeY);
-		cvMoveWindow("Left Image (Forward Camera)", marginBetweenWindows, 0);
-
-		cv::namedWindow("Right Image (Forward Camera)",0);
-		cv::imshow("Right Image (Forward Camera)", imgR);
-		cvResizeWindow("Right Image (Forward Camera)", newSizeX, newSizeY);
-		cvMoveWindow("Right Image (Forward Camera)", newSizeX + 2*marginBetweenWindows, 0);
-
-		cv::namedWindow("Depth map",0);
-		cv::imshow("Depth map", imgDepthColor);
-		cvResizeWindow("Depth map", newSizeX, newSizeY);
-		cvMoveWindow("Depth map", 2*(newSizeX + 2*marginBetweenWindows), 0);
-
-
-		cv::waitKey(1);
-
-
+		plotInputImages(imgL, imgR, imgDepthColor);
 
 		createControlPanel();
 		double angle_treshold = ((double)g_angle_threshold_ratio)/10;
-
-		imgDepthColor.copyTo(img3);
 
 		CodeContainer myCode1 = CodeContainer(imgRectified, img3, imgDepth,
 				g_minimumLengthOfAcceptedContours,
@@ -174,13 +179,23 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				g_dilate,
 				g_line_size_for_plotting,
 				g_distance_between_lines,
-				false,
+				true,
 				angle_treshold
 		);
 
-		float toto, toto1, toto2;
-		client->getGroundTruth(msg, toto, toto1, toto2);
-		printf("toto: %f\n", toto);
+		// Timestamp after the computation.
+		endTime = getTimeNow();
+
+		// Time calculation in Seconds.
+		double time = endTime - startTime;
+		std::cout<<"Elapsed Time: "<<time<<"\n";
+
+		float ground_x, ground_y, ground_z;
+
+		client->getGroundTruth(msg, ground_x, ground_y, ground_z);
+		printf("GroundTruthCoordinates: x: %f. y: %f. z: %f.\n", ground_x, ground_y, ground_z);
+
+
 
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
@@ -200,11 +215,11 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 #ifndef NO_DISPLAY
 		if ((client->getCameraConfig() & PxSHM::CAMERA_FORWARD_LEFT)
 				== PxSHM::CAMERA_FORWARD_LEFT) {
-			cv::namedWindow("Left Image (Forward Camera)");
-			cv::imshow("Left Image (Forward Camera)", imgL);
+			//cv::namedWindow("Left Image (Forward Camera)");
+			//cv::imshow("Left Image (Forward Camera)", imgL);
 		} else {
-			cv::namedWindow("Left Image (Downward Camera)");
-			cv::imshow("Left Image (Downward Camera)", imgL);
+			//cv::namedWindow("Left Image (Downward Camera)");
+			//cv::imshow("Left Image (Downward Camera)", imgL);
 		}
 #endif
 
@@ -347,7 +362,7 @@ int main(int argc, char* argv[]) {
 
 	PxSHMImageClient client;
 	client.init(true, PxSHM::CAMERA_FORWARD_LEFT, PxSHM::CAMERA_FORWARD_RIGHT);
-
+	//client.init(true, PxSHM::CAMERA_FORWARD_RGBD);
 	// Ready to roll
 	fprintf(stderr, "# INFO: Image client ready, waiting for images..\n");
 

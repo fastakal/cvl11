@@ -84,7 +84,7 @@ void ContoursAndLines::approximateContour(vector<vector<Point>> input_contours, 
  */
 void ContoursAndLines::plotMyContours(vector<vector<Point>> contours) {
 	Mat output_image = Mat::zeros(edgeImage.size(), CV_8UC3);
-	Scalar color(rand()*255,rand()*255,rand()*255);
+	Scalar color(255, 255, 255);
 
 	if (contours.size()){
 		// Drawing all the contours

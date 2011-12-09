@@ -33,3 +33,6 @@ this class takes one parameter, the hoop object (that contains the fitted plane 
 ask the assistant
 in plotplane:
 float z = (A*((double) j)/dst.channels() + B*i + C)*4;
+
+take out
+g_dilate.

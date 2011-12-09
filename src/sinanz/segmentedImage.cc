@@ -7,12 +7,12 @@
 
 #include "segmentedImage.h"
 
-segmentedImage::segmentedImage (Mat input, int cannyMin, int cannyMax, int dilate){
+segmentedImage::segmentedImage (Mat input, int cannyMin, int cannyMax){
 	input_image = input;
 	pre_process(input_image);
-	segmentThisImage(cannyMin, cannyMax, dilate);
-
+	segmentThisImage(cannyMin, cannyMax);
 }
+
 segmentedImage::~segmentedImage(){}
 
 /**
@@ -31,17 +31,11 @@ void segmentedImage::pre_process(Mat input_img){
 }
 
 /**
- * A function that segments the input image by using canny edge.
+ * A function that segments the input image using canny edge detector by opencv.
  */
-void segmentedImage::segmentThisImage(int cannyMin, int cannyMax, int doDilate){
+void segmentedImage::segmentThisImage(int cannyMin, int cannyMax){
 	Mat cnt_img = Mat::zeros(input_image.size(), CV_8UC3);
-
-	// 2.1 find edges.
 	cv::Canny(filtered_image, cnt_img, cannyMin, cannyMax, 5);
 
-	if(doDilate == 1){
-		Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 1));
-		cv::dilate(cnt_img, cnt_img, kernel,Point(-1,-1), 1);
-	}
 	edgeImage = cnt_img;
 }

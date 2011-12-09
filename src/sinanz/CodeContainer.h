@@ -34,6 +34,8 @@ public:
 	CodeContainer(cv::Mat, cv::Mat,cv::Mat, int, int, int, int, int, int, int, bool, double);
 	virtual ~CodeContainer();
 	void createControlPanel();
+	double getTimeNow();
+	void plotPipeLineImages(cv::Mat firstImage,cv::Mat secondImage,cv::Mat thirdImage,cv::Mat fourthImage);
 };
 
 #endif /* CODECONTAINER_H_ */

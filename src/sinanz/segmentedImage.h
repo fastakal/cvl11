@@ -25,7 +25,7 @@ class segmentedImage {
 	Mat filtered_image;
 	Mat edgeImage;
 public:
-	segmentedImage (Mat input, int cannyMin, int cannyMax, int dilate);
+	segmentedImage (Mat input, int cannyMin, int cannyMax);
 	~segmentedImage ();
 	Mat getEdgeImage();
 
@@ -37,9 +37,9 @@ public:
 	void pre_process(Mat input_img);
 
 	/**
-	 * A function that segments the input image by using canny edge.
+	 * A function that segments the input image by using canny edge detector by opencv.
 	 */
-	void segmentThisImage(int cannyMin, int cannyMax, int dilate);
+	void segmentThisImage(int cannyMin, int cannyMax);
 };
 
 #endif /* SEGMENTEDIMAGE_H_ */
