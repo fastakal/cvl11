@@ -15,8 +15,11 @@ This file is inspired from the project done by Lorenz.
 #include <sys/time.h>
 #include <time.h>
 
-// Timer for benchmarking
+// Timer for benchmarking & a counter vector for stats.
 struct timeval tv;
+cv::Vector<float> timingHistory;
+int maxNumberOfFrames = 1000;
+int globalFrameCounter = 0;
 
 int sysid = 42;
 int compid = 112;
@@ -45,7 +48,7 @@ void createControlPanel(){
 	namedWindow("Control Panel");
 	createTrackbar("Threshold", "Control Panel", 				&g_CannyThreshold, 255, 0);
 	createTrackbar("MinLengthContours", "Control Panel", 		&g_minimumLengthOfAcceptedContours, 500, 0);
-	createTrackbar("MaxLengthContours", "Control Panel", 		&g_maximumLengthOfAcceptedContours, 500, 0);
+	createTrackbar("MaxLengthContours", "Control Panel", 		&g_maximumLengthOfAcceptedContours, 100000, 0);
 	createTrackbar("contourApproxOrder", "Control Panel", 		&g_contourApproxOrder, 10, 0);
 	createTrackbar("dilate", "Control Panel", 					&g_dilate, 1, 0);
 	createTrackbar("Line-Size for plotting", "Control Panel", 	&g_line_size_for_plotting, 100, 0);
@@ -104,9 +107,20 @@ void plotInputImages(cv::Mat imgL, cv::Mat imgR, cv::Mat imgDepthColor){
 	cv::waitKey(1);
 }
 
+void printTimingStats(){
+	timingHistory.resize(globalFrameCounter);
+	printf("\n\n\n");
+	for(int i = 0; i < globalFrameCounter; i++){
+		printf("Frame: %d, Time: %f\n", i, timingHistory[i]);
+	}
+}
+
 void signalHandler(int signal) {
 	if (signal == SIGINT) {
 		fprintf(stderr, "# INFO: Quitting...\n");
+
+		printTimingStats();
+
 		quit = true;
 		exit(EXIT_SUCCESS);
 	}
@@ -124,6 +138,7 @@ double getTimeNow(){
 
 	return time;
 }
+
 /**
  * @brief Handle incoming MAVLink packets containing images
  *
@@ -172,6 +187,8 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		double angle_treshold = ((double)g_angle_threshold_ratio)/10;
 
 		CodeContainer myCode1 = CodeContainer(imgRectified, img3, imgDepth,
+				client,
+				msg,
 				g_minimumLengthOfAcceptedContours,
 				g_maximumLengthOfAcceptedContours,
 				g_CannyThreshold,
@@ -188,14 +205,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		// Time calculation in Seconds.
 		double time = endTime - startTime;
-		std::cout<<"Elapsed Time: "<<time<<"\n";
-
-		float ground_x, ground_y, ground_z;
-
-		client->getGroundTruth(msg, ground_x, ground_y, ground_z);
-		printf("GroundTruthCoordinates: x: %f. y: %f. z: %f.\n", ground_x, ground_y, ground_z);
-
-
+		std::cout<<"############################# Total Time: "<<time<<"############################# \n";
+		timingHistory[globalFrameCounter] = time;
+		globalFrameCounter++;
 
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
@@ -236,8 +248,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				imgToSave);
 	}
 	break;
-	case 'a': {
-		std::cout << "You just pressed 'a', OMG!\n";
+	case 'w': {
+		std::cout << "\nFreeze for 2 seconds...\n";
+		cv::waitKey(2000);
 	}
 	break;
 	default:
@@ -251,8 +264,8 @@ static void mavlink_handler(const lcm_recv_buf_t *rbuf, const char * channel,
 	const mavlink_message_t* msg = getMAVLinkMsgPtr(container);
 	mavlink_message_t response;
 	lcm_t* lcm = static_cast<lcm_t*>(user);
-	printf("Received message #%d on channel \"%s\" (sys:%d|comp:%d):\n",
-			msg->msgid, channel, msg->sysid, msg->compid);
+	//printf("Received message #%d on channel \"%s\" (sys:%d|comp:%d):\n",
+	//	msg->msgid, channel, msg->sysid, msg->compid);
 
 	switch (msg->msgid) {
 	uint32_t receiveTime;
@@ -323,6 +336,9 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 										"config/parameters_2pt.cfg" }, { NULL } };
 
 int main(int argc, char* argv[]) {
+
+	timingHistory.resize(maxNumberOfFrames);
+
 	GError *error = NULL;
 	GOptionContext *context;
 
@@ -362,7 +378,6 @@ int main(int argc, char* argv[]) {
 
 	PxSHMImageClient client;
 	client.init(true, PxSHM::CAMERA_FORWARD_LEFT, PxSHM::CAMERA_FORWARD_RIGHT);
-	//client.init(true, PxSHM::CAMERA_FORWARD_RGBD);
 	// Ready to roll
 	fprintf(stderr, "# INFO: Image client ready, waiting for images..\n");
 

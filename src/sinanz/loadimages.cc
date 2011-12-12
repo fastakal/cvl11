@@ -473,7 +473,8 @@ int main(int argc, char* argv[])
 
 		imgDepthColor.copyTo(img3);
 
-		CodeContainer myCode1 = CodeContainer(imgRectified, img3, imgDepth,
+		/*CodeContainer myCode1 = CodeContainer(imgRectified, img3, imgDepth,
+
 				g_minimumLengthOfAcceptedContours,
 				g_maximumLengthOfAcceptedContours,
 				g_CannyThreshold,
@@ -483,7 +484,7 @@ int main(int argc, char* argv[])
 				g_distance_between_lines,
 				false,
 				angle_treshold
-		);
+		);*/
 	}
 
 	return EXIT_SUCCESS;

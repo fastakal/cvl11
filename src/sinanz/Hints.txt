@@ -34,5 +34,6 @@ ask the assistant
 in plotplane:
 float z = (A*((double) j)/dst.channels() + B*i + C)*4;
 
-take out
-g_dilate.
+
+BUG:
+void LinkedLines::connectRawLines(cv::vector<cv::vector<cv::Vec4f> > rLines, int maxDistance)

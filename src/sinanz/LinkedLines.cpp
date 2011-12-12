@@ -7,8 +7,16 @@
 
 #include "LinkedLines.h"
 
-LinkedLines::LinkedLines(cv::vector<cv::vector<cv::Vec4f> > rLines) {
+LinkedLines::LinkedLines(cv::vector<cv::vector<cv::Vec4f> > rLines,
+		int g_distance_between_lines,
+		int g_angle_threshold_ratio,
+		int g_line_size_for_plotting,
+		cv::Mat filteredLinesImg) {
 	setRawLines(rLines);
+	distanceBetweenLines = g_distance_between_lines;
+	connectRawLines(rawLines, distanceBetweenLines);
+	linkConnectedLines(connectedLines, g_angle_threshold_ratio);
+	filteredLinesImage = plotLines(linkedLines, g_line_size_for_plotting, filteredLinesImg);
 }
 
 LinkedLines::~LinkedLines() {
@@ -202,7 +210,7 @@ bool LinkedLines::anglesHaveSameSign(cv::vector<float> anglesOfOneContour, doubl
 		}
 	}
 	bool answer = ((((positiveAnglesCounter)/totalCounter)> thresholdRatio) ||
-				((negativeAnglesCounter)/totalCounter)> thresholdRatio);
+			((negativeAnglesCounter)/totalCounter)> thresholdRatio);
 
 	return answer;
 }

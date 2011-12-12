@@ -24,6 +24,7 @@
 #include "HoopPosition.h"
 #include "destination3dPoint.h"
 
+#include <interface/shared_mem/PxSHMImageClient.h>
 
 class CodeContainer {
 
@@ -31,7 +32,8 @@ public:
 	cv::Mat depthImage;
 	cv::Mat finalEdgeImage;
 	int numberOfPointsForDepthOfHoop;
-	CodeContainer(cv::Mat, cv::Mat,cv::Mat, int, int, int, int, int, int, int, bool, double);
+
+	CodeContainer(cv::Mat, cv::Mat,cv::Mat, PxSHMImageClient*, const mavlink_message_t*, int, int, int, int, int, int, int, bool, double);
 	virtual ~CodeContainer();
 	void createControlPanel();
 	double getTimeNow();

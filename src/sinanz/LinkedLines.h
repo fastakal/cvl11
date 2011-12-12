@@ -15,14 +15,21 @@
 
 class LinkedLines {
 public:
+	int distanceBetweenLines;
 	cv::vector<cv::vector<cv::Vec4f > > rawLines;
+	cv::Mat filteredLinesImage;
+
 	/**
 	 * connectedLines are lines satisfying the connectivity condition (lines close to each other).
 	 */
 	cv::vector<cv::vector<cv::Vec4f > > connectedLines;
 	cv::vector<cv::vector<cv::Vec4f > > linkedLines;
 
-	LinkedLines(cv::vector<cv::vector<cv::Vec4f> > rlines);
+	LinkedLines(cv::vector<cv::vector<cv::Vec4f> > rlines,
+			int g_distance_between_lines,
+			int g_angle_threshold_ratio,
+			int g_line_size_for_plotting,
+			cv::Mat filteredLinesImage);
 	virtual ~LinkedLines();
 
 	// Getters and Setters

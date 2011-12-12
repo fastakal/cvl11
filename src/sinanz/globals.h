@@ -10,7 +10,7 @@
 
 // Global Variables.
 int g_minimumLengthOfAcceptedContours = 250;
-int g_maximumLengthOfAcceptedContours = 500;
+int g_maximumLengthOfAcceptedContours = 100000;
 
 int g_CannyThreshold = 255;
 int g_contourApproxOrder = 0;
