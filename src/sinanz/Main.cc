@@ -196,7 +196,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				g_dilate,
 				g_line_size_for_plotting,
 				g_distance_between_lines,
-				true,
+				false,
 				angle_treshold
 		);
 
@@ -208,6 +208,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		std::cout<<"############################# Total Time: "<<time<<"############################# \n";
 		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
+
+
+
 
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
@@ -270,6 +273,7 @@ static void mavlink_handler(const lcm_recv_buf_t *rbuf, const char * channel,
 	switch (msg->msgid) {
 	uint32_t receiveTime;
 	uint32_t sendTime;
+
 	case MAVLINK_MSG_ID_COMMAND_LONG: {
 		mavlink_command_long_t cmd;
 		mavlink_msg_command_long_decode(msg, &cmd);

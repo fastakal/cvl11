@@ -22,6 +22,7 @@ public:
 	PxSHMImageClient* client;
 	const mavlink_message_t* msg;
 	CvMat *rotationMatrix;
+	cv::Vec3f translationVector;
 	cv::Point3f secondPoint;
 	cv::Vec3f trajectoryVector;
 
@@ -42,6 +43,8 @@ public:
 	 * A function that constructs the 3D rotation matrix using the roll, pitch and yaw from the client.
 	 */
 	void constructRotationMatrix();
+
+	void constructTranslationVector();
 
 	/**
 	 * A function that will get the second point (the point that's half a meter in front of the hoop and perpedicular.

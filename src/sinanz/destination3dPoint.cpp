@@ -17,6 +17,7 @@ destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, co
 	get2ndPoint();
 	plotNormalVector();
 	constructRotationMatrix();
+	constructTranslationVector();
 	getEndPoint();
 	getTrajectoryVector();
 	//printAll();
@@ -110,6 +111,15 @@ void destination3dPoint::constructRotationMatrix(){
 	rotationMatrix = rotMat;
 }
 
+void destination3dPoint::constructTranslationVector(){
+	float t_x, t_y, t_z;
+	client->getGroundTruth(msg, t_x, t_y, t_z);
+
+	translationVector[0] = t_x;
+	translationVector[1] = t_y;
+	translationVector[2] = t_z;
+}
+
 void destination3dPoint::getStartPoint(){
 
 	float ground_x, ground_y, ground_z;
@@ -127,6 +137,10 @@ void destination3dPoint::getEndPoint(){
 	endPoint.x = cvmGet(rotationMatrix, 0, 0) * x + cvmGet(rotationMatrix, 0, 1) * y + cvmGet(rotationMatrix, 0, 2) * z;
 	endPoint.y = cvmGet(rotationMatrix, 1, 0) * x + cvmGet(rotationMatrix, 1, 1) * y + cvmGet(rotationMatrix, 1, 2) * z;;
 	endPoint.z = cvmGet(rotationMatrix, 2, 0) * x + cvmGet(rotationMatrix, 2, 1) * y + cvmGet(rotationMatrix, 2, 2) * z;;
+
+	endPoint.x = endPoint.x + translationVector[0];
+	endPoint.y = endPoint.y + translationVector[1];
+	endPoint.z = endPoint.z + translationVector[2];
 }
 
 void destination3dPoint::getTrajectoryVector(){
