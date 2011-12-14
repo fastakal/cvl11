@@ -77,6 +77,10 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 		destination3dPoint pointIn3D = destination3dPoint(hp, client, message);
 		cv::imshow("imgDepthColor+hoop+plane", pointIn3D.img);
+		endPoint = pointIn3D.endPoint;
+	}
+	else {
+		endPoint.x = 0; endPoint.y = 0; endPoint.z = 0;
 	}
 
 

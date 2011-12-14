@@ -18,6 +18,10 @@ int g_dilate = 0;
 int g_line_size_for_plotting = 4;
 int g_distance_between_lines = 10;
 int g_angle_threshold_ratio = 5;
+cv::Vector<float> timingHistory;
+int maxNumberOfFrames = 1000;
+int globalFrameCounter = 0;
+int imageCounter = 0;
 
 float colormap_jet[128][3] =
 {

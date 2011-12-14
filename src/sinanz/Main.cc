@@ -17,9 +17,6 @@ This file is inspired from the project done by Lorenz.
 
 // Timer for benchmarking & a counter vector for stats.
 struct timeval tv;
-cv::Vector<float> timingHistory;
-int maxNumberOfFrames = 1000;
-int globalFrameCounter = 0;
 
 int sysid = 42;
 int compid = 112;
@@ -28,7 +25,6 @@ bool debug = 0;
 
 static GString* configFile = g_string_new("conf/abc.cfg");
 
-int imageCounter = 0;
 std::string fileBaseName("frame");
 std::string fileExt(".png");
 
@@ -39,7 +35,7 @@ bool quit = false;
 #include "StereoProc.h"
 #include "CodeContainer.h"
 #include "globals.h"
-
+lcm_t* lcm;
 //////// Functions
 /**
  * A function that creates a window with trackbars controlling parameters to test...
@@ -210,6 +206,19 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		globalFrameCounter++;
 
 
+		if( myCode1.endPoint.x != 0){
+
+		mavlink_set_local_position_setpoint_t pos;
+		pos.x = myCode1.endPoint.x;
+		pos.y = myCode1.endPoint.y;
+		pos.z = myCode1.endPoint.z;
+		mavlink_message_t msgp;
+		mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
+		sendMAVLinkMessage(lcm, &msgp);
+		printf("Sent a message with destination point: x: %f, y: %f, z: %f. \n", pos.x, pos.y, pos.z);
+		} else {
+			printf("didn't send a message, point is zero");
+		}
 
 
 		struct timeval tv;
@@ -228,17 +237,17 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		// Display if switched on
 #ifndef NO_DISPLAY
-		if ((client->getCameraConfig() & PxSHM::CAMERA_FORWARD_LEFT)
-				== PxSHM::CAMERA_FORWARD_LEFT) {
-			//cv::namedWindow("Left Image (Forward Camera)");
-			//cv::imshow("Left Image (Forward Camera)", imgL);
-		} else {
-			//cv::namedWindow("Left Image (Downward Camera)");
-			//cv::imshow("Left Image (Downward Camera)", imgL);
-		}
+if ((client->getCameraConfig() & PxSHM::CAMERA_FORWARD_LEFT)
+		== PxSHM::CAMERA_FORWARD_LEFT) {
+	//cv::namedWindow("Left Image (Forward Camera)");
+	//cv::imshow("Left Image (Forward Camera)", imgL);
+} else {
+	//cv::namedWindow("Left Image (Downward Camera)");
+	//cv::imshow("Left Image (Downward Camera)", imgL);
+}
 #endif
 
-		imgL.copyTo(imgToSave);
+imgL.copyTo(imgToSave);
 	}
 
 #ifndef NO_DISPLAY
@@ -354,7 +363,9 @@ int main(int argc, char* argv[]) {
 	}
 	g_option_context_free(context);
 	// Handling Program options
-	lcm_t* lcm = lcm_create("udpm://");
+	//lcm_t* lcm = lcm_create("udpm://");
+
+	lcm = lcm_create("udpm://");
 	if (!lcm) {
 		fprintf(stderr, "# ERROR: Cannot initialize LCM.\n");
 		exit(EXIT_FAILURE);
