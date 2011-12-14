@@ -33,8 +33,9 @@ public:
 	cv::Mat finalEdgeImage;
 	int numberOfPointsForDepthOfHoop;
 	cv::Point3f endPoint;
+	cv::Mat inverseIntrinsicMat;
 
-	CodeContainer(cv::Mat, cv::Mat,cv::Mat, PxSHMImageClient*, const mavlink_message_t*, int, int, int, int, int, int, int, bool, double);
+	CodeContainer(cv::Mat, cv::Mat,cv::Mat, cv::Mat, PxSHMImageClient*, const mavlink_message_t*, int, int, int, int, int, int, int, bool, double);
 	virtual ~CodeContainer();
 	void createControlPanel();
 	double getTimeNow();

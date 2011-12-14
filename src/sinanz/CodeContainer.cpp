@@ -8,7 +8,7 @@
 #include "CodeContainer.h"
 #include "MyEllipses.h"
 
-CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDepth,
+CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDepth, cv::Mat inverseK,
 		PxSHMImageClient* client,
 		const mavlink_message_t* message,
 		int g_minimumLengthOfAcceptedContours,
@@ -23,6 +23,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 	depthImage = imgDepth;
 	numberOfPointsForDepthOfHoop = 100;
+	inverseIntrinsicMat = inverseK;
 
 	cv::Mat temp = cv::Mat::zeros(img.size(), CV_8UC3);
 	cv::Mat input_image = cv::Mat::zeros(img.size(), CV_8UC3);;
@@ -75,7 +76,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 		HoopPosition hp = HoopPosition(depthImage, imgDepthColor, hoop, numberOfPointsForDepthOfHoop);
 		imgDepthColor = hp.disparityImageWithPlane;
 
-		destination3dPoint pointIn3D = destination3dPoint(hp, client, message);
+		destination3dPoint pointIn3D = destination3dPoint(hp, client, message, inverseIntrinsicMat);
 		cv::imshow("imgDepthColor+hoop+plane", pointIn3D.img);
 		endPoint = pointIn3D.endPoint;
 	}

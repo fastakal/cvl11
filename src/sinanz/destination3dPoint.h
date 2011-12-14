@@ -18,15 +18,16 @@ public:
 	HoopPosition hoop;
 	cv::Vec3f normalVector;
 	cv::Mat img;
+	cv::Mat inverseK;
 	cv::Point3f startPoint, endPoint;
 	PxSHMImageClient* client;
 	const mavlink_message_t* msg;
-	CvMat *rotationMatrix;
+	cv::Mat rotationMatrix;
 	cv::Vec3f translationVector;
 	cv::Point3f secondPoint;
 	cv::Vec3f trajectoryVector;
 
-	destination3dPoint(HoopPosition hoop, PxSHMImageClient* cl, const mavlink_message_t* message);
+	destination3dPoint(HoopPosition hoop, PxSHMImageClient* cl, const mavlink_message_t* message, cv::Mat inverseIntrinsicMat);
 	virtual ~destination3dPoint();
 
 	/**

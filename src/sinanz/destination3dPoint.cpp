@@ -7,11 +7,12 @@
 
 #include "destination3dPoint.h"
 
-destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, const mavlink_message_t* message) {
+destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, const mavlink_message_t* message, cv::Mat inverseIntrinsicMat) {
 	hoop = hp;
 	img = hp.disparityImageWithPlane;
 	client = cl;
 	msg = message;
+	inverseK = inverseIntrinsicMat;
 	getNormalVector();
 	getStartPoint();
 	get2ndPoint();
@@ -20,7 +21,7 @@ destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, co
 	constructTranslationVector();
 	getEndPoint();
 	getTrajectoryVector();
-	//printAll();
+	printAll();
 }
 
 destination3dPoint::~destination3dPoint() {}
@@ -109,6 +110,7 @@ void destination3dPoint::constructRotationMatrix(){
 	cvmSet(rotMat, 2, 2, cos(pitch) * cos(roll));
 
 	rotationMatrix = rotMat;
+	cv::transpose(rotationMatrix, rotationMatrix);
 }
 
 void destination3dPoint::constructTranslationVector(){
@@ -130,17 +132,37 @@ void destination3dPoint::getStartPoint(){
 
 void destination3dPoint::getEndPoint(){
 
+	// Print the sart Point:
+	printf("GroundTruth: x: %f. y: %f. z: %f. \n", startPoint.x, startPoint.y, startPoint.z);
+
 	float x = secondPoint.x;
 	float y = secondPoint.y;
 	float z = secondPoint.z;
 
-	endPoint.x = cvmGet(rotationMatrix, 0, 0) * x + cvmGet(rotationMatrix, 0, 1) * y + cvmGet(rotationMatrix, 0, 2) * z;
-	endPoint.y = cvmGet(rotationMatrix, 1, 0) * x + cvmGet(rotationMatrix, 1, 1) * y + cvmGet(rotationMatrix, 1, 2) * z;;
-	endPoint.z = cvmGet(rotationMatrix, 2, 0) * x + cvmGet(rotationMatrix, 2, 1) * y + cvmGet(rotationMatrix, 2, 2) * z;;
+	// Print the second Point:
+	printf("Desination In Pixels: x: %f. y: %f. z: %f. \n", secondPoint.x, secondPoint.y, secondPoint.z);
+
+	// Convert Image coordinates into frame coordinates.
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			x = inverseK.at<float>(0,0) * x + inverseK.at<float>(0,1) * y + inverseK.at<float>(0,2) * z;
+			y = inverseK.at<float>(1,0) * x + inverseK.at<float>(1,1) * y + inverseK.at<float>(1,2) * z;
+		}
+	}
+
+	printf("Before Rotation (multiplied by the inverseK): x: %f. y: %f. z: %f. \n", x, y, z);
+
+	endPoint.x = rotationMatrix.at<float>(0,0) * x + rotationMatrix.at<float>(0,1) * y + rotationMatrix.at<float>(0,2) * z;
+	endPoint.y = rotationMatrix.at<float>(1,0) * x + rotationMatrix.at<float>(1,1) * y + rotationMatrix.at<float>(1,2) * z;;
+	endPoint.z = rotationMatrix.at<float>(2,0) * x + rotationMatrix.at<float>(2,1) * y + rotationMatrix.at<float>(2,2) * z;;
+
+	printf("After Rotation: x: %f. y: %f. z: %f. \n", endPoint.x, endPoint.y, endPoint.z);
 
 	endPoint.x = endPoint.x + translationVector[0];
 	endPoint.y = endPoint.y + translationVector[1];
 	endPoint.z = endPoint.z + translationVector[2];
+
+	printf("After Translation (FINAL): x: %f. y: %f. z: %f. \n", endPoint.x, endPoint.y, endPoint.z);
 }
 
 void destination3dPoint::getTrajectoryVector(){
@@ -157,18 +179,9 @@ void destination3dPoint::printAll(){
 	for(int i = 0; i < 3; i++){
 		std::cout<<"[ ";
 		for(int j = 0; j < 3; j++){
-			std::cout<<". "<<i<<" . "<<j<<" . : "<<cvmGet(rotationMatrix, i, j);
+			std::cout<<" "<<rotationMatrix.at<float>(i,j);
 		}
 		std::cout<<" ]\n";
 	}
 	std::cout<<" ]\n";
-
-	// Print the second Point:
-	printf("SecondPoint: x: %f. y: %f. z: %f. \n", secondPoint.x, secondPoint.y, secondPoint.z);
-
-	// Print the end Point:
-	printf("EndPoint: x: %f. y: %f. z: %f. \n", endPoint.x, endPoint.y, endPoint.z);
-
-	// Print the sart Point:
-	printf("StartPoint: x: %f. y: %f. z: %f. \n", startPoint.x, startPoint.y, startPoint.z);
 }

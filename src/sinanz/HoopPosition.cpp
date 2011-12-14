@@ -147,6 +147,8 @@ HoopPosition::HoopPosition(cv::Mat depthImg, cv::Mat dispImage, cv::RotatedRect 
 	depthValuesOfHoop = findPointsValues(numberOfPointsForDepth);
 	plotDepthValues(disparityImage);
 	plotDepthValues(depthImage);
+	disparityImageWithPlane = disparityImage;
+
 	// If less than 4 points of depth are valid, then instead of having an error fitting the plane, we put the disparity image the same as input.
 	if( depthValuesOfHoop.size() < 4){
 		disparityImageWithPlane = disparityImage;
@@ -156,7 +158,8 @@ HoopPosition::HoopPosition(cv::Mat depthImg, cv::Mat dispImage, cv::RotatedRect 
 	else {
 		fitPlane();
 		plotThe4Points();
-		addFittedPlaneToImage(disparityImage);
+
+		//addFittedPlaneToImage(disparityImage);
 	}
 }
 

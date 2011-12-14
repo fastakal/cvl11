@@ -22,6 +22,7 @@ cv::Vector<float> timingHistory;
 int maxNumberOfFrames = 1000;
 int globalFrameCounter = 0;
 int imageCounter = 0;
+bool g_plot = false;
 
 float colormap_jet[128][3] =
 {

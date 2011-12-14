@@ -48,7 +48,7 @@ void createControlPanel(){
 	createTrackbar("contourApproxOrder", "Control Panel", 		&g_contourApproxOrder, 10, 0);
 	createTrackbar("dilate", "Control Panel", 					&g_dilate, 1, 0);
 	createTrackbar("Line-Size for plotting", "Control Panel", 	&g_line_size_for_plotting, 100, 0);
-	createTrackbar("Distance between lines", "Control Panel", 	&g_distance_between_lines, 100, 0);
+	createTrackbar("Distance between lines", "Control Panel", 	&g_distance_between_lines, 10000, 0);
 	createTrackbar("Angle Threshold", "Control Panel", 			&g_angle_threshold_ratio, 10, 0);
 }
 
@@ -157,11 +157,14 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	cv::Mat imgToSave;
 	cv::Mat intrinsicMat;
 
+
 	StereoProc imgproc;
 	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
 	imgproc.getImageInfo(intrinsicMat);
-
+	cv::Mat inverseIntrinsicMat;
+	inverseIntrinsicMat = intrinsicMat;
+	cv::invert(inverseIntrinsicMat, inverseIntrinsicMat);
 
 	if (client->readStereoImage(msg, imgL, imgR)) {
 
@@ -183,6 +186,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		double angle_treshold = ((double)g_angle_threshold_ratio)/10;
 
 		CodeContainer myCode1 = CodeContainer(imgRectified, img3, imgDepth,
+				inverseIntrinsicMat,
 				client,
 				msg,
 				g_minimumLengthOfAcceptedContours,
@@ -205,19 +209,27 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
 
-
-		if( myCode1.endPoint.x != 0){
-
 		mavlink_set_local_position_setpoint_t pos;
-		pos.x = myCode1.endPoint.x;
-		pos.y = myCode1.endPoint.y;
-		pos.z = myCode1.endPoint.z;
+		mavlink_set_local_position_setpoint_t lastPosition;
 		mavlink_message_t msgp;
-		mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
-		sendMAVLinkMessage(lcm, &msgp);
-		printf("Sent a message with destination point: x: %f, y: %f, z: %f. \n", pos.x, pos.y, pos.z);
+
+		if( myCode1.endPoint.z != 0){
+
+			pos.x = myCode1.endPoint.x;
+			pos.y = myCode1.endPoint.y;
+			pos.z = myCode1.endPoint.z;
+
+			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
+			sendMAVLinkMessage(lcm, &msgp);
+
+			lastPosition = pos;
+
+			printf("Sent a message with destination point: x: %f, y: %f, z: %f. \n", pos.x, pos.y, pos.z);
 		} else {
-			printf("didn't send a message, point is zero");
+			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &lastPosition);
+			sendMAVLinkMessage(lcm, &msgp);
+
+			printf("didn't send a new message, point is zero");
 		}
 
 
@@ -237,17 +249,17 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		// Display if switched on
 #ifndef NO_DISPLAY
-if ((client->getCameraConfig() & PxSHM::CAMERA_FORWARD_LEFT)
-		== PxSHM::CAMERA_FORWARD_LEFT) {
-	//cv::namedWindow("Left Image (Forward Camera)");
-	//cv::imshow("Left Image (Forward Camera)", imgL);
-} else {
-	//cv::namedWindow("Left Image (Downward Camera)");
-	//cv::imshow("Left Image (Downward Camera)", imgL);
-}
+		if ((client->getCameraConfig() & PxSHM::CAMERA_FORWARD_LEFT)
+				== PxSHM::CAMERA_FORWARD_LEFT) {
+			//cv::namedWindow("Left Image (Forward Camera)");
+			//cv::imshow("Left Image (Forward Camera)", imgL);
+		} else {
+			//cv::namedWindow("Left Image (Downward Camera)");
+			//cv::imshow("Left Image (Downward Camera)", imgL);
+		}
 #endif
 
-imgL.copyTo(imgToSave);
+		imgL.copyTo(imgToSave);
 	}
 
 #ifndef NO_DISPLAY
@@ -350,6 +362,10 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
+	if( argc == 2){
+		g_plot = argv[1];
+	}
+
 	timingHistory.resize(maxNumberOfFrames);
 
 	GError *error = NULL;
@@ -362,10 +378,10 @@ int main(int argc, char* argv[]) {
 		exit(EXIT_FAILURE);
 	}
 	g_option_context_free(context);
-	// Handling Program options
-	//lcm_t* lcm = lcm_create("udpm://");
 
+	// Handling Program options
 	lcm = lcm_create("udpm://");
+
 	if (!lcm) {
 		fprintf(stderr, "# ERROR: Cannot initialize LCM.\n");
 		exit(EXIT_FAILURE);
