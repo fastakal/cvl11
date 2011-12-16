@@ -35,8 +35,15 @@ bool quit = false;
 #include "StereoProc.h"
 #include "CodeContainer.h"
 #include "globals.h"
-lcm_t* lcm;
-//////// Functions
+
+
+//////// Functions and Structures
+
+struct united {
+	PxSHMImageClient *imageClient;
+	lcm_t *lcm;
+};
+
 /**
  * A function that creates a window with trackbars controlling parameters to test...
  */
@@ -144,7 +151,11 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	const mavlink_message_t* msg = getMAVLinkMsgPtr(container);
 
 	// Pointer to shared memory data
-	PxSHMImageClient* client = static_cast<PxSHMImageClient*>(user);
+
+	struct united *clientHandler = static_cast<struct united *>(user);
+	PxSHMImageClient* client = clientHandler->imageClient;
+	lcm_t *lcm = clientHandler->lcm;
+
 
 	printf("GOT IMG MSG\n");
 
@@ -380,7 +391,10 @@ int main(int argc, char* argv[]) {
 	g_option_context_free(context);
 
 	// Handling Program options
+	struct united clientHandler;
+	lcm_t* lcm;
 	lcm = lcm_create("udpm://");
+	clientHandler.lcm = lcm;
 
 	if (!lcm) {
 		fprintf(stderr, "# ERROR: Cannot initialize LCM.\n");
@@ -411,11 +425,12 @@ int main(int argc, char* argv[]) {
 	client.init(true, PxSHM::CAMERA_FORWARD_LEFT, PxSHM::CAMERA_FORWARD_RIGHT);
 	// Ready to roll
 	fprintf(stderr, "# INFO: Image client ready, waiting for images..\n");
+	clientHandler.imageClient = &client;
 
 	// Subscribe to MAVLink messages on the image channel
 	mavconn_mavlink_msg_container_t_subscription_t* imgSub =
 			mavconn_mavlink_msg_container_t_subscribe(lcm, MAVLINK_IMAGES,
-					&imageHandler, &client);
+					&imageHandler, &clientHandler);
 
 	signal(SIGINT, signalHandler);
 
