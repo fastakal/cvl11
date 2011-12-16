@@ -17,8 +17,7 @@ destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, co
 	getStartPoint();
 	get2ndPoint();
 	plotNormalVector();
-	constructRotationMatrix();
-	constructTranslationVector();
+	constructInverseP();
 	getEndPoint();
 	getTrajectoryVector();
 	printAll();
@@ -53,10 +52,6 @@ void destination3dPoint:: getNormalVector(){
 	normalVector[0] = a[1] * b[2] - a[2] * b[1];
 	normalVector[1] = a[2] * b[0] - a[0] * b[2];
 	normalVector[2] = a[0] * b[1] - a[1] * b[0];
-
-	//std::cout<<"a0: "<<a[0]<<"a1: "<<a[1]<<"a2: "<<a[2]<<"\n";
-	//std::cout<<"b0: "<<b[0]<<"b1: "<<b[1]<<"b2: "<<b[2]<<"\n";
-	//std::cout<<"normal: 0:"<<normalVector[0]<<" 1: "<<normalVector[1]<<" 2: "<<normalVector[2]<<"\n";
 }
 
 void destination3dPoint::get2ndPoint(){
@@ -87,39 +82,38 @@ void destination3dPoint::plotNormalVector(){
 	cv::line(img, hoopCentroid, cv::Point((int) secondPoint.x, (int) secondPoint.y), color, 3, 1, 0);
 }
 
-void destination3dPoint::constructRotationMatrix(){
+void destination3dPoint::constructInverseP(){
 
-	// Inspired by : http://planning.cs.uiuc.edu/node102.html
-	// yaw = alpha, pitch = beta, roll = gamma;
-	float roll, pitch, yaw;
-	CvMat *rotMat  = cvCreateMat(3, 3, CV_32FC1);
-	client->getRollPitchYaw(msg, roll, pitch, yaw);
+	float roll,pitch,yaw;
+	float x,y,z;
 
-	printf("RollPitchYaw: Roll: %f, Pitch: %f, Yaw: %f\n\n", roll, pitch, yaw);
+	client->getRollPitchYaw(msg,roll,pitch,yaw);
+	client->getGroundTruth(msg,x,y,z);
 
-	cvmSet(rotMat, 0, 0, cos(yaw) * cos(pitch));
-	cvmSet(rotMat, 0, 1, cos(yaw) * sin(pitch) * sin(roll) - sin(yaw) * cos(roll));
-	cvmSet(rotMat, 0, 2, cos(yaw) * sin(pitch) * cos(roll) + sin(yaw) * sin(roll));
+	float ca = cos(yaw);
+	float sa = sin(yaw);
+	float cb = cos(pitch);
+	float sb = sin(pitch);
+	float cg = cos(roll);
+	float sg = sin(roll);
 
-	cvmSet(rotMat, 1, 0, sin(yaw) * cos(pitch));
-	cvmSet(rotMat, 1, 1, sin(yaw) * sin(pitch) * sin(roll) + cos(yaw) * cos(roll));
-	cvmSet(rotMat, 1, 2, sin(yaw) * sin(pitch) * cos(roll) - cos(yaw) * sin(roll));
+	float rotMat[4][4] =
+	{{ca*cb,    ca*sb*sg-sa*cg,      ca*sb*cg+sa*sg,    x*1000},
+			{sa*cb,    sa*sb*sg+ca*cg,      sa*sb*cg-ca*sg,    y*1000},
+			{-sb,          cb*sg,               cb*cg,         z*1000},
+			{0,              0,                   0,           1}};
 
-	cvmSet(rotMat, 2, 0, -sin(pitch));
-	cvmSet(rotMat, 2, 1, cos(pitch) * sin(roll));
-	cvmSet(rotMat, 2, 2, cos(pitch) * cos(roll));
+	float rotMat2[4][4] =
+	{{0,1,0,0},
+			{0,0,1,0},
+			{1,0,0,0},
+			{0,0,0,1}
+	};
 
-	rotationMatrix = rotMat;
-	cv::transpose(rotationMatrix, rotationMatrix);
-}
+	cv::Mat rot(4,4,CV_32FC1,rotMat);
+	cv::Mat rot2(4,4,CV_32FC1,rotMat2);
 
-void destination3dPoint::constructTranslationVector(){
-	float t_x, t_y, t_z;
-	client->getGroundTruth(msg, t_x, t_y, t_z);
-
-	translationVector[0] = t_x;
-	translationVector[1] = t_y;
-	translationVector[2] = t_z;
+	inverseP = rot*rot2.inv();
 }
 
 void destination3dPoint::getStartPoint(){
@@ -132,37 +126,20 @@ void destination3dPoint::getStartPoint(){
 
 void destination3dPoint::getEndPoint(){
 
-	// Print the sart Point:
-	printf("GroundTruth: x: %f. y: %f. z: %f. \n", startPoint.x, startPoint.y, startPoint.z);
+	cv::Mat toto = inverseK * cv::Mat(secondPoint);
 
-	float x = secondPoint.x;
-	float y = secondPoint.y;
-	float z = secondPoint.z;
+	cv::Vec4f cameraPoint = 1000 * cv::Vec4f(
+			toto.at<float>(0,0),
+			toto.at<float>(1,0),
+			toto.at<float>(2,0),
+			1);
 
-	// Print the second Point:
-	printf("Desination In Pixels: x: %f. y: %f. z: %f. \n", secondPoint.x, secondPoint.y, secondPoint.z);
+	cv::Mat X = inverseP * cv::Mat(cameraPoint);
+	endPoint = cv::Point3f(X.at<float>(0,0)/X.at<float>(3,0),
+			X.at<float>(1,0)/X.at<float>(3,0),
+			X.at<float>(2,0)/X.at<float>(3,0));
 
-	// Convert Image coordinates into frame coordinates.
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++){
-			x = inverseK.at<float>(0,0) * x + inverseK.at<float>(0,1) * y + inverseK.at<float>(0,2) * z;
-			y = inverseK.at<float>(1,0) * x + inverseK.at<float>(1,1) * y + inverseK.at<float>(1,2) * z;
-		}
-	}
-
-	printf("Before Rotation (multiplied by the inverseK): x: %f. y: %f. z: %f. \n", x, y, z);
-
-	endPoint.x = rotationMatrix.at<float>(0,0) * x + rotationMatrix.at<float>(0,1) * y + rotationMatrix.at<float>(0,2) * z;
-	endPoint.y = rotationMatrix.at<float>(1,0) * x + rotationMatrix.at<float>(1,1) * y + rotationMatrix.at<float>(1,2) * z;;
-	endPoint.z = rotationMatrix.at<float>(2,0) * x + rotationMatrix.at<float>(2,1) * y + rotationMatrix.at<float>(2,2) * z;;
-
-	printf("After Rotation: x: %f. y: %f. z: %f. \n", endPoint.x, endPoint.y, endPoint.z);
-
-	endPoint.x = endPoint.x + translationVector[0];
-	endPoint.y = endPoint.y + translationVector[1];
-	endPoint.z = endPoint.z + translationVector[2];
-
-	printf("After Translation (FINAL): x: %f. y: %f. z: %f. \n", endPoint.x, endPoint.y, endPoint.z);
+	std::cerr<<"\nfinal point\n"<<cv::Mat(endPoint);
 }
 
 void destination3dPoint::getTrajectoryVector(){
@@ -179,7 +156,7 @@ void destination3dPoint::printAll(){
 	for(int i = 0; i < 3; i++){
 		std::cout<<"[ ";
 		for(int j = 0; j < 3; j++){
-			std::cout<<" "<<rotationMatrix.at<float>(i,j);
+			std::cout<<" "<<inverseP.at<float>(i,j);
 		}
 		std::cout<<" ]\n";
 	}

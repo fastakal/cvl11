@@ -22,7 +22,7 @@ public:
 	cv::Point3f startPoint, endPoint;
 	PxSHMImageClient* client;
 	const mavlink_message_t* msg;
-	cv::Mat rotationMatrix;
+	cv::Mat inverseP;
 	cv::Vec3f translationVector;
 	cv::Point3f secondPoint;
 	cv::Vec3f trajectoryVector;
@@ -43,7 +43,7 @@ public:
 	/**
 	 * A function that constructs the 3D rotation matrix using the roll, pitch and yaw from the client.
 	 */
-	void constructRotationMatrix();
+	void constructInverseP();
 
 	void constructTranslationVector();
 

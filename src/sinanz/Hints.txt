@@ -37,3 +37,43 @@ float z = (A*((double) j)/dst.channels() + B*i + C)*4;
 
 BUG:
 void LinkedLines::connectRawLines(cv::vector<cv::vector<cv::Vec4f> > rLines, int maxDistance)
+
+
+
+
+
+
+	/*
+	// Print the sart Point:
+	printf("GroundTruth: x: %f. y: %f. z: %f. \n", startPoint.x, startPoint.y, startPoint.z);
+
+	float x = secondPoint.x;
+	float y = secondPoint.y;
+	float z = secondPoint.z;
+
+	// Print the second Point:
+	printf("Desination In Pixels: x: %f. y: %f. z: %f. \n", secondPoint.x, secondPoint.y, secondPoint.z);
+
+	// Convert Image coordinates into frame coordinates.
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			x = inverseK.at<float>(0,0) * x + inverseK.at<float>(0,1) * y + inverseK.at<float>(0,2) * z;
+			y = inverseK.at<float>(1,0) * x + inverseK.at<float>(1,1) * y + inverseK.at<float>(1,2) * z;
+		}
+	}
+
+	printf("Before Rotation (multiplied by the inverseK): x: %f. y: %f. z: %f. \n", x, y, z);
+
+	endPoint.x = rotationMatrix.at<float>(0,0) * x + rotationMatrix.at<float>(0,1) * y + rotationMatrix.at<float>(0,2) * z;
+	endPoint.y = rotationMatrix.at<float>(1,0) * x + rotationMatrix.at<float>(1,1) * y + rotationMatrix.at<float>(1,2) * z;;
+	endPoint.z = rotationMatrix.at<float>(2,0) * x + rotationMatrix.at<float>(2,1) * y + rotationMatrix.at<float>(2,2) * z;;
+
+	printf("After Rotation: x: %f. y: %f. z: %f. \n", endPoint.x, endPoint.y, endPoint.z);
+
+	endPoint.x = endPoint.x + translationVector[0];
+	endPoint.y = endPoint.y + translationVector[1];
+	endPoint.z = endPoint.z + translationVector[2];
+
+	printf("After Translation (FINAL): x: %f. y: %f. z: %f. \n", endPoint.x, endPoint.y, endPoint.z);
+
+	 */
