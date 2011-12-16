@@ -20,7 +20,6 @@ destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, co
 	constructInverseP();
 	getEndPoint();
 	getTrajectoryVector();
-	printAll();
 }
 
 destination3dPoint::~destination3dPoint() {}
@@ -98,7 +97,7 @@ void destination3dPoint::constructInverseP(){
 	float sg = sin(roll);
 
 	float rotMat[4][4] =
-	{{ca*cb,    ca*sb*sg-sa*cg,      ca*sb*cg+sa*sg,    x*1000},
+	{{ca*cb,    ca*sb*sg-sa*cg,      ca*sb*cg+sa*sg,    	   x*1000},
 			{sa*cb,    sa*sb*sg+ca*cg,      sa*sb*cg-ca*sg,    y*1000},
 			{-sb,          cb*sg,               cb*cg,         z*1000},
 			{0,              0,                   0,           1}};
@@ -128,10 +127,10 @@ void destination3dPoint::getEndPoint(){
 
 	cv::Mat toto = inverseK * cv::Mat(secondPoint);
 
-	cv::Vec4f cameraPoint = 1000 * cv::Vec4f(
+	cv::Vec4f cameraPoint = cv::Vec4f(
 			toto.at<float>(0,0),
 			toto.at<float>(1,0),
-			toto.at<float>(2,0),
+			toto.at<float>(2,0) * 1000.0f,
 			1);
 
 	cv::Mat X = inverseP * cv::Mat(cameraPoint);
@@ -139,7 +138,10 @@ void destination3dPoint::getEndPoint(){
 			X.at<float>(1,0)/X.at<float>(3,0),
 			X.at<float>(2,0)/X.at<float>(3,0));
 
-	std::cerr<<"\nfinal point\n"<<cv::Mat(endPoint);
+	std::cout<<"\nsecondPoint\n"<<secondPoint;
+	std::cout<<"\ninverseK * secondPoint\n"<<cv::Mat(cameraPoint);
+	std::cout<<"\nendPoint\n"<<endPoint;
+
 }
 
 void destination3dPoint::getTrajectoryVector(){
@@ -147,18 +149,4 @@ void destination3dPoint::getTrajectoryVector(){
 	trajectoryVector[0] = endPoint.x - startPoint.x;
 	trajectoryVector[1] = endPoint.y - startPoint.y;
 	trajectoryVector[2] = endPoint.z - startPoint.z;
-}
-
-void destination3dPoint::printAll(){
-
-	// Print Rotation Matrix:
-	std::cout<<" [\n";
-	for(int i = 0; i < 3; i++){
-		std::cout<<"[ ";
-		for(int j = 0; j < 3; j++){
-			std::cout<<" "<<inverseP.at<float>(i,j);
-		}
-		std::cout<<" ]\n";
-	}
-	std::cout<<" ]\n";
 }
