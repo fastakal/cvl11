@@ -18,6 +18,7 @@ public:
 	int distanceBetweenLines;
 	cv::vector<cv::vector<cv::Vec4f > > rawLines;
 	cv::Mat filteredLinesImage;
+	int plottingLineSize;
 
 	/**
 	 * connectedLines are lines satisfying the connectivity condition (lines close to each other).
@@ -68,6 +69,7 @@ public:
 	 * A function that checks the difference in angles for successive lines in a contour. Needed for the connectivity criteria.
 	 */
 	bool anglesDiffAcceptable(cv::vector<float> anglesOfOneContour);
+	void plot();
 };
 
 #endif /* LINKEDLINES_H_ */

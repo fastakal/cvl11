@@ -34,8 +34,8 @@ void segmentedImage::pre_process(Mat input_img){
  * A function that segments the input image using canny edge detector by opencv.
  */
 void segmentedImage::segmentThisImage(int cannyMin, int cannyMax){
-	Mat cnt_img = Mat::zeros(input_image.size(), CV_8UC3);
-	cv::Canny(filtered_image, cnt_img, cannyMin, cannyMax, 5);
+	Mat cnt_img;// = Mat::zeros(input_image.size(), CV_8UC3);
 
+	cv::Canny(filtered_image, cnt_img, cannyMin, cannyMax, 5);
 	edgeImage = cnt_img;
 }

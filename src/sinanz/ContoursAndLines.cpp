@@ -7,17 +7,46 @@
 
 #include "ContoursAndLines.h"
 
-ContoursAndLines::ContoursAndLines(Mat edge, int minLength, int maxLength, int approxOrder, int lineSize) {
+ContoursAndLines::ContoursAndLines(Mat edge, int minLength, int maxLength, int approxOrder, int lineS) {
+	double tempTime, time1, time2, time3, time4;
+	tempTime = getTimeNow();
 	linesImage = Mat::zeros(edge.size(), CV_8UC3);
 	edgeImage = edge;
+	lineSize = lineS;
+	time1 = getTimeNow() - tempTime;
+	tempTime = getTimeNow();
 	findContours();
+	time2 = getTimeNow() - tempTime;
+	tempTime = getTimeNow();
 	approximateContour(contours, minLength, maxLength, approxOrder);
-	plotMyContours(approximatedContours);
+	time3 = getTimeNow() - tempTime;
+	tempTime = getTimeNow();
 	// If the size of line is 0, we fix it to 1 so that it doesn't crash.
 	if (lineSize == 0){
 		lineSize = 1;
 	}
 	decomposeContours(approximatedContours, lineSize);
+	time4 = getTimeNow() - tempTime;
+
+	printf("ContoursAndLines: Init: %f, finContours: %f, approximateContours: %f, decomposeContours: %f", time1, time2, time3, time4);
+
+}
+
+double ContoursAndLines::getTimeNow(){
+	struct 	timeval tp;
+	double sec, usec, time;
+
+	gettimeofday(&tp, NULL);
+	sec = static_cast<double>( tp.tv_sec);
+	usec = static_cast<double>( tp.tv_usec) / 1E6;
+	time = sec + usec;
+
+	return time;
+}
+
+
+void ContoursAndLines::plot(){
+	plotMyContours(approximatedContours);
 	plotLines(lines, lineSize, linesImage);
 }
 
@@ -69,7 +98,8 @@ void ContoursAndLines::approximateContour(vector<vector<Point>> input_contours, 
 		for( size_t k = 0; k < input_contours.size(); k++ ) {
 			if (input_contours[k].size()>minimumLength &&
 					input_contours[k].size() < maximumLength){
-				cv::approxPolyDP(Mat(input_contours[k]), contours1[j], approxOrder, false);
+				//cv::approxPolyDP(Mat(input_contours[k]), contours1[j], approxOrder, false);
+				contours1[j] = input_contours[k];
 				j+=1;
 			}
 		}
@@ -98,19 +128,29 @@ void ContoursAndLines::plotMyContours(vector<vector<Point>> contours) {
  * findLines function, so that we approximate correctly the contours (to avoid approximating half of the ellipse by one single line).
  */
 void ContoursAndLines::decomposeContours(vector<vector<Point> > contours, int lineSize){
+
 	// output is a vector of vector of lines. a
 	// vector of contours, where each contour is represented by a vector of lines.
+	double tempTime, time1, time2, insideTime, time4;
+	tempTime = getTimeNow();
 
-	vector<vector<Vec4f>> output_lines; output_lines.resize(contours.size());
-	for( int i = 0; i < contours.size(); i++){
-		int contourSize = contours[i].size();
-		int numberOfLines = (int) ((double)contourSize/(double)lineSize);
+	int totalNumberOfContours = contours.size();
+	int contourSize;
+	int numberOfLines;
+	vector<vector<Vec4f>> output_lines;
+	output_lines.resize(contours.size());
+
+	time1 = getTimeNow() - tempTime;
+	tempTime = getTimeNow();
+	for( int i = 0; i < totalNumberOfContours; i++){
+		contourSize = contours[i].size();
+		numberOfLines = (int) ((double)contourSize/(double)lineSize);
 		vector<Point> currentLine;
 		currentLine.resize(lineSize);
 		Vec4f this_line;
 		vector<Vec4f> current_contour;
 		current_contour.resize(numberOfLines);
-
+		insideTime = getTimeNow();
 		for( int j = 0; j < numberOfLines; j++ ){
 			for( int k = 0; k < lineSize; k++ ){
 				currentLine[k] = contours[i].at(j*lineSize + k);
@@ -118,9 +158,12 @@ void ContoursAndLines::decomposeContours(vector<vector<Point> > contours, int li
 			fitLine(Mat(currentLine), this_line, CV_DIST_L1, 0, 0.01,0.01);
 			current_contour[j] = this_line;
 		}
+		time4 = getTimeNow() - insideTime;
 		output_lines[i] = current_contour;
 	}
+	time2 = getTimeNow() - tempTime;
 	setLines(output_lines);
+	printf("\nDecomposeMethod: init: %f, mainLoop: %f, insideTime: %f\n", time1, time2, time4);
 }
 
 

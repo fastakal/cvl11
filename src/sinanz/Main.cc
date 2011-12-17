@@ -35,8 +35,6 @@ bool quit = false;
 #include "StereoProc.h"
 #include "CodeContainer.h"
 #include "globals.h"
-
-
 //////// Functions and Structures
 
 struct united {
@@ -172,6 +170,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	StereoProc imgproc;
 	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
+	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -181,8 +180,6 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		double startTime, endTime;
 
-		// Timestamp after the computation.
-		startTime = getTimeNow();
 
 		// Compute Stereo and store the processed frames in buffer
 		imgproc.process(imgL, imgR, imgRectified, imgDepth);
@@ -191,11 +188,14 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		cv::Mat img3 = cv::Mat::zeros(imgDepthColor.size(), imgDepthColor.type());
 		imgDepthColor.copyTo(img3);
 
-		plotInputImages(imgL, imgR, imgDepthColor);
+		if( g_plot){
+			plotInputImages(imgL, imgR, imgDepthColor);
+		}
 
 		createControlPanel();
 		double angle_treshold = ((double)g_angle_threshold_ratio)/10;
 
+		startTime = getTimeNow();
 		CodeContainer myCode1 = CodeContainer(imgRectified, img3, imgDepth,
 				inverseIntrinsicMat,
 				client,
@@ -207,15 +207,24 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				g_dilate,
 				g_line_size_for_plotting,
 				g_distance_between_lines,
-				false,
+				g_plot,
 				angle_treshold
 		);
+
+		/*
+		if(g_plot){
+			char filename [21];
+			sprintf(filename, "recording/toto_%d.jpg", globalFrameCounter);
+			imwrite(filename, myCode1.depthWithEllipse );
+		}
+		 */
 
 		// Timestamp after the computation.
 		endTime = getTimeNow();
 
 		// Time calculation in Seconds.
 		double time = endTime - startTime;
+
 		std::cout<<"############################# Total Time: "<<time<<"############################# \n";
 		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
@@ -257,18 +266,6 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 					"# INFO: Time from capture to display: %llu ms for camera %llu\n",
 					diff / 1000, client->getCameraID(msg));
 		}
-
-		// Display if switched on
-#ifndef NO_DISPLAY
-		if ((client->getCameraConfig() & PxSHM::CAMERA_FORWARD_LEFT)
-				== PxSHM::CAMERA_FORWARD_LEFT) {
-			//cv::namedWindow("Left Image (Forward Camera)");
-			//cv::imshow("Left Image (Forward Camera)", imgL);
-		} else {
-			//cv::namedWindow("Left Image (Downward Camera)");
-			//cv::imshow("Left Image (Downward Camera)", imgL);
-		}
-#endif
 
 		imgL.copyTo(imgToSave);
 	}
@@ -369,13 +366,13 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 								G_OPTION_ARG_NONE, &debug, "Debug mode, changes behaviour",
 								(debug) ? "true" : "false" }, { "config", 'g', 0,
 										G_OPTION_ARG_STRING, configFile, "Filename of paramClient config file",
-										"config/parameters_2pt.cfg" }, { NULL } };
+										"config/parameters_2pt.cfg" },
+										{ "plot", 'p', 0,
+												G_OPTION_ARG_NONE, &g_plot, "Plot everything",
+												(g_plot) ? "true" : "false" },
+												{ NULL } };
 
 int main(int argc, char* argv[]) {
-
-	if( argc == 2){
-		g_plot = argv[1];
-	}
 
 	timingHistory.resize(maxNumberOfFrames);
 

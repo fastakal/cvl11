@@ -11,6 +11,7 @@
 #include <iostream>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include "CodeContainer.h"
 
 using namespace cv;
 
@@ -23,6 +24,7 @@ public:
 	vector<vector<Point> > approximatedContours;
 	Mat contoursImage;
 	vector<vector<Vec4f>> lines;
+	int lineSize;
 
 	ContoursAndLines(Mat edge, int minLength, int maxLength, int approxOrder, int lineSize);
 	virtual ~ContoursAndLines();
@@ -37,8 +39,10 @@ public:
 	void approximateContour(vector<vector<Point>> input_contours, int minimumLength, int maximumLength, int approxOrder);
 	void plotMyContours(vector<vector<Point>> contours);
 	void decomposeContours(vector<vector<Point> > contours, int lineSize);
+	void plot();
 	void plotLines(vector<vector<Vec4f>> lines1, int lineSize, Mat output_image);
 	Mat plot1Line(Vec4f line1, int lineSize, Scalar color, Mat output_image);
+	double getTimeNow();
 };
 
 #endif /* CONTOURSANDLINES_H_ */

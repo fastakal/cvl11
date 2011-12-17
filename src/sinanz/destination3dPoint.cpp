@@ -138,10 +138,9 @@ void destination3dPoint::getEndPoint(){
 			X.at<float>(1,0)/X.at<float>(3,0),
 			X.at<float>(2,0)/X.at<float>(3,0));
 
-	std::cout<<"\nsecondPoint\n"<<secondPoint;
-	std::cout<<"\ninverseK * secondPoint\n"<<cv::Mat(cameraPoint);
-	std::cout<<"\nendPoint\n"<<endPoint;
-
+//	std::cout<<"\nsecondPoint\n"<<secondPoint;
+//	std::cout<<"\ninverseK * secondPoint\n"<<cv::Mat(cameraPoint);
+//	std::cout<<"\nendPoint\n"<<endPoint;
 }
 
 void destination3dPoint::getTrajectoryVector(){

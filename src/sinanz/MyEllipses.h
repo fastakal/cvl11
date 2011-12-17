@@ -14,13 +14,11 @@
 
 class MyEllipses {
 public:
-	MyEllipses(cv::vector<cv::vector<cv::Vec4f>> lLines, cv::Mat lImage, cv::Mat eImage);
+	MyEllipses(cv::vector<cv::vector<cv::Vec4f>> lLines, cv::Mat eImage);
 	virtual ~MyEllipses();
 
 	cv::Mat edgeImage;
-	cv::Mat linesImage;
 	cv::Mat ellipsesImage;
-	cv::Mat filteredEllipsesImage;
 	cv::Mat edgeImagePlusEllipses;
 
 	cv::vector<cv::vector<cv::Vec4f>> linkedLines;
@@ -79,6 +77,7 @@ public:
 
 	cv::RotatedRect getBestEllipse(cv::vector<cv::RotatedRect> filtEl, cv::vector<double> qualityOfEllipses);
 	void plotChosenEllipseOnEdgeImage();
+	void plot(cv::Mat lImage);
 
 };
 

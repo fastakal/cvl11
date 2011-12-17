@@ -7,20 +7,14 @@
 
 #include "MyEllipses.h"
 
-MyEllipses::MyEllipses(cv::vector<cv::vector<cv::Vec4f>> lLines, cv::Mat lImage, cv::Mat eImage) {
+MyEllipses::MyEllipses(cv::vector<cv::vector<cv::Vec4f>> lLines, cv::Mat eImage) {
 
 	linkedLines = lLines;
 	edgeImage = eImage;
-	lImage.copyTo(linesImage);
-	lImage.copyTo(ellipsesImage);
-	lImage.copyTo(filteredEllipsesImage);
 	ExtractPointsFromLines();
 	fitEllipses();
 	eliminateEllipses();
 	rejectEllipsesFromEdgeImage();
-	//plotEllipsesOnEdgeImage();
-	plotChosenEllipseOnEdgeImage();
-
 }
 
 MyEllipses::~MyEllipses() {
@@ -72,7 +66,7 @@ void MyEllipses::fitEllipses(){
 		currentContour = linkedPoints[i];
 		if( currentContour.size()>5){
 			minEllipse[validEllipsesCounter] = cv::fitEllipse(cv::Mat(currentContour));
-			cv::ellipse( ellipsesImage, minEllipse[i], color, 2, 8 );
+			//cv::ellipse( ellipsesImage, minEllipse[i], color, 2, 8 );
 			validEllipsesCounter++;
 		}
 	}
@@ -105,7 +99,7 @@ void MyEllipses::eliminateEllipses(){
 				errorMeasureEllipse(currentEllipse, currentPoints)){
 			points[validEllipsesCounter] = currentPoints;
 			filterEllipses[validEllipsesCounter] = currentEllipse;
-			cv::ellipse( filteredEllipsesImage, currentEllipse, color, 2, 8 );
+			//cv::ellipse( filteredEllipsesImage, currentEllipse, color, 2, 8 );
 			validEllipsesCounter++;
 		}
 	}
@@ -156,8 +150,6 @@ bool MyEllipses::errorMeasureEllipse(cv::RotatedRect anEllipse, cv::vector<cv::P
 		float xx = (float) (setOfPoints[i].x) - h;
 		float yy = (float) (setOfPoints[i].y) - k;
 
-		//x = a*b*xx/sqrt((b*xx)2 + (a*yy)2)
-		//y = a*b*yy/sqrt((b*xx)2 + (a*yy)2)
 		float common = a*b/(float) (sqrt((double) ((b*xx)*(b*xx) + (a*yy)*(a*yy))));
 		float xIntersection = xx*common;
 		float yIntersection = yy*common;
@@ -179,7 +171,6 @@ void MyEllipses::plotEllipsesOnEdgeImage(){
 	for(int i = 0; i < size; i++){
 		cv::ellipse( tempImage, filteredEllipses[i], color, 2, 8 );
 	}
-
 	edgeImagePlusEllipses = tempImage;
 }
 
@@ -244,7 +235,7 @@ void MyEllipses::rejectEllipsesFromEdgeImage(){
  * A function that takes a position (x and y) and returns 1 if the value in that neighbourhood is 255, 0 otherwise.
  */
 int MyEllipses::getPointsValue(int x,int y){
-	int patchSize = 2;
+	int patchSize = 3;
 	int value = 0;
 
 	if( !( (x + patchSize) < edgeImage.cols &&
@@ -282,14 +273,16 @@ cv::RotatedRect MyEllipses::getBestEllipse(cv::vector<cv::RotatedRect> ellipses,
 	return ellipses[index];
 }
 
-/**
- * Plots the chosen ellipse.
- */
-void MyEllipses::plotChosenEllipseOnEdgeImage(){
-	cv::Mat tempImage = cv::Mat::zeros(edgeImage.size(), CV_8UC3);
-	edgeImage.copyTo(tempImage);
-	cv::Scalar color = cv::Scalar( 255,0,0 );
+void MyEllipses::plot(cv::Mat lImage){
 
-	cv::ellipse( tempImage, chosenEllipse, color, 2, 8 );
-	edgeImagePlusEllipses = tempImage;
+	lImage.copyTo(ellipsesImage);
+	cv::Scalar color = cv::Scalar( 255,0,0 );
+	int size = fittedEllipses.size();
+
+	for( int i = 0; i < size; i++){
+		cv::ellipse( ellipsesImage, fittedEllipses[i], color, 2, 8 );
+	}
+
+	edgeImagePlusEllipses = edgeImage;
+	cv::ellipse( edgeImagePlusEllipses, chosenEllipse, color, 2, 8 );
 }

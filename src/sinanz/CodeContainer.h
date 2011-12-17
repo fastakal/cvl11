@@ -34,6 +34,7 @@ public:
 	int numberOfPointsForDepthOfHoop;
 	cv::Point3f endPoint;
 	cv::Mat inverseIntrinsicMat;
+	cv::Mat depthWithEllipse;
 
 	CodeContainer(cv::Mat, cv::Mat,cv::Mat, cv::Mat, PxSHMImageClient*, const mavlink_message_t*, int, int, int, int, int, int, int, bool, double);
 	virtual ~CodeContainer();

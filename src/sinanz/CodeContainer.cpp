@@ -21,22 +21,31 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 		bool plotOption,
 		double g_angle_threshold_ratio) {
 
+	double tempTime, time1, time2, time3, time4, time5, time6, time7;
+
+	tempTime = getTimeNow();
+
 	depthImage = imgDepth;
 	numberOfPointsForDepthOfHoop = 100;
+	//int g_margin = 20;
 	inverseIntrinsicMat = inverseK;
 
-	cv::Mat temp = cv::Mat::zeros(img.size(), CV_8UC3);
 	cv::Mat input_image = cv::Mat::zeros(img.size(), CV_8UC3);;
 	Mat filteredLinesImage = Mat::zeros(img.size(), CV_8UC3);
-	cv::Mat eImagePlusEllipses = Mat::zeros(img.size(), CV_8UC3);
 	vector<vector<Vec4f>> lines;
 	vector<vector<Vec4f> > lLines;
 
 	img.copyTo(input_image);
 
+	time1 = getTimeNow() - tempTime;
+
+	tempTime = getTimeNow();
 	// create a segmented image out of the input image.
 	segmentedImage myImage = segmentedImage(input_image, g_CannyThreshold, 2*g_CannyThreshold);
 
+	time2 = getTimeNow() - tempTime;
+
+	tempTime = getTimeNow();
 	// 2.2 regroup them in contours.
 	// 2.3 approximate contours by a polynomial (curves/lines).
 	ContoursAndLines contours = ContoursAndLines(myImage.getEdgeImage(),
@@ -45,9 +54,10 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 			g_contourApproxOrder,
 			g_line_size_for_plotting
 	);
+	time3 = getTimeNow() - tempTime;
 
+	tempTime = getTimeNow();
 	// 2.4 approximate contours by lines of fixed size.
-
 	lines = contours.getLines();
 
 	// 2.5 Link and connect Lines (algorithm explained in the article).
@@ -58,43 +68,60 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 			filteredLinesImage);
 
 	lLines = linkedlines.getLinkedLines();
-	filteredLinesImage = linkedlines.filteredLinesImage;
+
+	time4 = getTimeNow() - tempTime;
+
+	tempTime = getTimeNow();
 
 	// 2.4 regroup contours into potential ellipses and choose the "best" one.
-	filteredLinesImage.copyTo(temp);
-	MyEllipses ml = MyEllipses(lLines, temp, myImage.getEdgeImage());
-
-	filteredLinesImage = ml.filteredEllipsesImage;
-	eImagePlusEllipses = ml.edgeImagePlusEllipses;
-	finalEdgeImage = eImagePlusEllipses;
-
-	// Plot the hoop on the disparity image.
+	MyEllipses ml = MyEllipses(lLines, myImage.getEdgeImage());
 	cv::RotatedRect hoop = ml.chosenEllipse;
+
+	time5 = getTimeNow() - tempTime;
+
+	tempTime = getTimeNow();
 
 	// Going to 3D hoop + plane fitting..
 	if( hoop.center.x != 0 && hoop.center.y != 0){
+
 		HoopPosition hp = HoopPosition(depthImage, imgDepthColor, hoop, numberOfPointsForDepthOfHoop);
 		imgDepthColor = hp.disparityImageWithPlane;
 
 		destination3dPoint pointIn3D = destination3dPoint(hp, client, message, inverseIntrinsicMat);
-		cv::imshow("imgDepthColor+hoop+plane", pointIn3D.img);
+		if(plotOption){
+			cv::imshow("imgDepthColor+hoop+plane", pointIn3D.img);
+			depthWithEllipse = pointIn3D.img;
+		}
+
 		endPoint = pointIn3D.endPoint;
 	}
 	else {
 		endPoint.x = 0; endPoint.y = 0; endPoint.z = 0;
+		depthWithEllipse = depthImage;
 	}
+	time6 = getTimeNow() - tempTime;
 
-
+	tempTime = getTimeNow();
 
 	if (plotOption){
 		cv::Mat cnt_img = cv::Mat::zeros(img.size(), CV_8UC3);
-		cnt_img = contours.getContoursImage();
 		cv::Mat linesImage = cv::Mat::zeros(img.size(), CV_8UC3);
+
+		contours.plot();
+		linkedlines.plot();
+
+		cnt_img = contours.getContoursImage();
 		linesImage = contours.linesImage;
+		ml.plot(linkedlines.filteredLinesImage);
+		filteredLinesImage = ml.ellipsesImage;
+		finalEdgeImage = ml.edgeImagePlusEllipses;
 
 		plotPipeLineImages(myImage.getEdgeImage(), cnt_img, linesImage, filteredLinesImage);
 	}
+	time7 = getTimeNow() - tempTime;
 
+	printf("\n\nTimings\n init: %f | segmentation: %f | contours: %f | lines: %f | ellipses/Hoop: %f | hoop3d + destination: %f | plotting: %f\nTotal: %f\n",
+			time1, time2, time3, time4, time5, time6, time7, time1 + time2 + time3 + time4 + time5 + time6 + time7);
 }
 
 CodeContainer::~CodeContainer() {}
@@ -111,7 +138,10 @@ double CodeContainer::getTimeNow(){
 	return time;
 }
 
-void CodeContainer::plotPipeLineImages(cv::Mat firstImage,cv::Mat secondImage,cv::Mat thirdImage,cv::Mat fourthImage){
+void CodeContainer::plotPipeLineImages(cv::Mat firstImage,
+		cv::Mat secondImage,
+		cv::Mat thirdImage,
+		cv::Mat fourthImage){
 
 	int newSizeX = secondImage.cols/2 + 40;
 	int newSizeY = secondImage.rows/2;

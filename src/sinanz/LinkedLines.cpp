@@ -12,11 +12,18 @@ LinkedLines::LinkedLines(cv::vector<cv::vector<cv::Vec4f> > rLines,
 		int g_angle_threshold_ratio,
 		int g_line_size_for_plotting,
 		cv::Mat filteredLinesImg) {
+
 	setRawLines(rLines);
 	distanceBetweenLines = g_distance_between_lines;
+	filteredLinesImage = filteredLinesImg;
+	plottingLineSize = g_line_size_for_plotting;
+
 	connectRawLines(rawLines, distanceBetweenLines);
 	linkConnectedLines(connectedLines, g_angle_threshold_ratio);
-	filteredLinesImage = plotLines(linkedLines, g_line_size_for_plotting, filteredLinesImg);
+}
+
+void LinkedLines::plot(){
+	filteredLinesImage = plotLines(linkedLines, plottingLineSize, filteredLinesImage);
 }
 
 LinkedLines::~LinkedLines() {
