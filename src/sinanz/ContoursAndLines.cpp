@@ -8,27 +8,27 @@
 #include "ContoursAndLines.h"
 
 ContoursAndLines::ContoursAndLines(Mat edge, int minLength, int maxLength, int approxOrder, int lineS) {
-	double tempTime, time1, time2, time3, time4;
-	tempTime = getTimeNow();
+	//double tempTime, time1, time2, time3, time4;
+	//tempTime = getTimeNow();
 	linesImage = Mat::zeros(edge.size(), CV_8UC3);
 	edgeImage = edge;
 	lineSize = lineS;
-	time1 = getTimeNow() - tempTime;
-	tempTime = getTimeNow();
+	//time1 = getTimeNow() - tempTime;
+	//tempTime = getTimeNow();
 	findContours();
-	time2 = getTimeNow() - tempTime;
-	tempTime = getTimeNow();
+	//time2 = getTimeNow() - tempTime;
+	//tempTime = getTimeNow();
 	approximateContour(contours, minLength, maxLength, approxOrder);
-	time3 = getTimeNow() - tempTime;
-	tempTime = getTimeNow();
+	//time3 = getTimeNow() - tempTime;
+	//tempTime = getTimeNow();
 	// If the size of line is 0, we fix it to 1 so that it doesn't crash.
 	if (lineSize == 0){
 		lineSize = 1;
 	}
 	decomposeContours(approximatedContours, lineSize);
-	time4 = getTimeNow() - tempTime;
+	//time4 = getTimeNow() - tempTime;
 
-	printf("ContoursAndLines: Init: %f, finContours: %f, approximateContours: %f, decomposeContours: %f", time1, time2, time3, time4);
+	//printf("ContoursAndLines: Init: %f, finContours: %f, approximateContours: %f, decomposeContours: %f", time1, time2, time3, time4);
 
 }
 
@@ -131,8 +131,8 @@ void ContoursAndLines::decomposeContours(vector<vector<Point> > contours, int li
 
 	// output is a vector of vector of lines. a
 	// vector of contours, where each contour is represented by a vector of lines.
-	double tempTime, time1, time2, insideTime, time4;
-	tempTime = getTimeNow();
+	//double tempTime, time1, time2, insideTime, time4;
+	//tempTime = getTimeNow();
 
 	int totalNumberOfContours = contours.size();
 	int contourSize;
@@ -140,8 +140,8 @@ void ContoursAndLines::decomposeContours(vector<vector<Point> > contours, int li
 	vector<vector<Vec4f>> output_lines;
 	output_lines.resize(contours.size());
 
-	time1 = getTimeNow() - tempTime;
-	tempTime = getTimeNow();
+	//time1 = getTimeNow() - tempTime;
+	//tempTime = getTimeNow();
 	for( int i = 0; i < totalNumberOfContours; i++){
 		contourSize = contours[i].size();
 		numberOfLines = (int) ((double)contourSize/(double)lineSize);
@@ -150,7 +150,7 @@ void ContoursAndLines::decomposeContours(vector<vector<Point> > contours, int li
 		Vec4f this_line;
 		vector<Vec4f> current_contour;
 		current_contour.resize(numberOfLines);
-		insideTime = getTimeNow();
+		//insideTime = getTimeNow();
 		for( int j = 0; j < numberOfLines; j++ ){
 			for( int k = 0; k < lineSize; k++ ){
 				currentLine[k] = contours[i].at(j*lineSize + k);
@@ -158,12 +158,12 @@ void ContoursAndLines::decomposeContours(vector<vector<Point> > contours, int li
 			fitLine(Mat(currentLine), this_line, CV_DIST_L1, 0, 0.01,0.01);
 			current_contour[j] = this_line;
 		}
-		time4 = getTimeNow() - insideTime;
+		//time4 = getTimeNow() - insideTime;
 		output_lines[i] = current_contour;
 	}
-	time2 = getTimeNow() - tempTime;
+	//time2 = getTimeNow() - tempTime;
 	setLines(output_lines);
-	printf("\nDecomposeMethod: init: %f, mainLoop: %f, insideTime: %f\n", time1, time2, time4);
+	//printf("\nDecomposeMethod: init: %f, mainLoop: %f, insideTime: %f\n", time1, time2, time4);
 }
 
 

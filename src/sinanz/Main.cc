@@ -188,21 +188,18 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		if(initialize){
 			client->getRollPitchYaw(msg, roll, pitch, yaw);
-			float x, y, z;
-			client->getGroundTruth(msg, x, y, z);
-			pos.x = x;
-			pos.y = y;
-			pos.z = z;
+			float init_x, init_y, init_z;
+			client->getGroundTruth(msg, init_x, init_y, init_z);
+			pos.x = init_x;
+			pos.y = init_y;
+			pos.z = init_z;
 			pos.yaw = yaw;
 			pos.target_system = getSystemID();
 			pos.target_component = 200;
 			pos.coordinate_frame = 1;
 
-
 			initialize = false;
-
 		}
-
 
 		double startTime, endTime;
 
@@ -237,25 +234,17 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				angle_treshold
 		);
 
-		/*
-		if(g_plot){
-			char filename [21];
-			sprintf(filename, "recording/toto_%d.jpg", globalFrameCounter);
-			imwrite(filename, myCode1.depthWithEllipse );
-		}
-		 */
-
 		// Timestamp after the computation.
 		endTime = getTimeNow();
 
 		// Time calculation in Seconds.
 		double time = endTime - startTime;
 
-		std::cout<<"############################# Total Time: "<<time<<"############################# \n";
+		std::cout<<"############################# Total Time: "<<time<<"\n";
 		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
 
-		if( myCode1.endPoint.z != 0){
+		if( myCode1.endPoint.z != 0 ){
 
 			pos.x = myCode1.endPoint.x;
 			pos.y = myCode1.endPoint.y;
@@ -269,13 +258,25 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			sendMAVLinkMessage(lcm, &msgp);
 
 			lastPosition = pos;
+			lastPosition.x = pos.x;
+			lastPosition.y = pos.y;
+			lastPosition.z = pos.z;
+			lastPosition.yaw = yaw;
+			lastPosition.target_system = getSystemID();
+			lastPosition.target_component = 200;
+			lastPosition.coordinate_frame = 1;
 
-			printf("Sent a message with destination point: x: %f, y: %f, z: %f. \n", pos.x, pos.y, pos.z);
+			printf("\nlastPosition: x: %f, y: %f, z: %f\n" , lastPosition.x, lastPosition.y, lastPosition.z);
+
+			printf("New Destination: x: %f, y: %f, z: %f. \n",
+					pos.x/1000, pos.y/1000, pos.z/1000);
 		} else {
-			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &lastPosition);
-			sendMAVLinkMessage(lcm, &msgp);
+			printf("no message was sent");
+			//mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &lastPosition);
+			//sendMAVLinkMessage(lcm, &msgp);
 
-			printf("didn't send a new message, point is zero");
+			//printf("Same Destination: x: %f, y: %f, z: %f. \n",
+				//	lastPosition.x/1000, lastPosition.y/1000, lastPosition.z/1000);
 		}
 
 

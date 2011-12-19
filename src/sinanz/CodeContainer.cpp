@@ -21,9 +21,9 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 		bool plotOption,
 		double g_angle_threshold_ratio) {
 
-	double tempTime, time1, time2, time3, time4, time5, time6, time7;
+	//double tempTime, time1, time2, time3, time4, time5, time6, time7;
 
-	tempTime = getTimeNow();
+	//tempTime = getTimeNow();
 
 	depthImage = imgDepth;
 	numberOfPointsForDepthOfHoop = 100;
@@ -37,15 +37,17 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 	img.copyTo(input_image);
 
-	time1 = getTimeNow() - tempTime;
+	//time1 = getTimeNow() - tempTime;
 
-	tempTime = getTimeNow();
+	//tempTime = getTimeNow();
+
 	// create a segmented image out of the input image.
 	segmentedImage myImage = segmentedImage(input_image, g_CannyThreshold, 2*g_CannyThreshold);
 
-	time2 = getTimeNow() - tempTime;
+	//time2 = getTimeNow() - tempTime;
 
-	tempTime = getTimeNow();
+	//tempTime = getTimeNow();
+
 	// 2.2 regroup them in contours.
 	// 2.3 approximate contours by a polynomial (curves/lines).
 	ContoursAndLines contours = ContoursAndLines(myImage.getEdgeImage(),
@@ -54,9 +56,11 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 			g_contourApproxOrder,
 			g_line_size_for_plotting
 	);
-	time3 = getTimeNow() - tempTime;
 
-	tempTime = getTimeNow();
+	//time3 = getTimeNow() - tempTime;
+
+	//tempTime = getTimeNow();
+
 	// 2.4 approximate contours by lines of fixed size.
 	lines = contours.getLines();
 
@@ -69,17 +73,17 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 	lLines = linkedlines.getLinkedLines();
 
-	time4 = getTimeNow() - tempTime;
+	//time4 = getTimeNow() - tempTime;
 
-	tempTime = getTimeNow();
+	//tempTime = getTimeNow();
 
 	// 2.4 regroup contours into potential ellipses and choose the "best" one.
 	MyEllipses ml = MyEllipses(lLines, myImage.getEdgeImage());
 	cv::RotatedRect hoop = ml.chosenEllipse;
 
-	time5 = getTimeNow() - tempTime;
+	//time5 = getTimeNow() - tempTime;
 
-	tempTime = getTimeNow();
+	//tempTime = getTimeNow();
 
 	// Going to 3D hoop + plane fitting..
 	if( hoop.center.x != 0 && hoop.center.y != 0){
@@ -99,9 +103,10 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 		endPoint.x = 0; endPoint.y = 0; endPoint.z = 0;
 		depthWithEllipse = depthImage;
 	}
-	time6 = getTimeNow() - tempTime;
 
-	tempTime = getTimeNow();
+	//time6 = getTimeNow() - tempTime;
+
+	//tempTime = getTimeNow();
 
 	if (plotOption){
 		cv::Mat cnt_img = cv::Mat::zeros(img.size(), CV_8UC3);
@@ -118,10 +123,10 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 		plotPipeLineImages(myImage.getEdgeImage(), cnt_img, linesImage, filteredLinesImage);
 	}
-	time7 = getTimeNow() - tempTime;
+	//time7 = getTimeNow() - tempTime;
 
-	printf("\n\nTimings\n init: %f | segmentation: %f | contours: %f | lines: %f | ellipses/Hoop: %f | hoop3d + destination: %f | plotting: %f\nTotal: %f\n",
-			time1, time2, time3, time4, time5, time6, time7, time1 + time2 + time3 + time4 + time5 + time6 + time7);
+	//printf("\n\nTimings\n init: %f | segmentation: %f | contours: %f | lines: %f | ellipses/Hoop: %f | hoop3d + destination: %f | plotting: %f\nTotal: %f\n",
+		//	time1, time2, time3, time4, time5, time6, time7, time1 + time2 + time3 + time4 + time5 + time6 + time7);
 }
 
 CodeContainer::~CodeContainer() {}
