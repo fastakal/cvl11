@@ -69,6 +69,7 @@ public:
 	void getTrajectoryVector();
 
 	void printAll();
+	void getNormalVectorNewWay();
 };
 
 #endif /* DESTINATION3DPOINT_H_ */

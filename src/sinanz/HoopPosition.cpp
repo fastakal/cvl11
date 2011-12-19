@@ -145,6 +145,7 @@ HoopPosition::HoopPosition(cv::Mat depthImg, cv::Mat dispImage, cv::RotatedRect 
 	disparityImage = dispImage;
 	ellipse = el;
 	depthValuesOfHoop = findPointsValues(numberOfPointsForDepth);
+	selectedDepthPoints = findPointsValues(3);
 	plotDepthValues(disparityImage);
 	plotDepthValues(depthImage);
 	disparityImageWithPlane = disparityImage;

@@ -35,6 +35,9 @@ bool quit = false;
 #include "StereoProc.h"
 #include "CodeContainer.h"
 #include "globals.h"
+
+float roll, pitch, yaw;
+bool initialize = true;
 //////// Functions and Structures
 
 struct united {
@@ -146,6 +149,7 @@ double getTimeNow(){
  */
 void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		const mavconn_mavlink_msg_container_t* container, void* user) {
+
 	const mavlink_message_t* msg = getMAVLinkMsgPtr(container);
 
 	// Pointer to shared memory data
@@ -177,6 +181,28 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	cv::invert(inverseIntrinsicMat, inverseIntrinsicMat);
 
 	if (client->readStereoImage(msg, imgL, imgR)) {
+
+		mavlink_set_local_position_setpoint_t pos;
+		mavlink_set_local_position_setpoint_t lastPosition;
+		mavlink_message_t msgp;
+
+		if(initialize){
+			client->getRollPitchYaw(msg, roll, pitch, yaw);
+			float x, y, z;
+			client->getGroundTruth(msg, x, y, z);
+			pos.x = x;
+			pos.y = y;
+			pos.z = z;
+			pos.yaw = yaw;
+			pos.target_system = getSystemID();
+			pos.target_component = 200;
+			pos.coordinate_frame = 1;
+
+
+			initialize = false;
+
+		}
+
 
 		double startTime, endTime;
 
@@ -229,15 +255,15 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
 
-		mavlink_set_local_position_setpoint_t pos;
-		mavlink_set_local_position_setpoint_t lastPosition;
-		mavlink_message_t msgp;
-
 		if( myCode1.endPoint.z != 0){
 
 			pos.x = myCode1.endPoint.x;
 			pos.y = myCode1.endPoint.y;
 			pos.z = myCode1.endPoint.z;
+			pos.yaw = yaw;
+			pos.target_system = getSystemID();
+			pos.target_component = 200;
+			pos.coordinate_frame = 1;
 
 			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
 			sendMAVLinkMessage(lcm, &msgp);
@@ -373,6 +399,7 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 												{ NULL } };
 
 int main(int argc, char* argv[]) {
+
 
 	timingHistory.resize(maxNumberOfFrames);
 

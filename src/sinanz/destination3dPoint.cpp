@@ -14,6 +14,7 @@ destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, co
 	msg = message;
 	inverseK = inverseIntrinsicMat;
 	getNormalVector();
+
 	getStartPoint();
 	get2ndPoint();
 	plotNormalVector();
