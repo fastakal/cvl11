@@ -38,6 +38,8 @@ bool quit = false;
 
 float roll, pitch, yaw;
 bool initialize = true;
+double g_startOfExperiment;
+double g_current_time;
 //////// Functions and Structures
 
 struct united {
@@ -158,9 +160,6 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	PxSHMImageClient* client = clientHandler->imageClient;
 	lcm_t *lcm = clientHandler->lcm;
 
-
-	printf("GOT IMG MSG\n");
-
 	// read image data
 	Mat imgL = Mat::zeros(480, 640, CV_8UC3);
 	Mat imgR = Mat::zeros(480, 640, CV_8UC3);
@@ -186,23 +185,34 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		mavlink_set_local_position_setpoint_t lastPosition;
 		mavlink_message_t msgp;
 
+		g_current_time = getTimeNow();
+		double diffInTime = g_current_time - g_startOfExperiment;
+
+		if(diffInTime > 10.0f){
+			initialize = false;
+		}
+
 		if(initialize){
+			printf("\nTime: %f Seconds\n", diffInTime);
+
 			client->getRollPitchYaw(msg, roll, pitch, yaw);
 			float init_x, init_y, init_z;
 			client->getGroundTruth(msg, init_x, init_y, init_z);
 			pos.x = init_x;
 			pos.y = init_y;
-			pos.z = init_z;
+			pos.z = -800;
 			pos.yaw = yaw;
 			pos.target_system = getSystemID();
 			pos.target_component = 200;
 			pos.coordinate_frame = 1;
 
-			initialize = false;
+			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
+			sendMAVLinkMessage(lcm, &msgp);
+			printf("Lifting: x: %f, y: %f, z: %f.\n",
+								pos.x/1000, pos.y/1000, pos.z/1000);
 		}
 
 		double startTime, endTime;
-
 
 		// Compute Stereo and store the processed frames in buffer
 		imgproc.process(imgL, imgR, imgRectified, imgDepth);
@@ -240,11 +250,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		// Time calculation in Seconds.
 		double time = endTime - startTime;
 
-		std::cout<<"############################# Total Time: "<<time<<"\n";
-		timingHistory[globalFrameCounter] = time;
-		globalFrameCounter++;
-
-		if( myCode1.endPoint.z != 0 ){
+		if( myCode1.endPoint.z != 0 && initialize == false){
 
 			pos.x = myCode1.endPoint.x;
 			pos.y = myCode1.endPoint.y;
@@ -266,19 +272,22 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			lastPosition.target_component = 200;
 			lastPosition.coordinate_frame = 1;
 
-			printf("\nlastPosition: x: %f, y: %f, z: %f\n" , lastPosition.x, lastPosition.y, lastPosition.z);
-
-			printf("New Destination: x: %f, y: %f, z: %f. \n",
+			printf("New Destination: x: %f, y: %f, z: %f.\n",
 					pos.x/1000, pos.y/1000, pos.z/1000);
 		} else {
-			printf("no message was sent");
+			if(initialize == false)
+				printf("no message was sent.\n");
+
 			//mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &lastPosition);
 			//sendMAVLinkMessage(lcm, &msgp);
 
 			//printf("Same Destination: x: %f, y: %f, z: %f. \n",
-				//	lastPosition.x/1000, lastPosition.y/1000, lastPosition.z/1000);
+			//	lastPosition.x/1000, lastPosition.y/1000, lastPosition.z/1000);
 		}
 
+		//std::cout<<"Total Time: "<<time<<"\n";
+		timingHistory[globalFrameCounter] = time;
+		globalFrameCounter++;
 
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
@@ -353,8 +362,8 @@ static void mavlink_handler(const lcm_recv_buf_t *rbuf, const char * channel,
 		gettimeofday(&tv, NULL);
 		receiveTime = tv.tv_usec;
 		sendTime = mavlink_msg_attitude_get_time_boot_ms(msg);
-		printf("Received attitude message, transport took %f ms\n",
-				(receiveTime - sendTime) / 1000.0f);
+		//printf("Received attitude message, transport took %f ms\n",
+		//(receiveTime - sendTime) / 1000.0f);
 		break;
 	case MAVLINK_MSG_ID_GPS_RAW_INT: {
 		mavlink_gps_raw_int_t gps;
@@ -366,7 +375,7 @@ static void mavlink_handler(const lcm_recv_buf_t *rbuf, const char * channel,
 	case MAVLINK_MSG_ID_RAW_PRESSURE: {
 		mavlink_raw_pressure_t p;
 		mavlink_msg_raw_pressure_decode(msg, &p);
-		printf("PRES: %f\n", p.press_abs / (double) 1000);
+		//printf("PRES: %f\n", p.press_abs / (double) 1000);
 	}
 	break;
 	default:
@@ -401,6 +410,7 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
+	g_startOfExperiment = getTimeNow();
 
 	timingHistory.resize(maxNumberOfFrames);
 

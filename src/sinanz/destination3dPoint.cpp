@@ -67,7 +67,13 @@ void destination3dPoint::get2ndPoint(){
 	double new_y = hoopCentroid.y - normalVector[1] * lengthOfLine;
 	double new_z = new_x*A + new_y*B + C;
 
-	secondPoint = cv::Point3f(new_x, new_y, new_z);
+	//secondPoint = cv::Point3f(new_x, new_y, new_z);
+
+	double x = hoopCentroid.x;
+	double y = hoopCentroid.y;
+	double z = x*A + y*B + C;
+
+	secondPoint = cv::Point3f(x, y, z);
 }
 
 
@@ -126,22 +132,20 @@ void destination3dPoint::getStartPoint(){
 
 void destination3dPoint::getEndPoint(){
 
-	cv::Mat toto = inverseK * cv::Mat(secondPoint);
+	cv::Mat intrinsic = inverseK.inv();
+	float focus = intrinsic.at<float>(0, 0);
 
-	cv::Vec4f cameraPoint = cv::Vec4f(
-			toto.at<float>(0,0),
-			toto.at<float>(1,0),
-			toto.at<float>(2,0) * 1000.0f,
-			1);
+	cv::Vec4f cameraPoint;
+	cameraPoint[0] = 1000.0f * (secondPoint.x - hoop.depthImage.cols / 2.0f) * secondPoint.z / focus;
+	cameraPoint[1] = 1000.0f * (secondPoint.y - hoop.depthImage.rows / 2.0f) * secondPoint.z / focus;
+	cameraPoint[2] = 1000.0f * secondPoint.z;
+	cameraPoint[3] = 1;
 
 	cv::Mat X = inverseP * cv::Mat(cameraPoint);
+
 	endPoint = cv::Point3f(X.at<float>(0,0)/X.at<float>(3,0),
 			X.at<float>(1,0)/X.at<float>(3,0),
 			X.at<float>(2,0)/X.at<float>(3,0));
-
-//	std::cout<<"\nsecondPoint\n"<<secondPoint;
-//	std::cout<<"\ninverseK * secondPoint\n"<<cv::Mat(cameraPoint);
-//	std::cout<<"\nendPoint\n"<<endPoint;
 }
 
 void destination3dPoint::getTrajectoryVector(){
