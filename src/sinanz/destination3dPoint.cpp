@@ -96,6 +96,9 @@ void destination3dPoint::constructInverseP(){
 	client->getRollPitchYaw(msg,roll,pitch,yaw);
 	client->getGroundTruth(msg,x,y,z);
 
+	//x = 0; y = 0; z = -1;
+	//roll = pitch = yaw = 0;
+
 	float ca = cos(yaw);
 	float sa = sin(yaw);
 	float cb = cos(pitch);
@@ -135,6 +138,10 @@ void destination3dPoint::getEndPoint(){
 	cv::Mat intrinsic = inverseK.inv();
 	float focus = intrinsic.at<float>(0, 0);
 
+	//secondPoint.x = 752/2;
+	//secondPoint.y = 480/2;
+	//secondPoint.z = 1.0f;
+
 	cv::Vec4f cameraPoint;
 	cameraPoint[0] = 1000.0f * (secondPoint.x - hoop.depthImage.cols / 2.0f) * secondPoint.z / focus;
 	cameraPoint[1] = 1000.0f * (secondPoint.y - hoop.depthImage.rows / 2.0f) * secondPoint.z / focus;
@@ -143,8 +150,8 @@ void destination3dPoint::getEndPoint(){
 
 	cv::Mat X = inverseP * cv::Mat(cameraPoint);
 
-	endPoint = cv::Point3f(X.at<float>(0,0)/X.at<float>(3,0),
-			X.at<float>(1,0)/X.at<float>(3,0),
+		endPoint = cv::Point3f(X.at<float>(0,0)/X.at<float>(3,0),
+				X.at<float>(1,0)/X.at<float>(3,0),
 			X.at<float>(2,0)/X.at<float>(3,0));
 }
 
