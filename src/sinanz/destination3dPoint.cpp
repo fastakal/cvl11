@@ -153,6 +153,7 @@ void destination3dPoint::getEndPoint(){
 		endPoint = cv::Point3f(X.at<float>(0,0)/X.at<float>(3,0),
 				X.at<float>(1,0)/X.at<float>(3,0),
 			X.at<float>(2,0)/X.at<float>(3,0));
+		endPoint*=0.001;
 }
 
 void destination3dPoint::getTrajectoryVector(){

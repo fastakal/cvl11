@@ -40,6 +40,7 @@ float roll, pitch, yaw;
 bool initialize = true;
 double g_startOfExperiment;
 double g_current_time;
+bool g_print_positions;
 //////// Functions and Structures
 
 struct united {
@@ -188,7 +189,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		g_current_time = getTimeNow();
 		double diffInTime = g_current_time - g_startOfExperiment;
 
-		if(diffInTime > 10.0f){
+		if(diffInTime > 2.0f){
 			initialize = false;
 		}
 
@@ -209,7 +210,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
 			sendMAVLinkMessage(lcm, &msgp);
 			printf("Lifting: x: %f, y: %f, z: %f.\n",
-								pos.x/1000, pos.y/1000, pos.z/1000);
+					pos.x/1000, pos.y/1000, pos.z/1000);
 		}
 
 		double startTime, endTime;
@@ -249,6 +250,22 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		// Time calculation in Seconds.
 		double time = endTime - startTime;
+		if( g_print_positions && myCode1.endPoint.z != 0 ){
+			// Print all
+			float x, y, z;
+			float roll, pitch, yaw;
+
+			client->getRollPitchYaw(msg,roll,pitch,yaw);
+			client->getGroundTruth(msg,x,y,z);
+			printf("\nHelicopter Position: x: %f. y: %f. z: %f. yaw: %f, roll: %f, pitch: %f.\n",
+					x, y, z,
+					yaw, roll, pitch);
+
+			printf("Hoop Position: x: %f. y: %f. z: %f.\n",
+					myCode1.endPoint.x,
+					myCode1.endPoint.y,
+					myCode1.endPoint.z);
+		}
 
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
@@ -272,8 +289,8 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			lastPosition.target_component = 200;
 			lastPosition.coordinate_frame = 1;
 
-			printf("New Destination: x: %f, y: %f, z: %f.\n",
-					pos.x/1000, pos.y/1000, pos.z/1000);
+			//printf("New Destination: x: %f, y: %f, z: %f.\n",
+			//		pos.x, pos.y, pos.z);
 		} else {
 			if(initialize == false)
 				printf("no message was sent.\n");
@@ -406,7 +423,10 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 										{ "plot", 'p', 0,
 												G_OPTION_ARG_NONE, &g_plot, "Plot everything",
 												(g_plot) ? "true" : "false" },
-												{ NULL } };
+												{ "print", 'o', 0,
+														G_OPTION_ARG_NONE, &g_print_positions, "Print the positions of the helicopter and the destination point (hoop's centroid)",
+														(g_print_positions) ? "true" : "false" },
+														{ NULL } };
 
 int main(int argc, char* argv[]) {
 
