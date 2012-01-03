@@ -35,12 +35,16 @@ bool quit = false;
 #include "StereoProc.h"
 #include "CodeContainer.h"
 #include "globals.h"
+#include <fstream>
+#include <iostream>
 
 float roll, pitch, yaw;
 bool initialize = true;
 double g_startOfExperiment;
 double g_current_time;
 bool g_print_positions;
+std::ofstream pointsFile;
+ 
 //////// Functions and Structures
 
 struct united {
@@ -172,9 +176,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 
 	StereoProc imgproc;
-	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+	//imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -201,7 +205,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			client->getGroundTruth(msg, init_x, init_y, init_z);
 			pos.x = init_x;
 			pos.y = init_y;
-			pos.z = -800;
+			pos.z = -0.800;
 			pos.yaw = yaw;
 			pos.target_system = getSystemID();
 			pos.target_component = 200;
@@ -210,7 +214,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
 			sendMAVLinkMessage(lcm, &msgp);
 			printf("Lifting: x: %f, y: %f, z: %f.\n",
-					pos.x/1000, pos.y/1000, pos.z/1000);
+					pos.x, pos.y, pos.z);
 		}
 
 		double startTime, endTime;
@@ -265,6 +269,11 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 					myCode1.endPoint.x,
 					myCode1.endPoint.y,
 					myCode1.endPoint.z);
+					
+					printf("Distance: %f\n", sqrt(pow(myCode1.endPoint.x - x,2) + pow(myCode1.endPoint.y - y,2)));
+				  
+				  pointsFile << "h:"<<x<<"|"<<y<<"|"<<z<<"\n";
+ 				  pointsFile << "w:"<<myCode1.endPoint.x<<"|"<<myCode1.endPoint.y<<"|"<<myCode1.endPoint.z<<"\n";
 		}
 
 		if( myCode1.endPoint.z != 0 && initialize == false){
@@ -430,6 +439,8 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
+  pointsFile.open ("points.txt");
+ 
 	g_startOfExperiment = getTimeNow();
 
 	timingHistory.resize(maxNumberOfFrames);
@@ -496,6 +507,8 @@ int main(int argc, char* argv[]) {
 		lcm_handle(lcm);
 	}
 
+ pointsFile.close();
+ 
 	mavconn_mavlink_msg_container_t_unsubscribe(lcm, imgSub);
 	mavconn_mavlink_msg_container_t_unsubscribe(lcm, comm_sub);
 	lcm_destroy(lcm);

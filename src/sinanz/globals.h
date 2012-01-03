@@ -9,7 +9,7 @@
 #define GLOBALS_H_
 
 // Global Variables.
-int g_minimumLengthOfAcceptedContours = 250;
+int g_minimumLengthOfAcceptedContours = 1;
 int g_maximumLengthOfAcceptedContours = 100000;
 
 int g_CannyThreshold = 255;

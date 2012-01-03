@@ -17,10 +17,10 @@ destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, co
 
 	getStartPoint();
 	get2ndPoint();
-	plotNormalVector();
+	//plotNormalVector();
 	constructInverseP();
-	getEndPoint();
-	getTrajectoryVector();
+	//getEndPoint();
+	globalPoint();
 }
 
 destination3dPoint::~destination3dPoint() {}
@@ -55,7 +55,7 @@ void destination3dPoint:: getNormalVector(){
 }
 
 void destination3dPoint::get2ndPoint(){
-	int lengthOfLine = 50;
+	//int lengthOfLine = 50;
 	cv::Vec3f plane = hoop.plane;
 
 	double A = plane[0];
@@ -63,9 +63,9 @@ void destination3dPoint::get2ndPoint(){
 	double C = plane[2];
 	cv::Point hoopCentroid = hoop.ellipse.center;
 
-	double new_x = hoopCentroid.x - normalVector[0] * lengthOfLine;
-	double new_y = hoopCentroid.y - normalVector[1] * lengthOfLine;
-	double new_z = new_x*A + new_y*B + C;
+	//double new_x = hoopCentroid.x - normalVector[0] * lengthOfLine;
+	//double new_y = hoopCentroid.y - normalVector[1] * lengthOfLine;
+	//double new_z = new_x*A + new_y*B + C;
 
 	//secondPoint = cv::Point3f(new_x, new_y, new_z);
 
@@ -148,17 +148,74 @@ void destination3dPoint::getEndPoint(){
 	cameraPoint[2] = 1000.0f * secondPoint.z;
 	cameraPoint[3] = 1;
 
+//  std::cout << "\n cameraPoint: " << cv::Mat(cameraPoint) << std::endl;
+
 	cv::Mat X = inverseP * cv::Mat(cameraPoint);
 
 		endPoint = cv::Point3f(X.at<float>(0,0)/X.at<float>(3,0),
 				X.at<float>(1,0)/X.at<float>(3,0),
 			X.at<float>(2,0)/X.at<float>(3,0));
+			
 		endPoint*=0.001;
 }
 
-void destination3dPoint::getTrajectoryVector(){
+cv::Vec3f destination3dPoint::globalPoint(){
+	float roll, pitch, yaw;
+	float x, y, z;
 
-	trajectoryVector[0] = endPoint.x - startPoint.x;
-	trajectoryVector[1] = endPoint.y - startPoint.y;
-	trajectoryVector[2] = endPoint.z - startPoint.z;
+	client->getRollPitchYaw(msg, roll, pitch, yaw);
+	client->getGroundTruth(msg, x, y, z);
+
+	float ca = cos(yaw);
+	float sa = sin(yaw);
+	float cb = cos(pitch);
+	float sb = sin(pitch);
+	float cg = cos(roll);
+	float sg = sin(roll);
+
+	float H1t[4][4] = {
+			{ca * cb,  ca * sb * sg - sa * cg,  ca * sb * cg + sa * sg,  x * 1000},
+			{sa * cb,  sa * sb * sg + ca * cg,  sa * sb * cg - ca * sg,  y * 1000},
+			{-sb, 	   cb * sg, 				        cb * cg, 				         z * 1000},
+			{0, 	     0, 					            0, 					             1	     }
+	};
+
+
+	float H2t[4][4] = {
+			{0, 1, 0, 0},
+			{0, 0, 1, 0},
+			{1, 0, 0, 0},
+			{0, 0, 0, 1}
+	};
+
+	cv::Mat H1(4, 4, CV_32FC1, H1t);
+	cv::Mat H2(4, 4, CV_32FC1, H2t);
+
+	cv::Mat H = H1 * H2.inv();
+	
+	cv::Mat intrinsic = inverseK.inv();
+	float focus = intrinsic.at<float>(0,0);
+	cv::Vec3f ooo;
+	
+	ooo[0] = (secondPoint.x - img.cols / 2.) * secondPoint.z / focus;
+	ooo[1] = (secondPoint.y - img.rows / 2.) * secondPoint.z / focus;
+	ooo[2] = secondPoint.z;
+
+  std::cout<<"secondPoint: "<<cv::Mat(secondPoint)<<std::endl;
+  std::cout<<"ooo: "<<cv::Mat(ooo)<<std::endl;
+
+
+	cv::Vec4f cameraPoint = cv::Vec4f(ooo[0] * 1000.0f,
+	    			                        ooo[1] * 1000.0f,
+			                              ooo[2] * 1000.0f,
+  			                            1);
+
+	cv::Mat X = H * cv::Mat(cameraPoint);
+
+	cv::Vec3f fP = cv::Vec<float, 3>(X.at<float>(0, 0) / X.at<float>(3, 0),
+	                         X.at<float>(1, 0) / X.at<float>(3, 0),
+        			             X.at<float>(2, 0) / X.at<float>(3, 0));
+
+	endPoint = cv::Point3f(fP)*0.001;
+	std::cout<<"endPoint: "<<cv::Mat(endPoint)<<"\nfP: "<<cv::Mat(fP)<<"\n\n";
 }
