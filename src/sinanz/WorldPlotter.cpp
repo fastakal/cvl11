@@ -44,13 +44,14 @@ void WorldPlotter::plotTopView(
 		Point3f objectNormal,
 		Point3f quadPosition,
 		Point3f quadOrientation){
+//		objectPosition = Point3f(-0.5, 0.75, -1);
 
 	// Plot Normal Vector
 	Point2i object_normal_p1, object_normal_p2;
 
-	object_normal_p1.x = objectPosition.x / real_size_x * plot_size_x / 1000.0f
+	object_normal_p1.x = objectPosition.x / real_size_x * plot_size_x
 			+ plot_size_x / 2;
-	object_normal_p1.y = objectPosition.y / real_size_y * plot_size_y / 1000.0f
+	object_normal_p1.y = objectPosition.y / real_size_y * plot_size_y
 			+ plot_size_y / 2;
 
 	object_normal_p2.x = object_normal_p2.x - 25 * objectNormal.x;
