@@ -26,7 +26,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 	//tempTime = getTimeNow();
 
 	depthImage = imgDepth;
-	numberOfPointsForDepthOfHoop = 100;
+	numberOfPointsForDepthOfHoop = 10;
 	//int g_margin = 20;
 	inverseIntrinsicMat = inverseK;
 

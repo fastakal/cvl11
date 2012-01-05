@@ -24,7 +24,7 @@ public:
 	const mavlink_message_t* msg;
 	cv::Mat inverseP;
 	cv::Vec3f translationVector;
-	cv::Point3f secondPoint;
+	cv::Point3f pixelCoordinatesWithDepth;
 	cv::Vec3f trajectoryVector;
 
 	destination3dPoint(HoopPosition hoop, PxSHMImageClient* cl, const mavlink_message_t* message, cv::Mat inverseIntrinsicMat);
@@ -39,11 +39,6 @@ public:
 	 * A function that will plot the normal vector on the image that contains the fitted plane.
 	 */
 	void plotNormalVector();
-
-	/**
-	 * A function that constructs the 3D rotation matrix using the roll, pitch and yaw from the client.
-	 */
-	void constructInverseP();
 
 	void constructTranslationVector();
 

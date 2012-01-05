@@ -196,7 +196,7 @@ cv::vector<cv::Vec3f> HoopPosition::findPointsValues(int numberOfPoints){
 		z = currentDepthValue[2];
 
 		if(z > 0){
-			depthValues[i] = currentDepthValue;
+			depthValues[validDepthValuesCounter] = currentDepthValue;
 			validDepthValuesCounter++;
 		}
 	}

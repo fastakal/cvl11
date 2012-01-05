@@ -38,6 +38,9 @@ public:
 			Point3f objectNormal,
 			Point3f quadPosition,
 			Point3f quadOrientation);
+
+	void plotCoordinates(Vector<Point3f> coordinates);
+	void finalize();
 };
 
 #endif /* WORLDPLOTTER_H_ */

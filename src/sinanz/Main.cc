@@ -45,7 +45,7 @@ double g_startOfExperiment;
 double g_current_time;
 bool g_print_positions;
 std::ofstream pointsFile;
- 
+
 //////// Functions and Structures
 
 struct united {
@@ -177,9 +177,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 
 	StereoProc imgproc;
-	//imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -262,33 +262,30 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		client->getGroundTruth(msg,x,y,z);
 
 		if( g_print_positions && myCode1.endPoint.z != 0 ){
-			// Print all
-			printf("\nHelicopter Position: x: %f. y: %f. z: %f. yaw: %f, roll: %f, pitch: %f.\n",
-					x, y, z,
-					yaw, roll, pitch);
 
-			printf("Hoop Position: x: %f. y: %f. z: %f.\n",
-					myCode1.endPoint.x,
-					myCode1.endPoint.y,
-					myCode1.endPoint.z);
-					
-					printf("Distance: %f\n", sqrt(pow(myCode1.endPoint.x - x,2) + pow(myCode1.endPoint.y - y,2)));
-				  
-				  pointsFile << "h:"<<x<<"|"<<y<<"|"<<z<<"\n";
- 				  pointsFile << "w:"<<myCode1.endPoint.x<<"|"<<myCode1.endPoint.y<<"|"<<myCode1.endPoint.z<<"\n";
+			printf("Distance: %f\n", sqrt(pow(myCode1.endPoint.x - x,2) + pow(myCode1.endPoint.y - y,2)));
 		}
 
 		Point3f hoopPoint = Point3f(myCode1.endPoint.x,
-										myCode1.endPoint.y,
-										myCode1.endPoint.z);
+				myCode1.endPoint.y,
+				myCode1.endPoint.z);
 		Point3f hoopNormal = Point3f(1, 1, 1);
 		Point3f quadPoint = Point3f(x, y, z);
 		Point3f quadOrientation = Point3f(roll, pitch, yaw);
 
-		WorldPlotter plot;
-		plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
+		cv::Vector<Point3f> coordinates;
+		coordinates.resize(4);
+		coordinates[0] = hoopPoint;
+		coordinates[1] = hoopNormal;
+		coordinates[2] = quadPoint;
+		coordinates[3] = quadOrientation;
 
 		if( myCode1.endPoint.z != 0 && initialize == false){
+
+			WorldPlotter plot;
+			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
+			plot.plotCoordinates(coordinates);
+			plot.finalize();
 
 			pos.x = myCode1.endPoint.x;
 			pos.y = myCode1.endPoint.y;
@@ -451,8 +448,8 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
-  pointsFile.open ("points.txt");
- 
+	pointsFile.open ("points.txt");
+
 	g_startOfExperiment = getTimeNow();
 
 	timingHistory.resize(maxNumberOfFrames);
@@ -519,8 +516,8 @@ int main(int argc, char* argv[]) {
 		lcm_handle(lcm);
 	}
 
- pointsFile.close();
- 
+	pointsFile.close();
+
 	mavconn_mavlink_msg_container_t_unsubscribe(lcm, imgSub);
 	mavconn_mavlink_msg_container_t_unsubscribe(lcm, comm_sub);
 	lcm_destroy(lcm);

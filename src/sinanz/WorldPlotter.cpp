@@ -13,8 +13,8 @@ WorldPlotter::WorldPlotter() {
 	plot_size_x = 800;
 	plot_size_y = 600;
 
-	real_size_x = 4;
-	real_size_y = 4;
+	real_size_x = 6;
+	real_size_y = 6;
 	x_color = Scalar(255/2, 255/2, 255/2);
 	y_color = Scalar(255/2, 255/2, 255/2);
 	normal_color = Scalar(0, 0, 255);
@@ -44,7 +44,7 @@ void WorldPlotter::plotTopView(
 		Point3f objectNormal,
 		Point3f quadPosition,
 		Point3f quadOrientation){
-//		objectPosition = Point3f(-0.5, 0.75, -1);
+	//		objectPosition = Point3f(-0.5, 0.75, -1);
 
 	// Plot Normal Vector
 	Point2i object_normal_p1, object_normal_p2;
@@ -54,8 +54,8 @@ void WorldPlotter::plotTopView(
 	object_normal_p1.y = objectPosition.y / real_size_y * plot_size_y
 			+ plot_size_y / 2;
 
-	object_normal_p2.x = object_normal_p2.x - 25 * objectNormal.x;
-	object_normal_p2.y = object_normal_p2.y - 25 * objectNormal.y;
+	object_normal_p2.x = object_normal_p1.x - 25 * objectNormal.x;
+	object_normal_p2.y = object_normal_p1.y - 25 * objectNormal.y;
 
 	line(plot, object_normal_p1, object_normal_p2, normal_color, normal_thickness);
 
@@ -95,12 +95,12 @@ void WorldPlotter::plotTopView(
 			Point2i(q_x - 1, q_y - 1),
 			Point2i(q_x + 1, q_y + 1),
 			quad_color, object_thickness);
-			
+
 	line(plot, 
-	Point2i(x, y),
-  Point2i(q_x, q_y),
-  normal_color,
-  normal_thickness);
+			Point2i(x, y),
+			Point2i(q_x, q_y),
+			normal_color,
+			normal_thickness);
 
 	putText(plot,
 			"Object",
@@ -122,9 +122,53 @@ void WorldPlotter::plotTopView(
 			FONT_HERSHEY_PLAIN,
 			1,
 			Scalar(0, 0, 255));
+}
+
+void WorldPlotter::plotCoordinates(Vector<Point3f> coordinates){
+
+	std::stringstream sstr1;
+	std::string str1;
+	sstr1 << "Hoop Point:"<<
+			" x: "<<coordinates[0].x<<
+			".y: "<<coordinates[0].y<<
+			".z: "<<coordinates[0].z<<
+			"\n";
+	str1 = sstr1.str();
+
+	putText(plot, str1, Point2i(100, 20), FONT_HERSHEY_PLAIN, 1,text_color);
+
+	std::stringstream sstr2;
+	sstr2 << "Hoop Normal:"<<
+			" x: "<<coordinates[1].x<<
+			".y: "<<coordinates[1].y<<
+			".z: "<<coordinates[1].z<<
+			"\n";
+	str1 = sstr2.str();
+	putText(plot, str1, Point2i(100, 40), FONT_HERSHEY_PLAIN, 1,text_color);
+
+	std::stringstream sstr3;
+	sstr3 << "Quad Point:"<<
+			" x: "<<coordinates[2].x<<
+			".y: "<<coordinates[2].y<<
+			".z: "<<coordinates[2].z<<
+			"\n";
+	str1 = sstr3.str();
+	putText(plot, str1, Point2i(100, 60), FONT_HERSHEY_PLAIN, 1,text_color);
+
+	std::stringstream sstr4;
+	sstr4 << "Quad Orientation:"<<
+			" x: "<<coordinates[3].x<<
+			".y: "<<coordinates[3].y<<
+			".z: "<<coordinates[3].z<<
+			"\n";
+	str1 = sstr4.str();
+	putText(plot, str1, Point2i(100, 80), FONT_HERSHEY_PLAIN, 1,text_color);
+}
+
+
+void WorldPlotter::finalize(){
 
 	namedWindow("TopViewPlot");
 	imshow("TopViewPlot", plot);
-
 }
 
