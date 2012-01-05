@@ -71,9 +71,9 @@ void destination3dPoint::get2ndPoint(){
 
 	double x = hoopCentroid.x;
 	double y = hoopCentroid.y;
-	double z = x*A + y*B + C;
-
-	secondPoint = cv::Point3f(x, y, z);
+	double z = hoop.selectedDepthPoints[0][2];
+	//printf("\nz: %f\n", z);
+	//double z = x*A + y*B + C;
 }
 
 
@@ -159,7 +159,7 @@ void destination3dPoint::getEndPoint(){
 		endPoint*=0.001;
 }
 
-cv::Vec3f destination3dPoint::globalPoint(){
+void destination3dPoint::globalPoint(){
 	float roll, pitch, yaw;
 	float x, y, z;
 

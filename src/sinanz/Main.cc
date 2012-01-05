@@ -37,6 +37,7 @@ bool quit = false;
 #include "globals.h"
 #include <fstream>
 #include <iostream>
+#include "WorldPlotter.h"
 
 float roll, pitch, yaw;
 bool initialize = true;
@@ -176,9 +177,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 
 	StereoProc imgproc;
-	//imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -254,13 +255,14 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		// Time calculation in Seconds.
 		double time = endTime - startTime;
+		float x, y, z;
+		float roll, pitch, yaw;
+
+		client->getRollPitchYaw(msg,roll,pitch,yaw);
+		client->getGroundTruth(msg,x,y,z);
+
 		if( g_print_positions && myCode1.endPoint.z != 0 ){
 			// Print all
-			float x, y, z;
-			float roll, pitch, yaw;
-
-			client->getRollPitchYaw(msg,roll,pitch,yaw);
-			client->getGroundTruth(msg,x,y,z);
 			printf("\nHelicopter Position: x: %f. y: %f. z: %f. yaw: %f, roll: %f, pitch: %f.\n",
 					x, y, z,
 					yaw, roll, pitch);
@@ -275,6 +277,16 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				  pointsFile << "h:"<<x<<"|"<<y<<"|"<<z<<"\n";
  				  pointsFile << "w:"<<myCode1.endPoint.x<<"|"<<myCode1.endPoint.y<<"|"<<myCode1.endPoint.z<<"\n";
 		}
+
+		Point3f hoopPoint = Point3f(myCode1.endPoint.x,
+										myCode1.endPoint.y,
+										myCode1.endPoint.z);
+		Point3f hoopNormal = Point3f(1, 1, 1);
+		Point3f quadPoint = Point3f(x, y, z);
+		Point3f quadOrientation = Point3f(roll, pitch, yaw);
+
+		WorldPlotter plot;
+		plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
 
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
