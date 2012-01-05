@@ -45,7 +45,7 @@ double g_startOfExperiment;
 double g_current_time;
 bool g_print_positions;
 std::ofstream pointsFile;
-
+WorldPlotter plot;
 //////// Functions and Structures
 
 struct united {
@@ -273,19 +273,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		Point3f quadPoint = Point3f(x, y, z);
 		Point3f quadOrientation = Point3f(roll, pitch, yaw);
 
-		cv::Vector<Point3f> coordinates;
-		coordinates.resize(4);
-		coordinates[0] = hoopPoint;
-		coordinates[1] = hoopNormal;
-		coordinates[2] = quadPoint;
-		coordinates[3] = quadOrientation;
-
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
-			WorldPlotter plot;
 			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
-			plot.plotCoordinates(coordinates);
-			plot.finalize();
 
 			pos.x = myCode1.endPoint.x;
 			pos.y = myCode1.endPoint.y;

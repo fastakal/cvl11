@@ -125,8 +125,7 @@ void destination3dPoint::globalPoint(){
 			X.at<float>(2, 0) / X.at<float>(3, 0));
 
 	endPoint = cv::Point3f(fP)*0.001;
-
-	std::cout<<"pixelCoordinates + Depth: "<<cv::Mat(pixelCoordinatesWithDepth)<<std::endl;
-	std::cout<<"Camera Point: "<<cv::Mat(ooo)<<std::endl;
-	std::cout<<"World Point: "<<cv::Mat(endPoint)<<"\n";
+	//std::cout<<"pixelCoordinates + Depth: "<<cv::Mat(pixelCoordinatesWithDepth)<<std::endl;
+	//std::cout<<"Camera Point: "<<cv::Mat(ooo)<<std::endl;
+	//std::cout<<"World Point: "<<cv::Mat(endPoint)<<"\n";
 }

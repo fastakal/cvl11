@@ -10,6 +10,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 using namespace cv;
+using namespace std;
 
 class WorldPlotter {
 public:
@@ -29,7 +30,7 @@ public:
 	int object_size;
 	int object_thickness;
 
-	Mat plot;
+	Vector<Point2f> object_trace, quad_trace;
 
 	WorldPlotter();
 	virtual ~WorldPlotter();
@@ -39,8 +40,13 @@ public:
 			Point3f quadPosition,
 			Point3f quadOrientation);
 
-	void plotCoordinates(Vector<Point3f> coordinates);
-	void finalize();
+	//void plotCoordinates(Vector<Point3f> coordinates);
+	void plotCoordinates(Mat &plot,
+			Vector<Point3f> &coordinates,
+			vector<string> &labels);
+
+	void plotTrace(Mat& plot, Vector<Point2f> coordinates, Scalar color);
+	void finalize(Mat& plot);
 };
 
 #endif /* WORLDPLOTTER_H_ */
