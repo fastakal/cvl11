@@ -108,6 +108,18 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 	//tempTime = getTimeNow();
 
+		cv::Mat cnt_img = cv::Mat::zeros(img.size(), CV_8UC3);
+		cv::Mat linesImage = cv::Mat::zeros(img.size(), CV_8UC3);
+
+		contours.plot();
+		linkedlines.plot();
+
+		cnt_img = contours.getContoursImage();
+		linesImage = contours.linesImage;
+		ml.plot(linkedlines.filteredLinesImage);
+		filteredLinesImage = ml.ellipsesImage;
+		finalEdgeImage = ml.edgeImagePlusEllipses;
+		
 	if (plotOption){
 		cv::Mat cnt_img = cv::Mat::zeros(img.size(), CV_8UC3);
 		cv::Mat linesImage = cv::Mat::zeros(img.size(), CV_8UC3);
@@ -123,6 +135,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 		plotPipeLineImages(myImage.getEdgeImage(), cnt_img, linesImage, filteredLinesImage);
 	}
+	cv::imshow("Thresholded Image", myImage.getEdgeImage());
 	//time7 = getTimeNow() - tempTime;
 
 	//printf("\n\nTimings\n init: %f | segmentation: %f | contours: %f | lines: %f | ellipses/Hoop: %f | hoop3d + destination: %f | plotting: %f\nTotal: %f\n",
