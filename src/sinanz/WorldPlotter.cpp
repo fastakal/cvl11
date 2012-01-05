@@ -10,15 +10,16 @@
 WorldPlotter::WorldPlotter() {
 
 	// Initialization Phase.
-	plot_size_x = 936;
-	plot_size_y = 702;
+	plot_size_x = 800;
+	plot_size_y = 600;
+
 	real_size_x = 4;
 	real_size_y = 4;
 	x_color = Scalar(255/2, 255/2, 255/2);
 	y_color = Scalar(255/2, 255/2, 255/2);
 	normal_color = Scalar(0, 0, 255);
 	normal_thickness = 2;
-	object_size = 2;
+	object_size = 4;
 	object_color = Scalar(128, 128, 0);
 	object_thickness = 3;
 	quad_color = Scalar(0, 128, 128);
@@ -76,9 +77,9 @@ void WorldPlotter::plotTopView(
 
 	float q_x, q_y;
 
-	q_x = (x + 0.04 * cos(yaw)) / real_size_x * plot_size_x
+	q_x = (x + 0.1 * cos(yaw)) / real_size_x * plot_size_x
 			+ plot_size_x / 2;
-	q_y = (y + 0.04 * sin(yaw)) / real_size_y * plot_size_y
+	q_y = (y + 0.1* sin(yaw)) / real_size_y * plot_size_y
 			+ plot_size_y / 2;
 
 	x = x / real_size_x * plot_size_x + plot_size_x / 2;
@@ -93,17 +94,23 @@ void WorldPlotter::plotTopView(
 			Point2i(q_x - 1, q_y - 1),
 			Point2i(q_x + 1, q_y + 1),
 			quad_color, object_thickness);
+			
+	line(plot, 
+	Point2i(x, y),
+  Point2i(q_x, q_y),
+  normal_color,
+  normal_thickness);
 
 	putText(plot,
 			"Object",
-			object_normal_p1,
+			Point2i(object_normal_p1.x, object_normal_p1.y - 10),
 			FONT_HERSHEY_PLAIN,
 			1,
 			text_color);
 
 	putText(plot,
 			"Quad",
-			Point2i(x, y),
+			Point2i(x, y - 10),
 			FONT_HERSHEY_PLAIN,
 			1,
 			text_color);
