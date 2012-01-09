@@ -18,6 +18,7 @@ public:
 	int plot_size_y;
 	float real_size_x;
 	float real_size_y;
+	int marker_size;
 
 	Scalar x_color;
 	Scalar y_color;
@@ -25,6 +26,7 @@ public:
 	Scalar object_color;
 	Scalar quad_color;
 	Scalar text_color;
+  double font_scale;
 
 	int normal_thickness;
 	int object_size;
@@ -47,6 +49,7 @@ public:
 
 	void plotTrace(Mat& plot, Vector<Point2f> coordinates, Scalar color);
 	void finalize(Mat& plot);
+	void plotAxes(cv::Mat& plot);
 };
 
 #endif /* WORLDPLOTTER_H_ */
