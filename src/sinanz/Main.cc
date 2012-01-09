@@ -177,9 +177,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 
 	StereoProc imgproc;
-	//imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -194,16 +194,18 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		g_current_time = getTimeNow();
 		double diffInTime = g_current_time - g_startOfExperiment;
 
-		if(diffInTime > 2.0f){
+		if(diffInTime > 10.0f){
 			initialize = false;
 		}
 
 		if(initialize){
 			printf("\nTime: %f Seconds\n", diffInTime);
+			float yaw;
+			float init_x, init_y, init_z;
 
 			client->getRollPitchYaw(msg, roll, pitch, yaw);
-			float init_x, init_y, init_z;
 			client->getGroundTruth(msg, init_x, init_y, init_z);
+
 			pos.x = init_x;
 			pos.y = init_y;
 			pos.z = -0.800;
@@ -216,6 +218,11 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			sendMAVLinkMessage(lcm, &msgp);
 			printf("Lifting: x: %f, y: %f, z: %f.\n",
 					pos.x, pos.y, pos.z);
+
+			printf("\nInitialization________________________________________________\n");
+			printf("Send: x: %f|y: %f|z: %f\n", pos.x, pos.y, pos.z);
+			printf("    yaw: %f", pos.yaw);
+			printf("\n________________________________________________\n");
 		}
 
 		double startTime, endTime;
