@@ -177,9 +177,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 
 	StereoProc imgproc;
-	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+//	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -194,7 +194,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		g_current_time = getTimeNow();
 		double diffInTime = g_current_time - g_startOfExperiment;
 
-		if(diffInTime > 10.0f){
+		if(diffInTime > 2.0f){
 			initialize = false;
 		}
 
@@ -209,7 +209,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			pos.x = init_x;
 			pos.y = init_y;
 			pos.z = -0.800;
-			pos.yaw = yaw;
+			pos.yaw = yaw * 180 / M_PI;
 			pos.target_system = getSystemID();
 			pos.target_component = 200;
 			pos.coordinate_frame = 1;
@@ -222,7 +222,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			printf("\nInitialization________________________________________________\n");
 			printf("Send: x: %f|y: %f|z: %f\n", pos.x, pos.y, pos.z);
 			printf("    yaw: %f", pos.yaw);
-			printf("\n________________________________________________\n");
+			printf("\n______________________________________________________________\n");
 		}
 
 		double startTime, endTime;
@@ -269,7 +269,6 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		client->getGroundTruth(msg,x,y,z);
 
 		if( g_print_positions && myCode1.endPoint.z != 0 ){
-
 			printf("Distance: %f\n", sqrt(pow(myCode1.endPoint.x - x,2) + pow(myCode1.endPoint.y - y,2)));
 		}
 
@@ -288,34 +287,16 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			pos.x = myCode1.endPoint.x;
 			pos.y = myCode1.endPoint.y;
 			pos.z = myCode1.endPoint.z;
-			pos.yaw = yaw;
+			pos.yaw = yaw * 180 / M_PI;
 			pos.target_system = getSystemID();
 			pos.target_component = 200;
 			pos.coordinate_frame = 1;
 
 			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
 			sendMAVLinkMessage(lcm, &msgp);
-
-			lastPosition = pos;
-			lastPosition.x = pos.x;
-			lastPosition.y = pos.y;
-			lastPosition.z = pos.z;
-			lastPosition.yaw = yaw;
-			lastPosition.target_system = getSystemID();
-			lastPosition.target_component = 200;
-			lastPosition.coordinate_frame = 1;
-
-			//printf("New Destination: x: %f, y: %f, z: %f.\n",
-			//		pos.x, pos.y, pos.z);
 		} else {
 			if(initialize == false)
 				printf("no message was sent.\n");
-
-			//mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &lastPosition);
-			//sendMAVLinkMessage(lcm, &msgp);
-
-			//printf("Same Destination: x: %f, y: %f, z: %f. \n",
-			//	lastPosition.x/1000, lastPosition.y/1000, lastPosition.z/1000);
 		}
 
 		cv::Mat toto; toto = imgRectified;

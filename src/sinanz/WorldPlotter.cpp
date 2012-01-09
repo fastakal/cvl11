@@ -102,7 +102,7 @@ void WorldPlotter::plotTopView(
 			Point2i(q_x + 1, q_y + 1),
 			quad_color, object_thickness);
 
-	line(plot, 
+	line(plot,
 			Point2i(x, y),
 			Point2i(q_x, q_y),
 			normal_color,
@@ -132,99 +132,77 @@ void WorldPlotter::plotTopView(
 	cv::Vector<Point3f> coordinates;
 	vector<string> labels;
 
-	coordinates.resize(4);
+	coordinates.resize(5);
 
-	coordinates[0] = objectPosition; labels.push_back("Hoop Point");
-	coordinates[1] = objectNormal;	 labels.push_back("Hoop Normal");
-	coordinates[2] = quadPosition;   labels.push_back("Quad Point");
-	coordinates[3] = quadOrientation;labels.push_back("Quad Orient.");
+	cv::Vec3f distanceVector = cv::Vec3f(objectPosition) - cv::Vec3f(quadPosition);
+	cv::Point3f distance = cv::Point3f(sqrt(distanceVector[0] * distanceVector[0] +
+			distanceVector[1] * distanceVector[1] +
+			distanceVector[2] * distanceVector[2]),
+			0,
+			0);
 
+	coordinates[0] = objectPosition; labels.push_back("P.Hoop Point");
+	coordinates[1] = objectNormal;	 labels.push_back("P.Hoop Normal");
+	coordinates[2] = quadPosition;   labels.push_back("P.Quad Point");
+	coordinates[3] = quadOrientation;labels.push_back("O.Quad Orient.");
+	coordinates[4] = distance;labels.push_back("D.Distance.");
 
 	plotCoordinates(plot, coordinates, labels);
 	finalize(plot);
 }
-/*
-void WorldPlotter::plotCoordinates(Vector<Point3f> coordinates){
 
-	std::stringstream sstr1;
-	std::string str1;
-	sstr1 << "Hoop Point:"<<
-			" x: "<<coordinates[0].x<<
-			".y: "<<coordinates[0].y<<
-			".z: "<<coordinates[0].z<<
-			"\n";
-	str1 = sstr1.str();
-
-	putText(plot, str1, Point2i(100, 20), FONT_HERSHEY_PLAIN, 1,text_color);
-
-	std::stringstream sstr2;
-	sstr2 << "Hoop Normal:"<<
-			" x: "<<coordinates[1].x<<
-			".y: "<<coordinates[1].y<<
-			".z: "<<coordinates[1].z<<
-			"\n";
-	str1 = sstr2.str();
-	putText(plot, str1, Point2i(100, 40), FONT_HERSHEY_PLAIN, 1,text_color);
-
-	std::stringstream sstr3;
-	sstr3 << "Quad Point:"<<
-			" x: "<<coordinates[2].x<<
-			".y: "<<coordinates[2].y<<
-			".z: "<<coordinates[2].z<<
-			"\n";
-	str1 = sstr3.str();
-	putText(plot, str1, Point2i(100, 60), FONT_HERSHEY_PLAIN, 1,text_color);
-
-	std::stringstream sstr4;
-	sstr4 << "Quad Orientation:"<<
-			" x: "<<coordinates[3].x<<
-			".y: "<<coordinates[3].y<<
-			".z: "<<coordinates[3].z<<
-			"\n";
-	str1 = sstr4.str();
-	putText(plot, str1, Point2i(100, 80), FONT_HERSHEY_PLAIN, 1,text_color);
-}
- */
 void WorldPlotter::plotCoordinates(Mat &plot, Vector<Point3f> &coordinates,
 		vector<string> &labels) {
 	int count = coordinates.size();
+	int precision = 2;
+	int width = 10;
+	String x = "x", y = "y", z = "z";
+	String label; 
 
 	for(int i = 0; i < count; ++i) {
 		stringstream sstr;
 
-		sstr << left << labels.at(i).c_str() << right;
+    label = &labels.at(i)[2];
+		sstr << left << label.c_str() << right;
+			  
+		if(labels.at(i)[0] == 'D'){
+			x = "D"; y = ""; z = "";
+		} else if(labels.at(i)[0] == 'O') {
+			x = "r"; y = "p"; z = "y";
+		}
 
 		putText(plot, sstr.str(), Point2i(10, 15 * (i + 1)), FONT_HERSHEY_PLAIN, 1,
 				text_color);
 
 		stringstream sstrx;
-		sstrx.precision(5);
+		sstrx.precision(precision);
 		sstrx.setf(ios::fixed, ios::floatfield);
 
-		sstrx << "> x: ";
-		sstrx.width(10);
+		sstrx << "> "<<x<<": ";
+		sstrx.width(width);
 		sstrx << right << coordinates[i].x;
 
 		putText(plot, sstrx.str(), Point2i(120, 15 * (i + 1)), FONT_HERSHEY_PLAIN, 1,
 				text_color);
 
+		if(labels.at(i)[0] == 'D') continue;
 		stringstream sstry;
-		sstry.precision(5);
+		sstry.precision(precision);
 		sstry.setf(ios::fixed, ios::floatfield);
 
-		sstry << " y: ";
-		sstry.width(10);
+		sstry << " "<<y<<": ";
+		sstry.width(width);
 		sstry << right << coordinates[i].y;
 
 		putText(plot, sstry.str(), Point2i(280, 15 * (i + 1)), FONT_HERSHEY_PLAIN, 1,
 				text_color);
 
 		stringstream sstrz;
-		sstrz.precision(5);
+		sstrz.precision(precision);
 		sstrz.setf(ios::fixed, ios::floatfield);
 
-		sstrz << " z: ";
-		sstrz.width(10);
+		sstrz << " "<<z<<": ";
+		sstrz.width(width);
 		sstrz << right << coordinates[i].z;
 
 		putText(plot, sstrz.str(), Point2i(430, 15 * (i + 1)), FONT_HERSHEY_PLAIN, 1,
@@ -243,3 +221,4 @@ void WorldPlotter::plotTrace(Mat& plot, Vector<Point2f> coordinates, Scalar colo
 		line(plot, coordinates[i], coordinates[i + 1], color);
 	}
 }
+
