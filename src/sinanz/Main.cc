@@ -282,7 +282,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			pos.x = myCode1.endPoint.x;
 			pos.y = myCode1.endPoint.y;
 			pos.z = myCode1.endPoint.z;
-			pos.yaw = yaw * 180 / M_PI;
+			float new_yaw = atan2(hoopPoint.y - quadPoint.y, hoopPoint.x - quadPoint.x);
+			
+			pos.yaw = new_yaw * 180 / M_PI;
 			pos.target_system = getSystemID();
 			pos.target_component = 200;
 			pos.coordinate_frame = 1;

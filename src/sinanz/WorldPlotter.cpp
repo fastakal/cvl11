@@ -146,7 +146,7 @@ void WorldPlotter::plotTopView(
 	coordinates[2] = quadPosition;   labels.push_back("P.Quad Point");
 	coordinates[3] = quadOrientation;labels.push_back("O.Quad Orient.");
 	coordinates[4] = distance;labels.push_back("D.Distance.");
-	coordinates[5] = cv::Point3f(0, 0, atan2(objectPosition.x - quadPosition.x, objectPosition.y - quadPosition.y));
+	coordinates[5] = cv::Point3f(0, 0, atan2(objectPosition.y - quadPosition.y, objectPosition.x - quadPosition.x));
 			 labels.push_back("O.DestinationYaw");
 
 	plotCoordinates(plot, coordinates, labels);
