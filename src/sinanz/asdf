@@ -102,7 +102,7 @@ void WorldPlotter::plotTopView(
 			Point2i(q_x + 1, q_y + 1),
 			quad_color, object_thickness);
 
-	line(plot,
+	line(plot, 
 			Point2i(x, y),
 			Point2i(q_x, q_y),
 			normal_color,
@@ -132,22 +132,20 @@ void WorldPlotter::plotTopView(
 	cv::Vector<Point3f> coordinates;
 	vector<string> labels;
 
-	coordinates.resize(6);
-
-	cv::Vec3f distanceVector = cv::Vec3f(objectPosition) - cv::Vec3f(quadPosition);
-	cv::Point3f distance = cv::Point3f(sqrt(distanceVector[0] * distanceVector[0] +
-			distanceVector[1] * distanceVector[1] +
-			distanceVector[2] * distanceVector[2]),
-			0,
-			0);
+	coordinates.resize(5);
+	
+  cv::Vec3f distanceVector = cv::Vec3f(objectPosition) - cv::Vec3f(quadPosition);
+  cv::Point3f distance = cv::Point3f(sqrt(distanceVector[0] * distanceVector[0] + 
+                                          distanceVector[1] * distanceVector[1] + 
+                                          distanceVector[2] * distanceVector[2]), 
+                                     0, 
+                                     0);
 
 	coordinates[0] = objectPosition; labels.push_back("P.Hoop Point");
 	coordinates[1] = objectNormal;	 labels.push_back("P.Hoop Normal");
 	coordinates[2] = quadPosition;   labels.push_back("P.Quad Point");
 	coordinates[3] = quadOrientation;labels.push_back("O.Quad Orient.");
 	coordinates[4] = distance;labels.push_back("D.Distance.");
-	coordinates[5] = cv::Point3f(0, 0, atan2(objectPosition.x - quadPosition.x, objectPosition.y - quadPosition.y));
-			 labels.push_back("O.DestinationYaw");
 
 	plotCoordinates(plot, coordinates, labels);
 	finalize(plot);
@@ -159,20 +157,17 @@ void WorldPlotter::plotCoordinates(Mat &plot, Vector<Point3f> &coordinates,
 	int precision = 2;
 	int width = 10;
 	String x = "x", y = "y", z = "z";
-	String label; 
 
 	for(int i = 0; i < count; ++i) {
 		stringstream sstr;
 
-    label = &labels.at(i)[2];
-		sstr << left << label.c_str() << right;
-			  
+		sstr << left << labels.at(i).c_str() << right;
 		if(labels.at(i)[0] == 'D'){
-			x = "D"; y = ""; z = "";
+		x = ""; y = ""; z = "";
 		} else if(labels.at(i)[0] == 'O') {
-			x = "r"; y = "p"; z = "y";
+		x = "roll"; y = "pitch"; z = "yaw";
 		}
-
+		
 		putText(plot, sstr.str(), Point2i(10, 15 * (i + 1)), FONT_HERSHEY_PLAIN, 1,
 				text_color);
 
@@ -187,7 +182,7 @@ void WorldPlotter::plotCoordinates(Mat &plot, Vector<Point3f> &coordinates,
 		putText(plot, sstrx.str(), Point2i(120, 15 * (i + 1)), FONT_HERSHEY_PLAIN, 1,
 				text_color);
 
-		if(labels.at(i)[0] == 'D') continue;
+    if(labels.at(i)[0] = 'D') continue;
 		stringstream sstry;
 		sstry.precision(precision);
 		sstry.setf(ios::fixed, ios::floatfield);
@@ -209,7 +204,7 @@ void WorldPlotter::plotCoordinates(Mat &plot, Vector<Point3f> &coordinates,
 
 		putText(plot, sstrz.str(), Point2i(430, 15 * (i + 1)), FONT_HERSHEY_PLAIN, 1,
 				text_color);
-	}
+				}
 }
 
 void WorldPlotter::finalize(Mat& plot){
@@ -223,4 +218,3 @@ void WorldPlotter::plotTrace(Mat& plot, Vector<Point2f> coordinates, Scalar colo
 		line(plot, coordinates[i], coordinates[i + 1], color);
 	}
 }
-

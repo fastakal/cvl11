@@ -218,11 +218,6 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			sendMAVLinkMessage(lcm, &msgp);
 			printf("Lifting: x: %f, y: %f, z: %f.\n",
 					pos.x, pos.y, pos.z);
-
-			printf("\nInitialization________________________________________________\n");
-			printf("Send: x: %f|y: %f|z: %f\n", pos.x, pos.y, pos.z);
-			printf("    yaw: %f", pos.yaw);
-			printf("\n______________________________________________________________\n");
 		}
 
 		double startTime, endTime;
