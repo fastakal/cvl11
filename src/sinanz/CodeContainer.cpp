@@ -80,6 +80,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 	// 2.4 regroup contours into potential ellipses and choose the "best" one.
 	MyEllipses ml = MyEllipses(lLines, myImage.getEdgeImage());
 	cv::RotatedRect hoop = ml.chosenEllipse;
+	finalHoop = hoop;
 
 	//time5 = getTimeNow() - tempTime;
 
@@ -135,7 +136,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 		plotPipeLineImages(myImage.getEdgeImage(), cnt_img, linesImage, filteredLinesImage);
 	}
-	cv::imshow("Thresholded Image", myImage.getEdgeImage());
+	//cv::imshow("Thresholded Image", myImage.getEdgeImage());
 	//time7 = getTimeNow() - tempTime;
 
 	//printf("\n\nTimings\n init: %f | segmentation: %f | contours: %f | lines: %f | ellipses/Hoop: %f | hoop3d + destination: %f | plotting: %f\nTotal: %f\n",

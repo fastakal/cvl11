@@ -177,9 +177,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 
 	StereoProc imgproc;
-	//imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -310,7 +310,10 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			//	lastPosition.x/1000, lastPosition.y/1000, lastPosition.z/1000);
 		}
 
-		//std::cout<<"Total Time: "<<time<<"\n";
+		cv::Mat toto; toto = imgRectified;
+		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
+		cv::imshow("Detection", toto);
+
 		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
 
