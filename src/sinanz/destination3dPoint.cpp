@@ -15,7 +15,8 @@ destination3dPoint::destination3dPoint(HoopPosition hp, PxSHMImageClient* cl, co
 	inverseK = inverseIntrinsicMat;
 	getNormalVector();
 	get2ndPoint();
-	globalPoint();
+	endPoint = globalPoint(pixelCoordinatesWithDepth);
+
 }
 
 destination3dPoint::~destination3dPoint() {}
@@ -24,28 +25,30 @@ destination3dPoint::~destination3dPoint() {}
  * A function that will calculate the normal to the fitted plane.
  */
 void destination3dPoint:: getNormalVector(){
-	cv::Vec3f plane = hoop.plane;
-
-	double A = plane[0];
-	double B = plane[1];
-	double C = plane[2];
-
-	double x_center = hoop.ellipse.center.x;
-	double y_center = hoop.ellipse.center.y;
 
 	// 3-Points Selection.
-	cv::Vec3f pt1; pt1 = hoop.selectedDepthPoints[0];
-	cv::Vec3f pt2; pt2 = hoop.selectedDepthPoints[1];
-	cv::Vec3f pt3; pt3 = hoop.selectedDepthPoints[2];
+	int size = hoop.depthValuesOfHoop.size();
+	cv::Vec3f pt1; pt1 = hoop.depthValuesOfHoop[0];
+	cv::Vec3f pt2; pt2 = hoop.depthValuesOfHoop[size/3];
+	cv::Vec3f pt3; pt3 = hoop.depthValuesOfHoop[2*size/3];
+
+	cv::Point3f pt1_3d = globalPoint(cv::Point3f(pt1));
+	cv::Point3f pt2_3d = globalPoint(cv::Point3f(pt2));
+	cv::Point3f pt3_3d = globalPoint(cv::Point3f(pt3));
 
 	// Vectors of the 3 points and Vector product of two vectors.
-	cv::Vec3f a; a[0] = pt3[0] - pt1[0]; a[1] = pt3[1] - pt1[1]; a[2] = pt3[2] - pt1[2];
-	cv::Vec3f b; b[0] = pt2[0] - pt1[0]; b[1] = pt2[1] - pt1[1]; b[2] = pt2[2] - pt1[2];
-
+	cv::Vec3f a; a[0] = pt3_3d.x - pt1_3d.x; a[1] = pt3_3d.y - pt1_3d.y; a[2] = pt3_3d.z - pt1_3d.z;
+	cv::Vec3f b; b[0] = pt2_3d.x - pt1_3d.x; b[1] = pt2_3d.y - pt1_3d.y; b[2] = pt2_3d.z - pt1_3d.z;
 
 	normalVector[0] = a[1] * b[2] - a[2] * b[1];
 	normalVector[1] = a[2] * b[0] - a[0] * b[2];
 	normalVector[2] = a[0] * b[1] - a[1] * b[0];
+
+	normalVector = normalVector *
+			(-1 / sqrt(
+			normalVector[0] * normalVector[0] +
+			normalVector[1] * normalVector[1] +
+			normalVector[2] * normalVector[2]));
 }
 
 void destination3dPoint::get2ndPoint(){
@@ -57,19 +60,9 @@ void destination3dPoint::get2ndPoint(){
 	double z = hoop.depthValuesOfHoop[0][2];
 
 	pixelCoordinatesWithDepth = cv::Point3f(x, y, z);
-	/*
-	 *
-	 for(int i = 0; i < hoop.depthValuesOfHoop.size(); i++){
-		std::cout<<hoop.depthValuesOfHoop[i][2]<<"|";
-		if(hoop.depthValuesOfHoop[i][2] == 0){
-			std::cout<<"ZERO"<<"\n";
-		}
-	}
-	std::cout<<"\n\npixelCoordinates"<<cv::Mat(pixelCoordinatesWithDepth)<<"\n\n";
-	*/
 }
 
-void destination3dPoint::globalPoint(){
+cv::Point3f destination3dPoint::globalPoint(cv::Point3f point){
 
 	float roll, pitch, yaw;
 	float x, y, z;
@@ -108,9 +101,9 @@ void destination3dPoint::globalPoint(){
 	float focus = intrinsic.at<float>(0,0);
 	cv::Vec3f ooo;
 
-	ooo[0] = (pixelCoordinatesWithDepth.x - img.cols / 2.) * pixelCoordinatesWithDepth.z / focus;
-	ooo[1] = (pixelCoordinatesWithDepth.y - img.rows / 2.) * pixelCoordinatesWithDepth.z / focus;
-	ooo[2] = pixelCoordinatesWithDepth.z;
+	ooo[0] = (point.x - img.cols / 2.) * point.z / focus;
+	ooo[1] = (point.y - img.rows / 2.) * point.z / focus;
+	ooo[2] = point.z;
 
 	cv::Vec4f cameraPoint = cv::Vec4f(
 			ooo[0] * 1000.0f,
@@ -124,8 +117,5 @@ void destination3dPoint::globalPoint(){
 			X.at<float>(1, 0) / X.at<float>(3, 0),
 			X.at<float>(2, 0) / X.at<float>(3, 0));
 
-	endPoint = cv::Point3f(fP)*0.001;
-	//std::cout<<"pixelCoordinates + Depth: "<<cv::Mat(pixelCoordinatesWithDepth)<<std::endl;
-	//std::cout<<"Camera Point: "<<cv::Mat(ooo)<<std::endl;
-	//std::cout<<"World Point: "<<cv::Mat(endPoint)<<"\n";
+	return cv::Point3f(fP)*0.001;
 }

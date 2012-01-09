@@ -269,7 +269,8 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		Point3f hoopPoint = Point3f(myCode1.endPoint.x,
 				myCode1.endPoint.y,
 				myCode1.endPoint.z);
-		Point3f hoopNormal = Point3f(1, 1, 1);
+		//Point3f hoopNormal = Point3f(1, 1, 1);
+		Point3f hoopNormal = cv::Point3f(myCode1.normalVector);
 		Point3f quadPoint = Point3f(x, y, z);
 		Point3f quadOrientation = Point3f(roll, pitch, yaw);
 

@@ -36,6 +36,7 @@ public:
 	cv::Mat inverseIntrinsicMat;
 	cv::Mat depthWithEllipse;
 	cv::RotatedRect finalHoop;
+	cv::Vec3f normalVector;
 
 	CodeContainer(cv::Mat, cv::Mat,cv::Mat, cv::Mat, PxSHMImageClient*, const mavlink_message_t*, int, int, int, int, int, int, int, bool, double);
 	virtual ~CodeContainer();

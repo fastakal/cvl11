@@ -93,6 +93,10 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 		imgDepthColor = hp.disparityImageWithPlane;
 
 		destination3dPoint pointIn3D = destination3dPoint(hp, client, message, inverseIntrinsicMat);
+
+		normalVector = pointIn3D.normalVector;
+
+
 		if(plotOption){
 			cv::imshow("imgDepthColor+hoop+plane", pointIn3D.img);
 			depthWithEllipse = pointIn3D.img;
@@ -103,6 +107,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 	else {
 		endPoint.x = 0; endPoint.y = 0; endPoint.z = 0;
 		depthWithEllipse = depthImage;
+		normalVector = cv::Vec3f(0, 0, 0);
 	}
 
 	//time6 = getTimeNow() - tempTime;

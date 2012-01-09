@@ -65,7 +65,7 @@ public:
 
 	void printAll();
 	void getNormalVectorNewWay();
-	void globalPoint();
+	cv::Point3f globalPoint(cv::Point3f point);
 };
 
 #endif /* DESTINATION3DPOINT_H_ */
