@@ -13,8 +13,8 @@ WorldPlotter::WorldPlotter() {
 	plot_size_x = 800;
 	plot_size_y = 600;
 
-	real_size_x = 8;
-	real_size_y = 8;
+	real_size_x = 10;
+	real_size_y = 10;
   marker_size = 5;	
 	x_color = Scalar(255/2, 255/2, 255/2);
 	y_color = Scalar(255/2, 255/2, 255/2);
@@ -128,14 +128,15 @@ void WorldPlotter::plotTopView(
 			Scalar(0, 0, 255));
 
   float normalization = sqrt(objectNormal.x * objectNormal.x + objectNormal.y * objectNormal.y);
-  float scale = -0.5;
-  float golden_x = objectPosition.x + scale * objectNormal.x / normalization;
-  float golden_y = objectPosition.y + scale * objectNormal.y / normalization;
+  float scale = 0.5;
+  float golden_x = objectPosition.x - scale * objectNormal.x / normalization;
+  float golden_y = objectPosition.y - scale * objectNormal.y / normalization;
+  float new_yaw = atan2(objectPosition.y - quadPosition.y, objectPosition.x - quadPosition.x) * 180 / M_PI;
 
   golden_x = golden_x / real_size_x * plot_size_x + plot_size_x / 2;
   golden_y = golden_y / real_size_y * plot_size_y + plot_size_y / 2;
  	cv::Point2i goldenPoint = cv::Point2i(golden_x, golden_y);
-	cv::circle(plot, goldenPoint, 5, Scalar(0, 0, 255), 2);
+	cv::circle(plot, goldenPoint, 1, Scalar(0, 0, 255), 2);
 	cv::Vector<Point3f> coordinates;
 	vector<string> labels;
 

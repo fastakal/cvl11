@@ -47,6 +47,54 @@ bool g_print_positions;
 std::ofstream pointsFile;
 WorldPlotter plot;
 //////// Functions and Structures
+int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
+
+	mavlink_message_t msg;
+	mavlink_set_local_position_setpoint_t pos;
+
+	pos.x   = p[0];
+	pos.y   = p[1];
+	pos.z   = p[2];
+	pos.yaw = yaw * 180 / M_PI;
+	pos.target_system     = getSystemID();
+	pos.target_component  = 200;
+	pos.coordinate_frame = 1;
+
+	mavlink_msg_set_local_position_setpoint_encode(getSystemID(), compid, &msg,
+	                                               &pos);
+	sendMAVLinkMessage(lcm, &msg);
+	return 0;
+}
+
+int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
+                       cv::Vec3f objectPosition, cv::Vec3f normal, float fixed_z,
+                       lcm_t *lcm, int compid) {
+
+  float keep = 0.5f;
+  cv::Vec3f quadPosition;
+
+  client->getGroundTruth(msg, quadPosition[0], quadPosition[1], quadPosition[2]);
+
+  cv::Vec3f d = objectPosition - quadPosition;
+
+  cv::Point3f distance = cv::Point3f(sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]),
+                             0, 0);
+
+  float yaw = atan2(objectPosition[1] - quadPosition[1],
+                    objectPosition[0] - quadPosition[0]);
+
+  float normalization = sqrt(normal[0] * normal[0] + normal[1] * normal[1]);
+
+  cv::Vec3f destination;
+
+  destination[0] = objectPosition[0] - keep * normal[0] / normalization;
+  destination[1] = objectPosition[1] - keep * normal[1] / normalization;
+  destination[2] = fixed_z;
+
+  flyToPos(destination, yaw, lcm, compid);
+
+  return 0;
+}
 
 struct united {
 	PxSHMImageClient *imageClient;
@@ -263,34 +311,22 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		client->getRollPitchYaw(msg,roll,pitch,yaw);
 		client->getGroundTruth(msg,x,y,z);
 
-		if( g_print_positions && myCode1.endPoint.z != 0 ){
-			printf("Distance: %f\n", sqrt(pow(myCode1.endPoint.x - x,2) + pow(myCode1.endPoint.y - y,2)));
-		}
-
 		Point3f hoopPoint = Point3f(myCode1.endPoint.x,
 				myCode1.endPoint.y,
 				myCode1.endPoint.z);
-		//Point3f hoopNormal = Point3f(1, 1, 1);
+
 		Point3f hoopNormal = cv::Point3f(myCode1.normalVector);
 		Point3f quadPoint = Point3f(x, y, z);
 		Point3f quadOrientation = Point3f(roll, pitch, yaw);
 
+ 	
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
 			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
-
-			pos.x = myCode1.endPoint.x;
-			pos.y = myCode1.endPoint.y;
-			pos.z = myCode1.endPoint.z;
-			float new_yaw = atan2(hoopPoint.y - quadPoint.y, hoopPoint.x - quadPoint.x);
-			
-			pos.yaw = new_yaw * 180 / M_PI;
-			pos.target_system = getSystemID();
-			pos.target_component = 200;
-			pos.coordinate_frame = 1;
-
-			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
-			sendMAVLinkMessage(lcm, &msgp);
+      
+      sendMessage(&msgp, client,
+                       cv::Vec3f(hoopPoint), cv::Vec3f(hoopNormal), -0.8,
+                       lcm, compid);
 		} else {
 			if(initialize == false)
 				printf("no message was sent.\n");
