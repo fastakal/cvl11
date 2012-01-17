@@ -46,6 +46,9 @@ double g_current_time;
 bool g_print_positions;
 std::ofstream pointsFile;
 WorldPlotter plot;
+cv::Vec3f lastKnownPosition;
+int FLAG = 5555;
+
 //////// Functions and Structures
 int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 
@@ -66,11 +69,31 @@ int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 	return 0;
 }
 
+bool validatePosition(cv::Vec3f destination){
+  float difference = 1;
+  float currentDifference = 0;
+  if(lastKnownPosition[0] != FLAG && lastKnownPosition[1] != FLAG){
+
+  currentDifference = sqrt(
+  pow(lastKnownPosition[0] - destination[0], 2.0f)
+   +  
+   pow(lastKnownPosition[1] - destination[1], 2.0f));
+   
+  if(currentDifference < difference)
+  return false;
+  } 
+  else {
+  lastKnownPosition = destination;
+    }
+
+  return true;
+}
+
 int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
                        cv::Vec3f objectPosition, cv::Vec3f normal, float fixed_z,
                        lcm_t *lcm, int compid) {
 
-  float keep = 0.5f;
+  float keep = 1.0f;
   cv::Vec3f quadPosition;
 
   client->getGroundTruth(msg, quadPosition[0], quadPosition[1], quadPosition[2]);
@@ -91,7 +114,13 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
   destination[1] = objectPosition[1] - keep * normal[1] / normalization;
   destination[2] = fixed_z;
 
-  flyToPos(destination, yaw, lcm, compid);
+  if(validatePosition(destination)){
+    flyToPos(destination, yaw, lcm, compid);
+    printf("\nPosition VALIDATED...\n");
+    }
+    else {
+    printf("\nPosition was not validated, considered an outlier...\n");
+    }
 
   return 0;
 }
@@ -144,9 +173,14 @@ colorDepthImage(cv::Mat& imgDepth, cv::Mat& imgColoredDepth)
 
 void plotInputImages(cv::Mat imgL, cv::Mat imgR, cv::Mat imgDepthColor){
 
-	int newSizeX = imgL.cols/2;
-	int newSizeY = imgL.rows/2;
+	int newSizeX = imgL.cols/3;
+	int newSizeY = imgL.rows/3;
+	float factor = 3;
 	int marginBetweenWindows = 20;
+
+	cv::resize(imgL, imgL, Size(), 1. / factor, 1. / factor);
+	cv::resize(imgR, imgR, Size(), 1. / factor, 1. / factor);
+	cv::resize(imgDepthColor, imgDepthColor, Size(), 1. / factor, 1. / factor);
 
 	cv::namedWindow("Left Image",	0);
 	cv::namedWindow("Right Image",	0);
@@ -156,9 +190,9 @@ void plotInputImages(cv::Mat imgL, cv::Mat imgR, cv::Mat imgDepthColor){
 	cv::imshow("Right Image", 	imgR);
 	cv::imshow("Depth map",		imgDepthColor);
 
-	cvResizeWindow("Left Image", 	newSizeX, newSizeY);
-	cvResizeWindow("Right Image", 	newSizeX, newSizeY);
-	cvResizeWindow("Depth map",		newSizeX, newSizeY);
+//	cvResizeWindow("Left Image", 	newSizeX, newSizeY);
+//	cvResizeWindow("Right Image", 	newSizeX, newSizeY);
+//	cvResizeWindow("Depth map",		newSizeX, newSizeY);
 
 	cvMoveWindow("Left Image", 		marginBetweenWindows, 0);
 	cvMoveWindow("Right Image", 	newSizeX + 2*marginBetweenWindows, 0);
@@ -179,7 +213,7 @@ void signalHandler(int signal) {
 	if (signal == SIGINT) {
 		fprintf(stderr, "# INFO: Quitting...\n");
 
-		printTimingStats();
+//		printTimingStats();
 
 		quit = true;
 		exit(EXIT_SUCCESS);
@@ -281,7 +315,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			plotInputImages(imgL, imgR, imgDepthColor);
 		}
 
-		createControlPanel();
+//		createControlPanel();
 		double angle_treshold = ((double)g_angle_threshold_ratio)/10;
 
 		startTime = getTimeNow();
@@ -319,7 +353,6 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		Point3f quadPoint = Point3f(x, y, z);
 		Point3f quadOrientation = Point3f(roll, pitch, yaw);
 
- 	
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
 			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
@@ -333,10 +366,13 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		}
 
 		cv::Mat toto; toto = imgRectified;
+		float factor = 3;
 		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
-		cv::imshow("Detection", toto);
+		cv::resize(toto, toto, Size(), 1. / factor, 1. / factor);
+    cv::namedWindow("Detection", 0);
+ 		cv::imshow("Detection", toto);
 
-		timingHistory[globalFrameCounter] = time;
+//		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
 
 		struct timeval tv;
@@ -463,11 +499,16 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
-	pointsFile.open ("points.txt");
+  lastKnownPosition[0] = FLAG;
+  lastKnownPosition[1] = FLAG;
+  lastKnownPosition[2] = FLAG;
 
-	g_startOfExperiment = getTimeNow();
+//	pointsFile.open ("points.txt");
+	
 
-	timingHistory.resize(maxNumberOfFrames);
+	//g_startOfExperiment = getTimeNow();
+
+	//timingHistory.resize(maxNumberOfFrames);
 
 	GError *error = NULL;
 	GOptionContext *context;

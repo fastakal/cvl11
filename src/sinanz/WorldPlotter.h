@@ -43,7 +43,7 @@ public:
 			Point3f quadOrientation);
 
 	//void plotCoordinates(Vector<Point3f> coordinates);
-	void plotCoordinates(Mat &plot,
+	void plotCoordinates(Mat *plot,
 			Vector<Point3f> &coordinates,
 			vector<string> &labels);
 

@@ -167,10 +167,16 @@ void CodeContainer::plotPipeLineImages(cv::Mat firstImage,
 		cv::Mat thirdImage,
 		cv::Mat fourthImage){
 
+  float factor = 3;
 	int newSizeX = secondImage.cols/2 + 40;
 	int newSizeY = secondImage.rows/2;
 	int marginBetweenWindows = 20;
 
+	cv::resize(firstImage, firstImage, Size(), 1. / factor, 1. / factor);
+	cv::resize(secondImage, secondImage, Size(), 1. / factor, 1. / factor);
+	cv::resize(thirdImage, thirdImage, Size(), 1. / factor, 1. / factor);
+	cv::resize(fourthImage, fourthImage, Size(), 1. / factor, 1. / factor);
+	
 	cv::namedWindow("Thresholded Image",0);
 	cv::namedWindow( "contours",		0);
 	cv::namedWindow("lines",			0);
@@ -181,11 +187,11 @@ void CodeContainer::plotPipeLineImages(cv::Mat firstImage,
 	cv::imshow("lines", 			thirdImage);
 	cv::imshow("filtered lines", 	fourthImage);
 
-	cvResizeWindow("Thresholded Image", newSizeX, newSizeY);
-	cvResizeWindow("contours", 			newSizeX, newSizeY);
-	cvResizeWindow("lines", 			newSizeX, newSizeY);
-	cvResizeWindow("filtered lines", 	newSizeX, newSizeY);
-	cvResizeWindow("eImagePlusEllipses", newSizeX, newSizeY);
+//	cvResizeWindow("Thresholded Image", newSizeX, newSizeY);
+//	cvResizeWindow("contours", 			newSizeX, newSizeY);
+//	cvResizeWindow("lines", 			newSizeX, newSizeY);
+//	cvResizeWindow("filtered lines", 	newSizeX, newSizeY);
+//	cvResizeWindow("eImagePlusEllipses", newSizeX, newSizeY);
 
 	cvMoveWindow("Thresholded Image", 	marginBetweenWindows, newSizeY + marginBetweenWindows);
 	cvMoveWindow("contours", 			newSizeX + 2*marginBetweenWindows, newSizeY + marginBetweenWindows);
