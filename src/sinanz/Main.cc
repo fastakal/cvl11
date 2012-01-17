@@ -103,11 +103,13 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
   cv::Point3f distance = cv::Point3f(sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]),
                              0, 0);
 
-  float yaw = atan2(objectPosition[1] - quadPosition[1],
-                    objectPosition[0] - quadPosition[0]);
+ // float yaw = atan2(objectPosition[1] - quadPosition[1],
+   //                 objectPosition[0] - quadPosition[0]);
 
   float normalization = sqrt(normal[0] * normal[0] + normal[1] * normal[1]);
-
+  
+  float yaw = (3*M_PI / 2) - atan2(normal[1] / normalization, normal[0] / normalization);
+  
   cv::Vec3f destination;
 
   destination[0] = objectPosition[0] - keep * normal[0] / normalization;
