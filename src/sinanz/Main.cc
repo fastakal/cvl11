@@ -41,6 +41,11 @@ bool quit = false;
 
 float roll, pitch, yaw;
 bool initialize = true;
+float init_yaw;
+float init_x, init_y, init_z;
+bool firstTime = true;
+float constant_z = -1.0f;
+
 double g_startOfExperiment;
 double g_current_time;
 bool g_print_positions;
@@ -93,30 +98,23 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
                        cv::Vec3f objectPosition, cv::Vec3f normal, float fixed_z,
                        lcm_t *lcm, int compid) {
 
-  float keep = 1.0f;
-  cv::Vec3f quadPosition;
+  float keep = 1.1f;
 
-  client->getGroundTruth(msg, quadPosition[0], quadPosition[1], quadPosition[2]);
-
-  cv::Vec3f d = objectPosition - quadPosition;
-
-  cv::Point3f distance = cv::Point3f(sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]),
-                             0, 0);
-
-  float yaw = atan2(objectPosition[1] - quadPosition[1],
-                    objectPosition[0] - quadPosition[0]);
+  float yaw = -atan2(-1 * normal[1], -1 * normal[0]);
 
   float normalization = sqrt(normal[0] * normal[0] + normal[1] * normal[1]);
-
   cv::Vec3f destination;
 
   destination[0] = objectPosition[0] - keep * normal[0] / normalization;
   destination[1] = objectPosition[1] - keep * normal[1] / normalization;
   destination[2] = fixed_z;
+  std::cout<<"objectPosition, normal, destination"<<std::endl<<cv::Mat(objectPosition)<<std::endl;
+  std::cout<<cv::Mat(normal * (1/normalization))<<std::endl;
+  std::cout<<cv::Mat(destination)<<std::endl;
 
   if(validatePosition(destination)){
     flyToPos(destination, yaw, lcm, compid);
-    printf("\nPosition VALIDATED...\n");
+    printf("\nPosition VALIDATED... %f \n", yaw * 180/M_PI);
     }
     else {
     printf("\nPosition was not validated, considered an outlier...\n");
@@ -276,30 +274,22 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		g_current_time = getTimeNow();
 		double diffInTime = g_current_time - g_startOfExperiment;
 
-		if(diffInTime > 2.0f){
+		if(diffInTime > 10.0f){
 			initialize = false;
 		}
 
 		if(initialize){
+		if(firstTime){
+  		client->getRollPitchYaw(msg, roll, pitch, init_yaw);
+  		client->getGroundTruth(msg, init_x, init_y, init_z);
+  		firstTime = false;
+		}
+		
 			printf("\nTime: %f Seconds\n", diffInTime);
-			float yaw;
-			float init_x, init_y, init_z;
+	    flyToPos(cv::Vec3f(init_x, init_y, constant_z), init_yaw, lcm, compid);
 
-			client->getRollPitchYaw(msg, roll, pitch, yaw);
-			client->getGroundTruth(msg, init_x, init_y, init_z);
-
-			pos.x = init_x;
-			pos.y = init_y;
-			pos.z = -0.800;
-			pos.yaw = yaw * 180 / M_PI;
-			pos.target_system = getSystemID();
-			pos.target_component = 200;
-			pos.coordinate_frame = 1;
-
-			mavlink_msg_set_local_position_setpoint_encode(getSystemID(),compid, &msgp, &pos);
-			sendMAVLinkMessage(lcm, &msgp);
-			printf("Lifting: x: %f, y: %f, z: %f.\n",
-					pos.x, pos.y, pos.z);
+			printf("Lifting: x: %f, y: %f, z: %f, yaw: %f.\n",
+					init_x, init_y, constant_z, init_yaw * (180 / M_PI));
 		}
 
 		double startTime, endTime;
@@ -355,22 +345,22 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
-			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
+//			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
       
       sendMessage(&msgp, client,
-                       cv::Vec3f(hoopPoint), cv::Vec3f(hoopNormal), -0.8,
+                       cv::Vec3f(hoopPoint), cv::Vec3f(hoopNormal), constant_z,
                        lcm, compid);
 		} else {
 			if(initialize == false)
 				printf("no message was sent.\n");
 		}
 
-		cv::Mat toto; toto = imgRectified;
-		float factor = 3;
-		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
-		cv::resize(toto, toto, Size(), 1. / factor, 1. / factor);
-    cv::namedWindow("Detection", 0);
- 		cv::imshow("Detection", toto);
+//		cv::Mat toto; toto = imgRectified;
+//		float factor = 3;
+//		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
+//		cv::resize(toto, toto, Size(), 1. / factor, 1. / factor);
+//    cv::namedWindow("Detection", 0);
+// 		cv::imshow("Detection", toto);
 
 //		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
@@ -499,14 +489,12 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
+  
   lastKnownPosition[0] = FLAG;
   lastKnownPosition[1] = FLAG;
   lastKnownPosition[2] = FLAG;
 
-//	pointsFile.open ("points.txt");
-	
-
-	//g_startOfExperiment = getTimeNow();
+	g_startOfExperiment = getTimeNow();
 
 	//timingHistory.resize(maxNumberOfFrames);
 
