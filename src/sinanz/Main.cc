@@ -55,6 +55,31 @@ cv::Vec3f lastKnownPosition;
 int FLAG = 5555;
 
 //////// Functions and Structures
+float arcTan(float x, float y) {
+  float angle;
+  float ax = abs(x);
+  float ay = abs(y);
+
+  if (x > 0 && y > 0)
+    angle = atan(ay / ax);
+  else if (x < 0 && y > 0)
+    angle = M_PI_2 + atan(ax / ay);
+  else if (x < 0 && y < 0)
+    angle = -M_PI_2 - atan(ax / ay);
+  else if (x > 0 && y < 0)
+    angle = -atan(ay / ax);
+  else if (x == 0)
+    angle = (y > 0) ? M_PI_2 : -M_PI_2;
+  else if (y == 0)
+    angle = (x > 0) ? 0 : M_PI;
+
+
+  if (x == 0 && y == 0)
+    angle = 0;
+
+  return angle;
+}
+
 int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 
 	mavlink_message_t msg;
@@ -73,9 +98,17 @@ int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 	sendMAVLinkMessage(lcm, &msg);
 	return 0;
 }
+bool validateNormal(cv::Vec3f normal) {
+  float threshold = 0.1;
+  if ( (abs(normal[0]) + abs(normal[1])) < threshold){
+  printf("normal is ZERO");
+  return false;
+  }
+  return true;
+}
 
 bool validatePosition(cv::Vec3f destination){
-  float difference = 1;
+  float difference = 1.5f;
   float currentDifference = 0;
   if(lastKnownPosition[0] != FLAG && lastKnownPosition[1] != FLAG){
 
@@ -98,12 +131,13 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
                        cv::Vec3f objectPosition, cv::Vec3f normal, float fixed_z,
                        lcm_t *lcm, int compid) {
 
-  float keep = 1.1f;
-
-  float yaw = -atan2(-1 * normal[1], -1 * normal[0]);
+  float keep = 1.0f;
+  cv::Vec3f destination;
 
   float normalization = sqrt(normal[0] * normal[0] + normal[1] * normal[1]);
-  cv::Vec3f destination;
+  
+//  float yaw = atan2((-1 * normal[1] / normalization), (-1 * normal[0] / normalization) );
+  float yaw = arcTan(normal[0], normal[1]);
 
   destination[0] = objectPosition[0] - keep * normal[0] / normalization;
   destination[1] = objectPosition[1] - keep * normal[1] / normalization;
@@ -112,7 +146,7 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
   std::cout<<cv::Mat(normal * (1/normalization))<<std::endl;
   std::cout<<cv::Mat(destination)<<std::endl;
 
-  if(validatePosition(destination)){
+  if(validatePosition(destination) && validateNormal(normal)){
     flyToPos(destination, yaw, lcm, compid);
     printf("\nPosition VALIDATED... %f \n", yaw * 180/M_PI);
     }
@@ -274,7 +308,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		g_current_time = getTimeNow();
 		double diffInTime = g_current_time - g_startOfExperiment;
 
-		if(diffInTime > 10.0f){
+		if(diffInTime > 5.0f){
 			initialize = false;
 		}
 
@@ -345,7 +379,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
-//			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
+			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
       
       sendMessage(&msgp, client,
                        cv::Vec3f(hoopPoint), cv::Vec3f(hoopNormal), constant_z,
@@ -355,12 +389,12 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				printf("no message was sent.\n");
 		}
 
-//		cv::Mat toto; toto = imgRectified;
-//		float factor = 3;
-//		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
-//		cv::resize(toto, toto, Size(), 1. / factor, 1. / factor);
-//    cv::namedWindow("Detection", 0);
-// 		cv::imshow("Detection", toto);
+		cv::Mat toto; toto = imgRectified;
+		float factor = 3;
+		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
+		cv::resize(toto, toto, Size(), 1. / factor, 1. / factor);
+    cv::namedWindow("Detection", 0);
+ 		cv::imshow("Detection", toto);
 
 //		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
