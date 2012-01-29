@@ -1,6 +1,9 @@
 /*=====================================================================
 This file is inspired from the project done by Lorenz.
 =====================================================================*/
+// Comments
+// validateNormal returns true always, check it.
+
 
 #include <cstdio>
 #include <unistd.h>
@@ -99,6 +102,7 @@ int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 	return 0;
 }
 bool validateNormal(cv::Vec3f normal) {
+return true;
   float threshold = 0.1;
   if ( (abs(normal[0]) + abs(normal[1])) < threshold){
   printf("normal is ZERO");
@@ -108,23 +112,25 @@ bool validateNormal(cv::Vec3f normal) {
 }
 
 bool validatePosition(cv::Vec3f destination){
-  float difference = 1.5f;
+  float difference = 0.5f;
   float currentDifference = 0;
+  
   if(lastKnownPosition[0] != FLAG && lastKnownPosition[1] != FLAG){
 
-  currentDifference = sqrt(
-  pow(lastKnownPosition[0] - destination[0], 2.0f)
-   +  
-   pow(lastKnownPosition[1] - destination[1], 2.0f));
-   
+  currentDifference = sqrt(pow(lastKnownPosition[0] - destination[0], 2.0f) +  pow(lastKnownPosition[1] - destination[1], 2.0f));
+/*
+  std::cout<<"lastKnown: "<<cv::Mat(lastKnownPosition)<<std::endl;
+  std::cout<<"destinati: "<<cv::Mat(destination)<<std::endl;
+  std::cout<<"curr: "<<currentDifference<<std::endl;
+  std::cout<<"diff: "<<difference<<endl;
+*/ 
   if(currentDifference < difference)
-  return false;
+  return true;
   } 
   else {
   lastKnownPosition = destination;
     }
-
-  return true;
+  return false;
 }
 
 int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
@@ -142,12 +148,15 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
   destination[0] = objectPosition[0] - keep * normal[0] / normalization;
   destination[1] = objectPosition[1] - keep * normal[1] / normalization;
   destination[2] = fixed_z;
-  std::cout<<"objectPosition, normal, destination"<<std::endl<<cv::Mat(objectPosition)<<std::endl;
-  std::cout<<cv::Mat(normal * (1/normalization))<<std::endl;
-  std::cout<<cv::Mat(destination)<<std::endl;
 
   if(validatePosition(destination) && validateNormal(normal)){
     flyToPos(destination, yaw, lcm, compid);
+
+    float roll, pitch, yawyaw, xx, yy, zz;
+ 		client->getRollPitchYaw(msg, roll, pitch, yawyaw);
+ 		client->getGroundTruth(msg, xx, yy, zz);
+    
+    plot.plotTopView(objectPosition, normal, cv::Point3f(xx,yy,zz), cv::Point3f(roll, pitch, yawyaw));
     printf("\nPosition VALIDATED... %f \n", yaw * 180/M_PI);
     }
     else {
@@ -343,6 +352,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		double angle_treshold = ((double)g_angle_threshold_ratio)/10;
 
 		startTime = getTimeNow();
+
+		cv::imwrite("1-input-Left.png", imgRectified);
+
 		CodeContainer myCode1 = CodeContainer(imgRectified, img3, imgDepth,
 				inverseIntrinsicMat,
 				client,
@@ -355,7 +367,8 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 				g_line_size_for_plotting,
 				g_distance_between_lines,
 				g_plot,
-				angle_treshold
+				angle_treshold,
+				1
 		);
 
 		// Timestamp after the computation.
@@ -379,8 +392,8 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 		if( myCode1.endPoint.z != 0 && initialize == false){
 
-			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
-      
+//			plot.plotTopView(hoopPoint, hoopNormal, quadPoint, quadOrientation);
+	    
       sendMessage(&msgp, client,
                        cv::Vec3f(hoopPoint), cv::Vec3f(hoopNormal), constant_z,
                        lcm, compid);
@@ -392,6 +405,9 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		cv::Mat toto; toto = imgRectified;
 		float factor = 3;
 		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
+
+		cv::imwrite("5-inputWithDetection.png", toto);
+
 		cv::resize(toto, toto, Size(), 1. / factor, 1. / factor);
     cv::namedWindow("Detection", 0);
  		cv::imshow("Detection", toto);

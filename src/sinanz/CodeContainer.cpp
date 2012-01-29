@@ -19,7 +19,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 		int g_line_size_for_plotting,
 		int g_distance_between_lines,
 		bool plotOption,
-		double g_angle_threshold_ratio) {
+		double g_angle_threshold_ratio, int tag) {
 
 	//double tempTime, time1, time2, time3, time4, time5, time6, time7;
 
@@ -98,7 +98,6 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 
 
 		if(plotOption){
-			cv::imshow("imgDepthColor+hoop+plane", pointIn3D.img);
 			depthWithEllipse = pointIn3D.img;
 		}
 
@@ -166,6 +165,10 @@ void CodeContainer::plotPipeLineImages(cv::Mat firstImage,
 		cv::Mat secondImage,
 		cv::Mat thirdImage,
 		cv::Mat fourthImage){
+		
+	cv::imwrite("2-ContoursImage.png", secondImage);
+	cv::imwrite("3-linesImage.png", thirdImage);
+	cv::imwrite("4-fliteredLinesWithEllilpses.png", fourthImage);
 
   float factor = 3;
 	int newSizeX = secondImage.cols/2 + 40;

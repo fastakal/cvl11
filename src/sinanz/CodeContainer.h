@@ -38,7 +38,7 @@ public:
 	cv::RotatedRect finalHoop;
 	cv::Vec3f normalVector;
 
-	CodeContainer(cv::Mat, cv::Mat,cv::Mat, cv::Mat, PxSHMImageClient*, const mavlink_message_t*, int, int, int, int, int, int, int, bool, double);
+	CodeContainer(cv::Mat, cv::Mat,cv::Mat, cv::Mat, PxSHMImageClient*, const mavlink_message_t*, int, int, int, int, int, int, int, bool, double, int);
 	virtual ~CodeContainer();
 	void createControlPanel();
 	double getTimeNow();

@@ -10,8 +10,8 @@
 WorldPlotter::WorldPlotter() {
 
 	// Initialization Phase.
-	plot_size_x = 400;
-	plot_size_y = 300;
+	plot_size_x = 800;
+	plot_size_y = 600;
 
 	real_size_x = 10;
 	real_size_y = 10;
