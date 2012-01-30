@@ -3,6 +3,7 @@ This file is inspired from the project done by Lorenz.
 =====================================================================*/
 // Comments
 // validateNormal returns true always, check it.
+// validatePosition returns true always, check it.
 
 
 #include <cstdio>
@@ -56,6 +57,7 @@ std::ofstream pointsFile;
 WorldPlotter plot;
 cv::Vec3f lastKnownPosition;
 int FLAG = 5555;
+cv::VideoWriter video;
 
 //////// Functions and Structures
 float arcTan(float x, float y) {
@@ -102,8 +104,8 @@ int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 	return 0;
 }
 bool validateNormal(cv::Vec3f normal) {
-return true;
-  float threshold = 0.1;
+//return true;
+  float threshold = 0.2;
   if ( (abs(normal[0]) + abs(normal[1])) < threshold){
   printf("normal is ZERO");
   return false;
@@ -111,20 +113,19 @@ return true;
   return true;
 }
 
-bool validatePosition(cv::Vec3f destination){
+bool validatePosition(cv::Vec3f destination, float yaw, cv::Point3f quadPoint, cv::Vec3f position){
+//return true;
   float difference = 0.5f;
   float currentDifference = 0;
+  
+  float relativeAngle = arcTan(position[0] - quadPoint.x, position[1] - quadPoint.y);
+  float diffInAngle = abs(relativeAngle - yaw);
   
   if(lastKnownPosition[0] != FLAG && lastKnownPosition[1] != FLAG){
 
   currentDifference = sqrt(pow(lastKnownPosition[0] - destination[0], 2.0f) +  pow(lastKnownPosition[1] - destination[1], 2.0f));
-/*
-  std::cout<<"lastKnown: "<<cv::Mat(lastKnownPosition)<<std::endl;
-  std::cout<<"destinati: "<<cv::Mat(destination)<<std::endl;
-  std::cout<<"curr: "<<currentDifference<<std::endl;
-  std::cout<<"diff: "<<difference<<endl;
-*/ 
-  if(currentDifference < difference)
+
+  if((currentDifference < difference) && (diffInAngle < 2.0f))
   return true;
   } 
   else {
@@ -135,7 +136,8 @@ bool validatePosition(cv::Vec3f destination){
 
 int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
                        cv::Vec3f objectPosition, cv::Vec3f normal, float fixed_z,
-                       lcm_t *lcm, int compid) {
+                       lcm_t *lcm, int compid, cv::Point3f                       quadPoint,
+cv::Point3f                       quadOrientation) {
 
   float keep = 1.0f;
   cv::Vec3f destination;
@@ -149,15 +151,13 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
   destination[1] = objectPosition[1] - keep * normal[1] / normalization;
   destination[2] = fixed_z;
 
-  if(validatePosition(destination) && validateNormal(normal)){
+  if(validatePosition(destination, yaw, quadPoint, objectPosition) && validateNormal(normal)){
     flyToPos(destination, yaw, lcm, compid);
 
-    float roll, pitch, yawyaw, xx, yy, zz;
- 		client->getRollPitchYaw(msg, roll, pitch, yawyaw);
- 		client->getGroundTruth(msg, xx, yy, zz);
+  plot.plotTopView(objectPosition, normal, quadPoint, quadOrientation);
     
-    plot.plotTopView(objectPosition, normal, cv::Point3f(xx,yy,zz), cv::Point3f(roll, pitch, yawyaw));
-    printf("\nPosition VALIDATED... %f \n", yaw * 180/M_PI);
+    
+    printf("\nPosition VALIDATED...\n");
     }
     else {
     printf("\nPosition was not validated, considered an outlier...\n");
@@ -300,9 +300,11 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 
 
 	StereoProc imgproc;
-//	imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
+  //imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
 	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/cmake/config/calib_stereo_bravo_firefly.scf");
+
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
 	inverseIntrinsicMat = intrinsicMat;
@@ -396,7 +398,10 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	    
       sendMessage(&msgp, client,
                        cv::Vec3f(hoopPoint), cv::Vec3f(hoopNormal), constant_z,
-                       lcm, compid);
+                       lcm, compid,
+                       quadPoint,
+                       quadOrientation
+                       );
 		} else {
 			if(initialize == false)
 				printf("no message was sent.\n");
@@ -539,6 +544,13 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
+  double fps = 30;
+  cv::Size imgSize = cv::Size(800,600);
+
+  video = cv::VideoWriter("output.avi", CV_FOURCC('M', 'J', 'P', 'G'),
+            fps,
+            imgSize
+            );
   
   lastKnownPosition[0] = FLAG;
   lastKnownPosition[1] = FLAG;

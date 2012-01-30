@@ -26,7 +26,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 	//tempTime = getTimeNow();
 
 	depthImage = imgDepth;
-	numberOfPointsForDepthOfHoop = 10;
+	numberOfPointsForDepthOfHoop = 100;
 	//int g_margin = 20;
 	inverseIntrinsicMat = inverseK;
 
@@ -90,6 +90,7 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 	if( hoop.center.x != 0 && hoop.center.y != 0){
 
 		HoopPosition hp = HoopPosition(depthImage, imgDepthColor, hoop, numberOfPointsForDepthOfHoop);
+    if (hp.depthValuesOfHoop.size()>4){		
 		imgDepthColor = hp.disparityImageWithPlane;
 
 		destination3dPoint pointIn3D = destination3dPoint(hp, client, message, inverseIntrinsicMat);
@@ -102,6 +103,12 @@ CodeContainer::CodeContainer(cv::Mat img, cv::Mat imgDepthColor, cv::Mat imgDept
 		}
 
 		endPoint = pointIn3D.endPoint;
+		}
+		else {
+		endPoint.x = 0; endPoint.y = 0; endPoint.z = 0;
+		depthWithEllipse = depthImage;
+		normalVector = cv::Vec3f(0, 0, 0);
+		}
 	}
 	else {
 		endPoint.x = 0; endPoint.y = 0; endPoint.z = 0;

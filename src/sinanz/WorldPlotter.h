@@ -33,6 +33,8 @@ public:
 	int object_thickness;
 
 	Vector<Point2f> object_trace, quad_trace;
+	
+	cv::Mat outputPlot; // Needs to be fetched after plotTopView() and not before.
 
 	WorldPlotter();
 	virtual ~WorldPlotter();

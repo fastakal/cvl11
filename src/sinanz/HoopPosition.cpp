@@ -157,7 +157,7 @@ HoopPosition::HoopPosition(cv::Mat depthImg, cv::Mat dispImage, cv::RotatedRect 
 		std::cout<<depthValuesOfHoop.size()<<"\n";
 	}
 	else {
-		fitPlane();
+//		fitPlane();
 		plotThe4Points();
 
 		//addFittedPlaneToImage(disparityImage);

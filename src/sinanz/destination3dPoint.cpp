@@ -57,7 +57,14 @@ void destination3dPoint::get2ndPoint(){
 
 	double x = hoopCentroid.x;
 	double y = hoopCentroid.y;
-	double z = hoop.depthValuesOfHoop[0][2];
+	double z;
+	printf("number of z values: %d\n", hoop.depthValuesOfHoop.size());
+	for(int i = 0; i < hoop.depthValuesOfHoop.size(); i++){
+	  z = z + hoop.depthValuesOfHoop[i][2];
+	}
+	z = z / hoop.depthValuesOfHoop.size();
+	
+//	double z = hoop.depthValuesOfHoop[0][2];
 
 	pixelCoordinatesWithDepth = cv::Point3f(x, y, z);
 }

@@ -161,6 +161,7 @@ void WorldPlotter::plotTopView(
 	plotCoordinates(&plot, coordinates, labels);
 //    plotCoordinates(NULL, coordinates, labels);
 	finalize(plot);
+	outputPlot = plot;
 }
 
 void WorldPlotter::plotCoordinates(Mat *plot, Vector<Point3f> &coordinates,
