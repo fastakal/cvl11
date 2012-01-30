@@ -52,6 +52,7 @@ public:
 	void plotTrace(Mat& plot, Vector<Point2f> coordinates, Scalar color);
 	void finalize(Mat& plot);
 	void plotAxes(cv::Mat& plot);
+	float arcTan(float x, float y);
 };
 
 #endif /* WORLDPLOTTER_H_ */

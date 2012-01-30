@@ -28,6 +28,32 @@ WorldPlotter::WorldPlotter() {
 	font_scale = 0.7;
 }
 
+float WorldPlotter::arcTan(float x, float y) {
+  float angle;
+  float ax = abs(x);
+  float ay = abs(y);
+
+  if (x > 0 && y > 0)
+    angle = atan(ay / ax);
+  else if (x < 0 && y > 0)
+    angle = M_PI_2 + atan(ax / ay);
+  else if (x < 0 && y < 0)
+    angle = -M_PI_2 - atan(ax / ay);
+  else if (x > 0 && y < 0)
+    angle = -atan(ay / ax);
+  else if (x == 0)
+    angle = (y > 0) ? M_PI_2 : -M_PI_2;
+  else if (y == 0)
+    angle = (x > 0) ? 0 : M_PI;
+
+
+  if (x == 0 && y == 0)
+    angle = 0;
+
+  return angle;
+}
+
+
 WorldPlotter::~WorldPlotter() {}
 
 /**
@@ -131,7 +157,7 @@ void WorldPlotter::plotTopView(
   float scale = 1.0f;
   float golden_x = objectPosition.x - scale * objectNormal.x / normalization;
   float golden_y = objectPosition.y - scale * objectNormal.y / normalization;
-  float new_yaw = atan2(objectPosition.y - quadPosition.y, objectPosition.x - quadPosition.x) * 180 / M_PI;
+   float new_yaw = arcTan(objectNormal.x, objectNormal.y);
 
   golden_x = golden_x / real_size_x * plot_size_x + plot_size_x / 2;
   golden_y = golden_y / real_size_y * plot_size_y + plot_size_y / 2;
@@ -154,7 +180,7 @@ void WorldPlotter::plotTopView(
 	coordinates[2] = quadPosition;   labels.push_back("P.Quad Point");
 	coordinates[3] = quadOrientation;labels.push_back("O.Quad Orient.");
 	coordinates[4] = distance;labels.push_back("D.Distance.");
-	coordinates[5] = cv::Point3f(0, 0, atan2(objectPosition.y - quadPosition.y, objectPosition.x - quadPosition.x));
+	coordinates[5] = cv::Point3f(0, 0, new_yaw);
 			 labels.push_back("O.DestinationYaw");
 	coordinates[6] = cv::Point3f(golden_x, golden_y, 0); labels.push_back("P.khaltak");
 

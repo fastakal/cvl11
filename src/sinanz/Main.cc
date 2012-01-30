@@ -125,8 +125,10 @@ bool validatePosition(cv::Vec3f destination, float yaw, cv::Point3f quadPoint, c
 
   currentDifference = sqrt(pow(lastKnownPosition[0] - destination[0], 2.0f) +  pow(lastKnownPosition[1] - destination[1], 2.0f));
 
-  if((currentDifference < difference) && (diffInAngle < 2.0f))
-  return true;
+    printf("diffInAngle: %f, yaw,%f relative, %f \n", diffInAngle, yaw, relativeAngle);
+//  if((currentDifference < difference) && (diffInAngle < 2.0f))
+    if(diffInAngle < 2.0f)
+      return true;
   } 
   else {
   lastKnownPosition = destination;
@@ -161,6 +163,7 @@ cv::Point3f                       quadOrientation) {
     }
     else {
     printf("\nPosition was not validated, considered an outlier...\n");
+//    printf("\nposition: %d\nNormal: %d\n", validatePosition(destination, yaw, quadPoint, objectPosition), validateNormal(normal));
     }
 
   return 0;
