@@ -71,24 +71,27 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00021"></a>00021         cv::Vec3f plane;
 <a name="l00022"></a>00022         cv::vector&lt;cv::Vec3f&gt; selectedDepthPoints;
 <a name="l00023"></a>00023         cv::Mat disparityImageWithPlane;
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025         <a class="code" href="classHoopPosition.html">HoopPosition</a>(cv::Mat, cv::Mat dispImage, cv::RotatedRect el, <span class="keywordtype">int</span> numberOfPointsForDepth);
-<a name="l00026"></a>00026         <span class="keyword">virtual</span> ~<a class="code" href="classHoopPosition.html">HoopPosition</a>();
-<a name="l00027"></a>00027 
-<a name="l00032"></a>00032         cv::vector&lt;cv::Vec3f&gt; <a class="code" href="classHoopPosition.html#a20ee55da5edf2dcc8f6025bee7c732f9">findPointsValues</a>(<span class="keywordtype">int</span> numberOfPoints);
-<a name="l00033"></a>00033 
-<a name="l00037"></a>00037         cv::Vec3f <a class="code" href="classHoopPosition.html#a557a2efd60c963b5c608adec34d8a4c3">get3DPoint</a>(<span class="keywordtype">int</span> x,<span class="keywordtype">int</span> y);
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039         <span class="keywordtype">void</span> fitPlane();
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041         <span class="keywordtype">void</span> plotFittedPlate();
-<a name="l00042"></a>00042         <span class="keywordtype">void</span> addFittedPlaneToImage();
-<a name="l00046"></a>00046         cv::Mat <a class="code" href="classHoopPosition.html#a2c5b2c808f5d6f5eb07ddddc8cca349a">rotatePlaneImage</a>(cv::Mat&amp; planeImage, <span class="keywordtype">double</span> angle);
-<a name="l00047"></a>00047 
-<a name="l00051"></a>00051         cv::Mat <a class="code" href="classHoopPosition.html#a0fb499507d77004d72777c0981d31cd5">fillPlaneImage</a>(cv::Mat&amp; planeImage);
-<a name="l00052"></a>00052 };
+<a name="l00024"></a>00024         <span class="keywordtype">float</span> colormap_jet[128][3];
+<a name="l00025"></a>00025         <a class="code" href="classHoopPosition.html">HoopPosition</a>();
+<a name="l00026"></a>00026         <a class="code" href="classHoopPosition.html">HoopPosition</a>(cv::Mat, cv::Mat dispImage, cv::RotatedRect el, <span class="keywordtype">int</span> numberOfPointsForDepth);
+<a name="l00027"></a>00027         <span class="keyword">virtual</span> ~<a class="code" href="classHoopPosition.html">HoopPosition</a>();
+<a name="l00028"></a>00028 
+<a name="l00033"></a>00033         cv::vector&lt;cv::Vec3f&gt; <a class="code" href="classHoopPosition.html#a20ee55da5edf2dcc8f6025bee7c732f9">findPointsValues</a>(<span class="keywordtype">int</span> numberOfPoints);
+<a name="l00034"></a>00034 
+<a name="l00038"></a>00038         <span class="keywordtype">void</span> <a class="code" href="classHoopPosition.html#abd490310645d556510a8af20b9ffedd9">plotDepthValues</a>(cv::Mat&amp; dispImage);
+<a name="l00039"></a>00039 
+<a name="l00043"></a>00043         cv::Vec3f <a class="code" href="classHoopPosition.html#a557a2efd60c963b5c608adec34d8a4c3">get3DPoint</a>(<span class="keywordtype">int</span> x,<span class="keywordtype">int</span> y);
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045         <span class="keywordtype">void</span> fitPlane();
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047         <span class="keywordtype">void</span> plotThe4Points();
+<a name="l00048"></a>00048         <span class="keywordtype">void</span> addFittedPlaneToImage(cv::Mat&amp; dispOrDepthImage);
+<a name="l00052"></a>00052         cv::Mat <a class="code" href="classHoopPosition.html#a2c5b2c808f5d6f5eb07ddddc8cca349a">rotatePlaneImage</a>(cv::Mat&amp; planeImage, <span class="keywordtype">double</span> angle);
 <a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="preprocessor">#endif </span><span class="comment">/* HOOPPOSITION_H_ */</span>
+<a name="l00057"></a>00057         cv::Mat <a class="code" href="classHoopPosition.html#a0fb499507d77004d72777c0981d31cd5">fillPlaneImage</a>(cv::Mat&amp; planeImage);
+<a name="l00058"></a>00058 };
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060 <span class="preprocessor">#endif </span><span class="comment">/* HOOPPOSITION_H_ */</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -105,7 +108,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:36 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

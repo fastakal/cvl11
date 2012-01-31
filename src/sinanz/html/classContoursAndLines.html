@@ -76,8 +76,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setLines</b> (vector&
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContoursAndLines.html#af2ae9375067d26c49dcd7fa52c85444a">approximateContour</a> (vector&lt; vector&lt; Point &gt;&gt; input_contours, int minimumLength, int maximumLength, int approxOrder)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContoursAndLines.html#aea09b8c601e2b9e24128fc506e4438dd">plotMyContours</a> (vector&lt; vector&lt; Point &gt;&gt; contours)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContoursAndLines.html#a02a092093a9f66feb5714fede7b1be16">decomposeContours</a> (vector&lt; vector&lt; Point &gt; &gt; contours, int lineSize)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3ec222236570871745f3176a6990e1e"></a><!-- doxytag: member="ContoursAndLines::plot" ref="ab3ec222236570871745f3176a6990e1e" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>plot</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContoursAndLines.html#a8cec007cc0061798867936ebb400687a">plotLines</a> (vector&lt; vector&lt; Vec4f &gt;&gt; lines1, int lineSize, Mat output_image)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContoursAndLines.html#abb87059453ad6a0eaf22e98100606870">plot1Line</a> (Vec4f line1, int lineSize, Scalar color, Mat output_image)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c4d7f68d18a2fba46b1cfe6f10338eb"></a><!-- doxytag: member="ContoursAndLines::getTimeNow" ref="a5c4d7f68d18a2fba46b1cfe6f10338eb" args="()" -->
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getTimeNow</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0407956646772fbf4bf17fac631f1a28"></a><!-- doxytag: member="ContoursAndLines::edgeImage" ref="a0407956646772fbf4bf17fac631f1a28" args="" -->
@@ -92,6 +96,8 @@ vector&lt; vector&lt; Point &gt; &gt;&#160;</td><td class="memItemRight" valign=
 Mat&#160;</td><td class="memItemRight" valign="bottom"><b>contoursImage</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27b0e699b483619e46b908191acbccb9"></a><!-- doxytag: member="ContoursAndLines::lines" ref="a27b0e699b483619e46b908191acbccb9" args="" -->
 vector&lt; vector&lt; Vec4f &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>lines</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a00fd4f32d61d96edd1a1d1b153929e6a"></a><!-- doxytag: member="ContoursAndLines::lineSize" ref="a00fd4f32d61d96edd1a1d1b153929e6a" args="" -->
+int&#160;</td><td class="memItemRight" valign="bottom"><b>lineSize</b></td></tr>
 </table>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="af2ae9375067d26c49dcd7fa52c85444a"></a><!-- doxytag: member="ContoursAndLines::approximateContour" ref="af2ae9375067d26c49dcd7fa52c85444a" args="(vector&lt; vector&lt; Point &gt;&gt; input_contours, int minimumLength, int maximumLength, int approxOrder)" -->
@@ -290,7 +296,7 @@ vector&lt; vector&lt; Vec4f &gt; &gt;&#160;</td><td class="memItemRight" valign=
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:36 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

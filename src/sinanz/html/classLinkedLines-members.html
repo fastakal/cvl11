@@ -56,15 +56,19 @@ This is the complete list of members for <a class="el" href="classLinkedLines.ht
   <tr class="memlist"><td><a class="el" href="classLinkedLines.html#a96aa89f80cc4441cc4b2a4bc916c9d4a">calculateAnglesOfConnectedLines</a>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; cLines)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLinkedLines.html#aca22f3054cb33e024bada96faae9ca2f">connectedLines</a></td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLinkedLines.html#a920f9ae9cb013c393a555c6c6c922d73">connectRawLines</a>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; rLines, int maxDistance)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>distanceBetweenLines</b> (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>filteredLinesImage</b> (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLinkedLines.html#aefaa75421b85c98299f8d4d2a956216a">findDistanceBetweenPoints</a>(cv::Point pt1, cv::Point pt2)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>getConnectedLines</b>() (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>getLinkedLines</b>() (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>getRawLines</b>() (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLinkedLines.html#a8c4e2755a3b9d05a6910618578caf3d2">linkConnectedLines</a>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; cLines, double thresholdRatio)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>LinkedLines</b>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; rlines) (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>linkedLines</b> (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>LinkedLines</b>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; rlines, int g_distance_between_lines, int g_angle_threshold_ratio, int g_line_size_for_plotting, cv::Mat filteredLinesImage) (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>plot</b>() (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLinkedLines.html#a7696b39387ac832b1b174c484e1c5dcd">plot1Line</a>(cv::Vec4f current_line, int lineSize, cv::Scalar color, cv::Mat output_image)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLinkedLines.html#ada95097dbf8ad3b4f1b18b42f3920a54">plotLines</a>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; lines1, int lineSize, cv::Mat output_image)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>plottingLineSize</b> (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>rawLines</b> (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>setConnectedLines</b>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; cLines) (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>setLinkedLines</b>(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; lLines) (defined in <a class="el" href="classLinkedLines.html">LinkedLines</a>)</td><td><a class="el" href="classLinkedLines.html">LinkedLines</a></td><td></td></tr>
@@ -85,7 +89,7 @@ This is the complete list of members for <a class="el" href="classLinkedLines.ht
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:37 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

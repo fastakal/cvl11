@@ -5,16 +5,16 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classsegmentedImage_ab7b842261ca5b4e83549e9b8d866f439}{
-{\bfseries segmentedImage} (Mat input, int cannyMin, int cannyMax, int dilate)}
-\label{classsegmentedImage_ab7b842261ca5b4e83549e9b8d866f439}
+\hypertarget{classsegmentedImage_ad17cd5d5e484be105efb0046151f314f}{
+{\bfseries segmentedImage} (Mat input, int cannyMin, int cannyMax)}
+\label{classsegmentedImage_ad17cd5d5e484be105efb0046151f314f}
 
 \item 
 Mat \hyperlink{classsegmentedImage_a044e9378bc9e068f99b977ce80254f35}{getEdgeImage} ()
 \item 
 void \hyperlink{classsegmentedImage_a428bdd95c64f3c7b7ef076353a539bd2}{pre\_\-process} (Mat input\_\-img)
 \item 
-void \hyperlink{classsegmentedImage_ab1d04fda23e6ffcdc9bfb971710f4f41}{segmentThisImage} (int cannyMin, int cannyMax, int dilate)
+void \hyperlink{classsegmentedImage_a8d6fd64835f0852e3cdd6658ab2d92bf}{segmentThisImage} (int cannyMin, int cannyMax)
 \end{DoxyCompactItemize}
 
 
@@ -37,18 +37,19 @@ Getters \hypertarget{classsegmentedImage_a428bdd95c64f3c7b7ef076353a539bd2}{
 \end{DoxyParamCaption}
 )}}
 \label{classsegmentedImage_a428bdd95c64f3c7b7ef076353a539bd2}
-Pre\_\-process function: A function that does the pre-\/processing stage on the input image. For the moment, simple Guassian blurring is done only. \hypertarget{classsegmentedImage_ab1d04fda23e6ffcdc9bfb971710f4f41}{
+Pre\_\-process function: A function that does the pre-\/processing stage on the input image. For the moment, simple Guassian blurring is done only. \hypertarget{classsegmentedImage_a8d6fd64835f0852e3cdd6658ab2d92bf}{
 \index{segmentedImage@{segmentedImage}!segmentThisImage@{segmentThisImage}}
 \index{segmentThisImage@{segmentThisImage}!segmentedImage@{segmentedImage}}
 \subsubsection[{segmentThisImage}]{\setlength{\rightskip}{0pt plus 5cm}void segmentedImage::segmentThisImage (
 \begin{DoxyParamCaption}
 \item[{int}]{cannyMin, }
-\item[{int}]{cannyMax, }
-\item[{int}]{doDilate}
+\item[{int}]{cannyMax}
 \end{DoxyParamCaption}
 )}}
-\label{classsegmentedImage_ab1d04fda23e6ffcdc9bfb971710f4f41}
-A function that segments the input image by using canny edge. 
+\label{classsegmentedImage_a8d6fd64835f0852e3cdd6658ab2d92bf}
+A function that segments the input image by using canny edge detector by opencv.
+
+A function that segments the input image using canny edge detector by opencv. 
 
 The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 

@@ -58,8 +58,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a98a7b4c38df7439900c7de0302587517"></a><!-- doxytag: member="LinkedLines::LinkedLines" ref="a98a7b4c38df7439900c7de0302587517" args="(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; rlines)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>LinkedLines</b> (cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; rlines)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e794358d4a75b03f77f3f3507d82127"></a><!-- doxytag: member="LinkedLines::LinkedLines" ref="a4e794358d4a75b03f77f3f3507d82127" args="(cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; rlines, int g_distance_between_lines, int g_angle_threshold_ratio, int g_line_size_for_plotting, cv::Mat filteredLinesImage)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>LinkedLines</b> (cv::vector&lt; cv::vector&lt; cv::Vec4f &gt; &gt; rlines, int g_distance_between_lines, int g_angle_threshold_ratio, int g_line_size_for_plotting, cv::Mat filteredLinesImage)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1855357157ea2fa0e3df79efaf08c15f"></a><!-- doxytag: member="LinkedLines::getRawLines" ref="a1855357157ea2fa0e3df79efaf08c15f" args="()" -->
 cv::vector&lt; cv::vector<br class="typebreak"/>
 &lt; cv::Vec4f &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getRawLines</b> ()</td></tr>
@@ -85,11 +85,19 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setLinkedLines</b> (c
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>anglesHaveSameSign</b> (cv::vector&lt; float &gt; anglesOfOneContour, double thresholdRatio)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd0687a6f9435e8e6dd09b4bb0bfa7d6"></a><!-- doxytag: member="LinkedLines::anglesDiffAcceptable" ref="acd0687a6f9435e8e6dd09b4bb0bfa7d6" args="(cv::vector&lt; float &gt; anglesOfOneContour)" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>anglesDiffAcceptable</b> (cv::vector&lt; float &gt; anglesOfOneContour)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc3743816a40009d8b085b57c0776b9d"></a><!-- doxytag: member="LinkedLines::plot" ref="afc3743816a40009d8b085b57c0776b9d" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>plot</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1ef1b71323e4f8b2b360603d965efc1e"></a><!-- doxytag: member="LinkedLines::distanceBetweenLines" ref="a1ef1b71323e4f8b2b360603d965efc1e" args="" -->
+int&#160;</td><td class="memItemRight" valign="bottom"><b>distanceBetweenLines</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa2124077aa872cdbac8f3d4f47f5aecb"></a><!-- doxytag: member="LinkedLines::rawLines" ref="aa2124077aa872cdbac8f3d4f47f5aecb" args="" -->
 cv::vector&lt; cv::vector<br class="typebreak"/>
 &lt; cv::Vec4f &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>rawLines</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aadd32fcc3cbf09d51302095e7a378ee3"></a><!-- doxytag: member="LinkedLines::filteredLinesImage" ref="aadd32fcc3cbf09d51302095e7a378ee3" args="" -->
+cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>filteredLinesImage</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab86a284ff8b536e9677101d3bc34ccbc"></a><!-- doxytag: member="LinkedLines::plottingLineSize" ref="ab86a284ff8b536e9677101d3bc34ccbc" args="" -->
+int&#160;</td><td class="memItemRight" valign="bottom"><b>plottingLineSize</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">cv::vector&lt; cv::vector<br class="typebreak"/>
 &lt; cv::Vec4f &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinkedLines.html#aca22f3054cb33e024bada96faae9ca2f">connectedLines</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26a6fd6e09564b9ed8181302db38b53f"></a><!-- doxytag: member="LinkedLines::linkedLines" ref="a26a6fd6e09564b9ed8181302db38b53f" args="" -->
@@ -308,7 +316,7 @@ cv::vector&lt; cv::vector<br class="typebreak"/>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:37 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -5,14 +5,24 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classCodeContainer_a2a811a80e563fe171224eeb2684895df}{
-{\bfseries CodeContainer} (cv::Mat, cv::Mat, cv::Mat, int, int, int, int, int, int, int, bool, double)}
-\label{classCodeContainer_a2a811a80e563fe171224eeb2684895df}
+\hypertarget{classCodeContainer_a6386ca1477e64ba021115c6e869773d0}{
+{\bfseries CodeContainer} (cv::Mat, cv::Mat, cv::Mat, cv::Mat, PxSHMImageClient $\ast$, const mavlink\_\-message\_\-t $\ast$, int, int, int, int, int, int, int, bool, double, int)}
+\label{classCodeContainer_a6386ca1477e64ba021115c6e869773d0}
 
 \item 
 \hypertarget{classCodeContainer_a70a3f228bf3526fc607aa79e655a90b7}{
 void {\bfseries createControlPanel} ()}
 \label{classCodeContainer_a70a3f228bf3526fc607aa79e655a90b7}
+
+\item 
+\hypertarget{classCodeContainer_afed6984cc61d3eb19820fbf49283421f}{
+double {\bfseries getTimeNow} ()}
+\label{classCodeContainer_afed6984cc61d3eb19820fbf49283421f}
+
+\item 
+\hypertarget{classCodeContainer_a6855356aa294c9f336d904b07870f57a}{
+void {\bfseries plotPipeLineImages} (cv::Mat firstImage, cv::Mat secondImage, cv::Mat thirdImage, cv::Mat fourthImage)}
+\label{classCodeContainer_a6855356aa294c9f336d904b07870f57a}
 
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
@@ -31,6 +41,31 @@ cv::Mat {\bfseries finalEdgeImage}}
 \hypertarget{classCodeContainer_aa12596e2d7e30c08100432c0d18cf69a}{
 int {\bfseries numberOfPointsForDepthOfHoop}}
 \label{classCodeContainer_aa12596e2d7e30c08100432c0d18cf69a}
+
+\item 
+\hypertarget{classCodeContainer_a96641a7de273d8e6fa5f5cf4406e0d2b}{
+cv::Point3f {\bfseries endPoint}}
+\label{classCodeContainer_a96641a7de273d8e6fa5f5cf4406e0d2b}
+
+\item 
+\hypertarget{classCodeContainer_a2796c5ce77f7d63291f88078d31cf631}{
+cv::Mat {\bfseries inverseIntrinsicMat}}
+\label{classCodeContainer_a2796c5ce77f7d63291f88078d31cf631}
+
+\item 
+\hypertarget{classCodeContainer_a10df0c24294bf834a4abbc3245466b79}{
+cv::Mat {\bfseries depthWithEllipse}}
+\label{classCodeContainer_a10df0c24294bf834a4abbc3245466b79}
+
+\item 
+\hypertarget{classCodeContainer_ac814724bf2639a7c0bb70c498a042c48}{
+cv::RotatedRect {\bfseries finalHoop}}
+\label{classCodeContainer_ac814724bf2639a7c0bb70c498a042c48}
+
+\item 
+\hypertarget{classCodeContainer_af877d6a77e8703aab567c1e354c51309}{
+cv::Vec3f {\bfseries normalVector}}
+\label{classCodeContainer_af877d6a77e8703aab567c1e354c51309}
 
 \end{DoxyCompactItemize}
 

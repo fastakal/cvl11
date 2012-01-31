@@ -12,6 +12,8 @@
 \item 
 cv::vector$<$ cv::Vec3f $>$ \hyperlink{classHoopPosition_a20ee55da5edf2dcc8f6025bee7c732f9}{findPointsValues} (int numberOfPoints)
 \item 
+void \hyperlink{classHoopPosition_abd490310645d556510a8af20b9ffedd9}{plotDepthValues} (cv::Mat \&dispImage)
+\item 
 cv::Vec3f \hyperlink{classHoopPosition_a557a2efd60c963b5c608adec34d8a4c3}{get3DPoint} (int x, int y)
 \item 
 \hypertarget{classHoopPosition_afa5de685d826744f74e0c4c446f7a9ac}{
@@ -19,14 +21,14 @@ void {\bfseries fitPlane} ()}
 \label{classHoopPosition_afa5de685d826744f74e0c4c446f7a9ac}
 
 \item 
-\hypertarget{classHoopPosition_ae739175a0973a6a2bc3ac7621f60328f}{
-void {\bfseries plotFittedPlate} ()}
-\label{classHoopPosition_ae739175a0973a6a2bc3ac7621f60328f}
+\hypertarget{classHoopPosition_aafe183d2dc781e8132deae9ea2d2ba6a}{
+void {\bfseries plotThe4Points} ()}
+\label{classHoopPosition_aafe183d2dc781e8132deae9ea2d2ba6a}
 
 \item 
-\hypertarget{classHoopPosition_aa4fa3114c3f3dac87c569e9212948afc}{
-void {\bfseries addFittedPlaneToImage} ()}
-\label{classHoopPosition_aa4fa3114c3f3dac87c569e9212948afc}
+\hypertarget{classHoopPosition_a329d4a3bb699fadc746cda104b2e5b5a}{
+void {\bfseries addFittedPlaneToImage} (cv::Mat \&dispOrDepthImage)}
+\label{classHoopPosition_a329d4a3bb699fadc746cda104b2e5b5a}
 
 \item 
 cv::Mat \hyperlink{classHoopPosition_a2c5b2c808f5d6f5eb07ddddc8cca349a}{rotatePlaneImage} (cv::Mat \&planeImage, double angle)
@@ -70,6 +72,11 @@ cv::vector$<$ cv::Vec3f $>$ {\bfseries selectedDepthPoints}}
 cv::Mat {\bfseries disparityImageWithPlane}}
 \label{classHoopPosition_a9f4fde272e414b0afb69a142956117e1}
 
+\item 
+\hypertarget{classHoopPosition_ad8233e83f2b2254b824671519cea063a}{
+float {\bfseries colormap\_\-jet} \mbox{[}128\mbox{]}\mbox{[}3\mbox{]}}
+\label{classHoopPosition_ad8233e83f2b2254b824671519cea063a}
+
 \end{DoxyCompactItemize}
 
 
@@ -104,7 +111,16 @@ A function that will take the ellipse, find the depth values of points on its pe
 \end{DoxyParamCaption}
 )}}
 \label{classHoopPosition_a557a2efd60c963b5c608adec34d8a4c3}
-A function that takes a position (x and y) and returns the value in that neighbourhood. \hypertarget{classHoopPosition_a2c5b2c808f5d6f5eb07ddddc8cca349a}{
+A function that takes a position (x and y) and returns the value in that neighbourhood. \hypertarget{classHoopPosition_abd490310645d556510a8af20b9ffedd9}{
+\index{HoopPosition@{HoopPosition}!plotDepthValues@{plotDepthValues}}
+\index{plotDepthValues@{plotDepthValues}!HoopPosition@{HoopPosition}}
+\subsubsection[{plotDepthValues}]{\setlength{\rightskip}{0pt plus 5cm}void HoopPosition::plotDepthValues (
+\begin{DoxyParamCaption}
+\item[{cv::Mat \&}]{dispImage}
+\end{DoxyParamCaption}
+)}}
+\label{classHoopPosition_abd490310645d556510a8af20b9ffedd9}
+A function that plots small circles in the position of the depth values, with a color that corresponds to the depth value. \hypertarget{classHoopPosition_a2c5b2c808f5d6f5eb07ddddc8cca349a}{
 \index{HoopPosition@{HoopPosition}!rotatePlaneImage@{rotatePlaneImage}}
 \index{rotatePlaneImage@{rotatePlaneImage}!HoopPosition@{HoopPosition}}
 \subsubsection[{rotatePlaneImage}]{\setlength{\rightskip}{0pt plus 5cm}cv::Mat HoopPosition::rotatePlaneImage (

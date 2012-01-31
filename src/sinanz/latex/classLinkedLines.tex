@@ -5,9 +5,9 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classLinkedLines_a98a7b4c38df7439900c7de0302587517}{
-{\bfseries LinkedLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ rlines)}
-\label{classLinkedLines_a98a7b4c38df7439900c7de0302587517}
+\hypertarget{classLinkedLines_a4e794358d4a75b03f77f3f3507d82127}{
+{\bfseries LinkedLines} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ rlines, int g\_\-distance\_\-between\_\-lines, int g\_\-angle\_\-threshold\_\-ratio, int g\_\-line\_\-size\_\-for\_\-plotting, cv::Mat filteredLinesImage)}
+\label{classLinkedLines_a4e794358d4a75b03f77f3f3507d82127}
 
 \item 
 \hypertarget{classLinkedLines_a1855357157ea2fa0e3df79efaf08c15f}{
@@ -61,13 +61,33 @@ bool {\bfseries anglesHaveSameSign} (cv::vector$<$ float $>$ anglesOfOneContour,
 bool {\bfseries anglesDiffAcceptable} (cv::vector$<$ float $>$ anglesOfOneContour)}
 \label{classLinkedLines_acd0687a6f9435e8e6dd09b4bb0bfa7d6}
 
+\item 
+\hypertarget{classLinkedLines_afc3743816a40009d8b085b57c0776b9d}{
+void {\bfseries plot} ()}
+\label{classLinkedLines_afc3743816a40009d8b085b57c0776b9d}
+
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
+\hypertarget{classLinkedLines_a1ef1b71323e4f8b2b360603d965efc1e}{
+int {\bfseries distanceBetweenLines}}
+\label{classLinkedLines_a1ef1b71323e4f8b2b360603d965efc1e}
+
+\item 
 \hypertarget{classLinkedLines_aa2124077aa872cdbac8f3d4f47f5aecb}{
 cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ {\bfseries rawLines}}
 \label{classLinkedLines_aa2124077aa872cdbac8f3d4f47f5aecb}
+
+\item 
+\hypertarget{classLinkedLines_aadd32fcc3cbf09d51302095e7a378ee3}{
+cv::Mat {\bfseries filteredLinesImage}}
+\label{classLinkedLines_aadd32fcc3cbf09d51302095e7a378ee3}
+
+\item 
+\hypertarget{classLinkedLines_ab86a284ff8b536e9677101d3bc34ccbc}{
+int {\bfseries plottingLineSize}}
+\label{classLinkedLines_ab86a284ff8b536e9677101d3bc34ccbc}
 
 \item 
 cv::vector$<$ cv::vector$<$ cv::Vec4f $>$ $>$ \hyperlink{classLinkedLines_aca22f3054cb33e024bada96faae9ca2f}{connectedLines}

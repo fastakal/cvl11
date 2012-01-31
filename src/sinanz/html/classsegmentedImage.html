@@ -57,11 +57,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab7b842261ca5b4e83549e9b8d866f439"></a><!-- doxytag: member="segmentedImage::segmentedImage" ref="ab7b842261ca5b4e83549e9b8d866f439" args="(Mat input, int cannyMin, int cannyMax, int dilate)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>segmentedImage</b> (Mat input, int cannyMin, int cannyMax, int dilate)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad17cd5d5e484be105efb0046151f314f"></a><!-- doxytag: member="segmentedImage::segmentedImage" ref="ad17cd5d5e484be105efb0046151f314f" args="(Mat input, int cannyMin, int cannyMax)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>segmentedImage</b> (Mat input, int cannyMin, int cannyMax)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsegmentedImage.html#a044e9378bc9e068f99b977ce80254f35">getEdgeImage</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsegmentedImage.html#a428bdd95c64f3c7b7ef076353a539bd2">pre_process</a> (Mat input_img)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsegmentedImage.html#ab1d04fda23e6ffcdc9bfb971710f4f41">segmentThisImage</a> (int cannyMin, int cannyMax, int dilate)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsegmentedImage.html#a8d6fd64835f0852e3cdd6658ab2d92bf">segmentThisImage</a> (int cannyMin, int cannyMax)</td></tr>
 </table>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a044e9378bc9e068f99b977ce80254f35"></a><!-- doxytag: member="segmentedImage::getEdgeImage" ref="a044e9378bc9e068f99b977ce80254f35" args="()" -->
@@ -99,7 +99,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab1d04fda23e6ffcdc9bfb971710f4f41"></a><!-- doxytag: member="segmentedImage::segmentThisImage" ref="ab1d04fda23e6ffcdc9bfb971710f4f41" args="(int cannyMin, int cannyMax, int dilate)" -->
+<a class="anchor" id="a8d6fd64835f0852e3cdd6658ab2d92bf"></a><!-- doxytag: member="segmentedImage::segmentThisImage" ref="a8d6fd64835f0852e3cdd6658ab2d92bf" args="(int cannyMin, int cannyMax)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -113,13 +113,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>cannyMax</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>doDilate</em>&#160;</td>
+          <td class="paramname"><em>cannyMax</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -129,7 +123,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>A function that segments the input image by using canny edge. </p>
+<p>A function that segments the input image by using canny edge detector by opencv.</p>
+<p>A function that segments the input image using canny edge detector by opencv. </p>
 
 </div>
 </div>
@@ -152,7 +147,7 @@ Public Member Functions</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:37 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

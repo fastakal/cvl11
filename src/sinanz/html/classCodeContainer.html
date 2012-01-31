@@ -58,10 +58,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a811a80e563fe171224eeb2684895df"></a><!-- doxytag: member="CodeContainer::CodeContainer" ref="a2a811a80e563fe171224eeb2684895df" args="(cv::Mat, cv::Mat, cv::Mat, int, int, int, int, int, int, int, bool, double)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>CodeContainer</b> (cv::Mat, cv::Mat, cv::Mat, int, int, int, int, int, int, int, bool, double)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6386ca1477e64ba021115c6e869773d0"></a><!-- doxytag: member="CodeContainer::CodeContainer" ref="a6386ca1477e64ba021115c6e869773d0" args="(cv::Mat, cv::Mat, cv::Mat, cv::Mat, PxSHMImageClient *, const mavlink_message_t *, int, int, int, int, int, int, int, bool, double, int)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>CodeContainer</b> (cv::Mat, cv::Mat, cv::Mat, cv::Mat, PxSHMImageClient *, const mavlink_message_t *, int, int, int, int, int, int, int, bool, double, int)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70a3f228bf3526fc607aa79e655a90b7"></a><!-- doxytag: member="CodeContainer::createControlPanel" ref="a70a3f228bf3526fc607aa79e655a90b7" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>createControlPanel</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afed6984cc61d3eb19820fbf49283421f"></a><!-- doxytag: member="CodeContainer::getTimeNow" ref="afed6984cc61d3eb19820fbf49283421f" args="()" -->
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getTimeNow</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6855356aa294c9f336d904b07870f57a"></a><!-- doxytag: member="CodeContainer::plotPipeLineImages" ref="a6855356aa294c9f336d904b07870f57a" args="(cv::Mat firstImage, cv::Mat secondImage, cv::Mat thirdImage, cv::Mat fourthImage)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>plotPipeLineImages</b> (cv::Mat firstImage, cv::Mat secondImage, cv::Mat thirdImage, cv::Mat fourthImage)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6268e4b294280a596d72da042c2f582"></a><!-- doxytag: member="CodeContainer::depthImage" ref="aa6268e4b294280a596d72da042c2f582" args="" -->
@@ -70,6 +74,16 @@ cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>depthImage</b></td
 cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>finalEdgeImage</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa12596e2d7e30c08100432c0d18cf69a"></a><!-- doxytag: member="CodeContainer::numberOfPointsForDepthOfHoop" ref="aa12596e2d7e30c08100432c0d18cf69a" args="" -->
 int&#160;</td><td class="memItemRight" valign="bottom"><b>numberOfPointsForDepthOfHoop</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96641a7de273d8e6fa5f5cf4406e0d2b"></a><!-- doxytag: member="CodeContainer::endPoint" ref="a96641a7de273d8e6fa5f5cf4406e0d2b" args="" -->
+cv::Point3f&#160;</td><td class="memItemRight" valign="bottom"><b>endPoint</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2796c5ce77f7d63291f88078d31cf631"></a><!-- doxytag: member="CodeContainer::inverseIntrinsicMat" ref="a2796c5ce77f7d63291f88078d31cf631" args="" -->
+cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>inverseIntrinsicMat</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10df0c24294bf834a4abbc3245466b79"></a><!-- doxytag: member="CodeContainer::depthWithEllipse" ref="a10df0c24294bf834a4abbc3245466b79" args="" -->
+cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>depthWithEllipse</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac814724bf2639a7c0bb70c498a042c48"></a><!-- doxytag: member="CodeContainer::finalHoop" ref="ac814724bf2639a7c0bb70c498a042c48" args="" -->
+cv::RotatedRect&#160;</td><td class="memItemRight" valign="bottom"><b>finalHoop</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af877d6a77e8703aab567c1e354c51309"></a><!-- doxytag: member="CodeContainer::normalVector" ref="af877d6a77e8703aab567c1e354c51309" args="" -->
+cv::Vec3f&#160;</td><td class="memItemRight" valign="bottom"><b>normalVector</b></td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="CodeContainer_8h_source.html">CodeContainer.h</a></li>
@@ -90,7 +104,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>numberOfPointsForDepth
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:36 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -59,16 +59,153 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00009"></a>00009 <span class="preprocessor"></span><span class="preprocessor">#define GLOBALS_H_</span>
 <a name="l00010"></a>00010 <span class="preprocessor"></span>
 <a name="l00011"></a>00011 <span class="comment">// Global Variables.</span>
-<a name="l00012"></a>00012 <span class="keywordtype">int</span> g_minimumLengthOfAcceptedContours = 250;
-<a name="l00013"></a>00013 <span class="keywordtype">int</span> g_maximumLengthOfAcceptedContours = 500;
+<a name="l00012"></a>00012 <span class="keywordtype">int</span> g_minimumLengthOfAcceptedContours = 1;
+<a name="l00013"></a>00013 <span class="keywordtype">int</span> g_maximumLengthOfAcceptedContours = 100000;
 <a name="l00014"></a>00014 
-<a name="l00015"></a>00015 <span class="keywordtype">int</span> g_CannyThreshold = 150;
+<a name="l00015"></a>00015 <span class="keywordtype">int</span> g_CannyThreshold = 255;
 <a name="l00016"></a>00016 <span class="keywordtype">int</span> g_contourApproxOrder = 0;
 <a name="l00017"></a>00017 <span class="keywordtype">int</span> g_dilate = 0;
 <a name="l00018"></a>00018 <span class="keywordtype">int</span> g_line_size_for_plotting = 4;
 <a name="l00019"></a>00019 <span class="keywordtype">int</span> g_distance_between_lines = 10;
-<a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="preprocessor">#endif </span><span class="comment">/* GLOBALS_H_ */</span>
+<a name="l00020"></a>00020 <span class="keywordtype">int</span> g_angle_threshold_ratio = 5;
+<a name="l00021"></a>00021 cv::Vector&lt;float&gt; timingHistory;
+<a name="l00022"></a>00022 <span class="keywordtype">int</span> maxNumberOfFrames = 1000;
+<a name="l00023"></a>00023 <span class="keywordtype">int</span> globalFrameCounter = 0;
+<a name="l00024"></a>00024 <span class="keywordtype">int</span> imageCounter = 0;
+<a name="l00025"></a>00025 <span class="keywordtype">bool</span> g_plot = <span class="keyword">false</span>;
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 <span class="keywordtype">float</span> colormap_jet[128][3] =
+<a name="l00028"></a>00028 {
+<a name="l00029"></a>00029                 {0.0f,0.0f,0.53125f},
+<a name="l00030"></a>00030                 {0.0f,0.0f,0.5625f},
+<a name="l00031"></a>00031                 {0.0f,0.0f,0.59375f},
+<a name="l00032"></a>00032                 {0.0f,0.0f,0.625f},
+<a name="l00033"></a>00033                 {0.0f,0.0f,0.65625f},
+<a name="l00034"></a>00034                 {0.0f,0.0f,0.6875f},
+<a name="l00035"></a>00035                 {0.0f,0.0f,0.71875f},
+<a name="l00036"></a>00036                 {0.0f,0.0f,0.75f},
+<a name="l00037"></a>00037                 {0.0f,0.0f,0.78125f},
+<a name="l00038"></a>00038                 {0.0f,0.0f,0.8125f},
+<a name="l00039"></a>00039                 {0.0f,0.0f,0.84375f},
+<a name="l00040"></a>00040                 {0.0f,0.0f,0.875f},
+<a name="l00041"></a>00041                 {0.0f,0.0f,0.90625f},
+<a name="l00042"></a>00042                 {0.0f,0.0f,0.9375f},
+<a name="l00043"></a>00043                 {0.0f,0.0f,0.96875f},
+<a name="l00044"></a>00044                 {0.0f,0.0f,1.0f},
+<a name="l00045"></a>00045                 {0.0f,0.03125f,1.0f},
+<a name="l00046"></a>00046                 {0.0f,0.0625f,1.0f},
+<a name="l00047"></a>00047                 {0.0f,0.09375f,1.0f},
+<a name="l00048"></a>00048                 {0.0f,0.125f,1.0f},
+<a name="l00049"></a>00049                 {0.0f,0.15625f,1.0f},
+<a name="l00050"></a>00050                 {0.0f,0.1875f,1.0f},
+<a name="l00051"></a>00051                 {0.0f,0.21875f,1.0f},
+<a name="l00052"></a>00052                 {0.0f,0.25f,1.0f},
+<a name="l00053"></a>00053                 {0.0f,0.28125f,1.0f},
+<a name="l00054"></a>00054                 {0.0f,0.3125f,1.0f},
+<a name="l00055"></a>00055                 {0.0f,0.34375f,1.0f},
+<a name="l00056"></a>00056                 {0.0f,0.375f,1.0f},
+<a name="l00057"></a>00057                 {0.0f,0.40625f,1.0f},
+<a name="l00058"></a>00058                 {0.0f,0.4375f,1.0f},
+<a name="l00059"></a>00059                 {0.0f,0.46875f,1.0f},
+<a name="l00060"></a>00060                 {0.0f,0.5f,1.0f},
+<a name="l00061"></a>00061                 {0.0f,0.53125f,1.0f},
+<a name="l00062"></a>00062                 {0.0f,0.5625f,1.0f},
+<a name="l00063"></a>00063                 {0.0f,0.59375f,1.0f},
+<a name="l00064"></a>00064                 {0.0f,0.625f,1.0f},
+<a name="l00065"></a>00065                 {0.0f,0.65625f,1.0f},
+<a name="l00066"></a>00066                 {0.0f,0.6875f,1.0f},
+<a name="l00067"></a>00067                 {0.0f,0.71875f,1.0f},
+<a name="l00068"></a>00068                 {0.0f,0.75f,1.0f},
+<a name="l00069"></a>00069                 {0.0f,0.78125f,1.0f},
+<a name="l00070"></a>00070                 {0.0f,0.8125f,1.0f},
+<a name="l00071"></a>00071                 {0.0f,0.84375f,1.0f},
+<a name="l00072"></a>00072                 {0.0f,0.875f,1.0f},
+<a name="l00073"></a>00073                 {0.0f,0.90625f,1.0f},
+<a name="l00074"></a>00074                 {0.0f,0.9375f,1.0f},
+<a name="l00075"></a>00075                 {0.0f,0.96875f,1.0f},
+<a name="l00076"></a>00076                 {0.0f,1.0f,1.0f},
+<a name="l00077"></a>00077                 {0.03125f,1.0f,0.96875f},
+<a name="l00078"></a>00078                 {0.0625f,1.0f,0.9375f},
+<a name="l00079"></a>00079                 {0.09375f,1.0f,0.90625f},
+<a name="l00080"></a>00080                 {0.125f,1.0f,0.875f},
+<a name="l00081"></a>00081                 {0.15625f,1.0f,0.84375f},
+<a name="l00082"></a>00082                 {0.1875f,1.0f,0.8125f},
+<a name="l00083"></a>00083                 {0.21875f,1.0f,0.78125f},
+<a name="l00084"></a>00084                 {0.25f,1.0f,0.75f},
+<a name="l00085"></a>00085                 {0.28125f,1.0f,0.71875f},
+<a name="l00086"></a>00086                 {0.3125f,1.0f,0.6875f},
+<a name="l00087"></a>00087                 {0.34375f,1.0f,0.65625f},
+<a name="l00088"></a>00088                 {0.375f,1.0f,0.625f},
+<a name="l00089"></a>00089                 {0.40625f,1.0f,0.59375f},
+<a name="l00090"></a>00090                 {0.4375f,1.0f,0.5625f},
+<a name="l00091"></a>00091                 {0.46875f,1.0f,0.53125f},
+<a name="l00092"></a>00092                 {0.5f,1.0f,0.5f},
+<a name="l00093"></a>00093                 {0.53125f,1.0f,0.46875f},
+<a name="l00094"></a>00094                 {0.5625f,1.0f,0.4375f},
+<a name="l00095"></a>00095                 {0.59375f,1.0f,0.40625f},
+<a name="l00096"></a>00096                 {0.625f,1.0f,0.375f},
+<a name="l00097"></a>00097                 {0.65625f,1.0f,0.34375f},
+<a name="l00098"></a>00098                 {0.6875f,1.0f,0.3125f},
+<a name="l00099"></a>00099                 {0.71875f,1.0f,0.28125f},
+<a name="l00100"></a>00100                 {0.75f,1.0f,0.25f},
+<a name="l00101"></a>00101                 {0.78125f,1.0f,0.21875f},
+<a name="l00102"></a>00102                 {0.8125f,1.0f,0.1875f},
+<a name="l00103"></a>00103                 {0.84375f,1.0f,0.15625f},
+<a name="l00104"></a>00104                 {0.875f,1.0f,0.125f},
+<a name="l00105"></a>00105                 {0.90625f,1.0f,0.09375f},
+<a name="l00106"></a>00106                 {0.9375f,1.0f,0.0625f},
+<a name="l00107"></a>00107                 {0.96875f,1.0f,0.03125f},
+<a name="l00108"></a>00108                 {1.0f,1.0f,0.0f},
+<a name="l00109"></a>00109                 {1.0f,0.96875f,0.0f},
+<a name="l00110"></a>00110                 {1.0f,0.9375f,0.0f},
+<a name="l00111"></a>00111                 {1.0f,0.90625f,0.0f},
+<a name="l00112"></a>00112                 {1.0f,0.875f,0.0f},
+<a name="l00113"></a>00113                 {1.0f,0.84375f,0.0f},
+<a name="l00114"></a>00114                 {1.0f,0.8125f,0.0f},
+<a name="l00115"></a>00115                 {1.0f,0.78125f,0.0f},
+<a name="l00116"></a>00116                 {1.0f,0.75f,0.0f},
+<a name="l00117"></a>00117                 {1.0f,0.71875f,0.0f},
+<a name="l00118"></a>00118                 {1.0f,0.6875f,0.0f},
+<a name="l00119"></a>00119                 {1.0f,0.65625f,0.0f},
+<a name="l00120"></a>00120                 {1.0f,0.625f,0.0f},
+<a name="l00121"></a>00121                 {1.0f,0.59375f,0.0f},
+<a name="l00122"></a>00122                 {1.0f,0.5625f,0.0f},
+<a name="l00123"></a>00123                 {1.0f,0.53125f,0.0f},
+<a name="l00124"></a>00124                 {1.0f,0.5f,0.0f},
+<a name="l00125"></a>00125                 {1.0f,0.46875f,0.0f},
+<a name="l00126"></a>00126                 {1.0f,0.4375f,0.0f},
+<a name="l00127"></a>00127                 {1.0f,0.40625f,0.0f},
+<a name="l00128"></a>00128                 {1.0f,0.375f,0.0f},
+<a name="l00129"></a>00129                 {1.0f,0.34375f,0.0f},
+<a name="l00130"></a>00130                 {1.0f,0.3125f,0.0f},
+<a name="l00131"></a>00131                 {1.0f,0.28125f,0.0f},
+<a name="l00132"></a>00132                 {1.0f,0.25f,0.0f},
+<a name="l00133"></a>00133                 {1.0f,0.21875f,0.0f},
+<a name="l00134"></a>00134                 {1.0f,0.1875f,0.0f},
+<a name="l00135"></a>00135                 {1.0f,0.15625f,0.0f},
+<a name="l00136"></a>00136                 {1.0f,0.125f,0.0f},
+<a name="l00137"></a>00137                 {1.0f,0.09375f,0.0f},
+<a name="l00138"></a>00138                 {1.0f,0.0625f,0.0f},
+<a name="l00139"></a>00139                 {1.0f,0.03125f,0.0f},
+<a name="l00140"></a>00140                 {1.0f,0.0f,0.0f},
+<a name="l00141"></a>00141                 {0.96875f,0.0f,0.0f},
+<a name="l00142"></a>00142                 {0.9375f,0.0f,0.0f},
+<a name="l00143"></a>00143                 {0.90625f,0.0f,0.0f},
+<a name="l00144"></a>00144                 {0.875f,0.0f,0.0f},
+<a name="l00145"></a>00145                 {0.84375f,0.0f,0.0f},
+<a name="l00146"></a>00146                 {0.8125f,0.0f,0.0f},
+<a name="l00147"></a>00147                 {0.78125f,0.0f,0.0f},
+<a name="l00148"></a>00148                 {0.75f,0.0f,0.0f},
+<a name="l00149"></a>00149                 {0.71875f,0.0f,0.0f},
+<a name="l00150"></a>00150                 {0.6875f,0.0f,0.0f},
+<a name="l00151"></a>00151                 {0.65625f,0.0f,0.0f},
+<a name="l00152"></a>00152                 {0.625f,0.0f,0.0f},
+<a name="l00153"></a>00153                 {0.59375f,0.0f,0.0f},
+<a name="l00154"></a>00154                 {0.5625f,0.0f,0.0f},
+<a name="l00155"></a>00155                 {0.53125f,0.0f,0.0f},
+<a name="l00156"></a>00156                 {0.5f,0.0f,0.0f}
+<a name="l00157"></a>00157 };
+<a name="l00158"></a>00158 <span class="preprocessor">#endif </span><span class="comment">/* GLOBALS_H_ */</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -85,7 +222,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:36 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

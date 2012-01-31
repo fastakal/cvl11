@@ -61,37 +61,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;iostream&gt;</span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;opencv2/imgproc/imgproc.hpp&gt;</span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;opencv2/highgui/highgui.hpp&gt;</span>
-<a name="l00014"></a>00014 
-<a name="l00015"></a>00015 <span class="keyword">using namespace </span>cv;
-<a name="l00016"></a>00016 
+<a name="l00014"></a>00014 <span class="preprocessor">#include &quot;CodeContainer.h&quot;</span>
+<a name="l00015"></a>00015 
+<a name="l00016"></a>00016 <span class="keyword">using namespace </span>cv;
 <a name="l00017"></a>00017 
-<a name="l00018"></a><a class="code" href="classContoursAndLines.html">00018</a> <span class="keyword">class </span><a class="code" href="classContoursAndLines.html">ContoursAndLines</a> {
-<a name="l00019"></a>00019 <span class="keyword">public</span>:
-<a name="l00020"></a>00020         Mat edgeImage;
-<a name="l00021"></a>00021         Mat linesImage;
-<a name="l00022"></a>00022         vector&lt;vector&lt;Point&gt; &gt; contours;
-<a name="l00023"></a>00023         vector&lt;vector&lt;Point&gt; &gt; approximatedContours;
-<a name="l00024"></a>00024         Mat contoursImage;
-<a name="l00025"></a>00025         vector&lt;vector&lt;Vec4f&gt;&gt; lines;
-<a name="l00026"></a>00026 
-<a name="l00027"></a>00027         <a class="code" href="classContoursAndLines.html">ContoursAndLines</a>(Mat edge, <span class="keywordtype">int</span> minLength, <span class="keywordtype">int</span> maxLength, <span class="keywordtype">int</span> approxOrder, <span class="keywordtype">int</span> lineSize);
-<a name="l00028"></a>00028         <span class="keyword">virtual</span> ~<a class="code" href="classContoursAndLines.html">ContoursAndLines</a>();
-<a name="l00029"></a>00029         vector&lt;vector&lt;Point&gt; &gt; getContours();
-<a name="l00030"></a>00030         <span class="keywordtype">void</span> setContours(vector&lt;vector&lt;Point&gt; &gt; cont);
-<a name="l00031"></a>00031         Mat getContoursImage();
-<a name="l00032"></a>00032         <span class="keywordtype">void</span> setContoursImage(Mat img);
-<a name="l00033"></a>00033         vector&lt;vector&lt;Vec4f&gt;&gt; getLines();
-<a name="l00034"></a>00034         <span class="keywordtype">void</span> setLines(vector&lt;vector&lt;Vec4f&gt;&gt; l);
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036         <span class="keywordtype">void</span> findContours();
-<a name="l00037"></a>00037         <span class="keywordtype">void</span> approximateContour(vector&lt;vector&lt;Point&gt;&gt; input_contours, <span class="keywordtype">int</span> minimumLength, <span class="keywordtype">int</span> maximumLength, <span class="keywordtype">int</span> approxOrder);
-<a name="l00038"></a>00038         <span class="keywordtype">void</span> plotMyContours(vector&lt;vector&lt;Point&gt;&gt; contours);
-<a name="l00039"></a>00039         <span class="keywordtype">void</span> decomposeContours(vector&lt;vector&lt;Point&gt; &gt; contours, <span class="keywordtype">int</span> lineSize);
-<a name="l00040"></a>00040         <span class="keywordtype">void</span> plotLines(vector&lt;vector&lt;Vec4f&gt;&gt; lines1, <span class="keywordtype">int</span> lineSize, Mat output_image);
-<a name="l00041"></a>00041         Mat plot1Line(Vec4f line1, <span class="keywordtype">int</span> lineSize, Scalar color, Mat output_image);
-<a name="l00042"></a>00042 };
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 <span class="preprocessor">#endif </span><span class="comment">/* CONTOURSANDLINES_H_ */</span>
+<a name="l00018"></a>00018 
+<a name="l00019"></a><a class="code" href="classContoursAndLines.html">00019</a> <span class="keyword">class </span><a class="code" href="classContoursAndLines.html">ContoursAndLines</a> {
+<a name="l00020"></a>00020 <span class="keyword">public</span>:
+<a name="l00021"></a>00021         Mat edgeImage;
+<a name="l00022"></a>00022         Mat linesImage;
+<a name="l00023"></a>00023         vector&lt;vector&lt;Point&gt; &gt; contours;
+<a name="l00024"></a>00024         vector&lt;vector&lt;Point&gt; &gt; approximatedContours;
+<a name="l00025"></a>00025         Mat contoursImage;
+<a name="l00026"></a>00026         vector&lt;vector&lt;Vec4f&gt;&gt; lines;
+<a name="l00027"></a>00027         <span class="keywordtype">int</span> lineSize;
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029         <a class="code" href="classContoursAndLines.html">ContoursAndLines</a>(Mat edge, <span class="keywordtype">int</span> minLength, <span class="keywordtype">int</span> maxLength, <span class="keywordtype">int</span> approxOrder, <span class="keywordtype">int</span> lineSize);
+<a name="l00030"></a>00030         <span class="keyword">virtual</span> ~<a class="code" href="classContoursAndLines.html">ContoursAndLines</a>();
+<a name="l00031"></a>00031         vector&lt;vector&lt;Point&gt; &gt; getContours();
+<a name="l00032"></a>00032         <span class="keywordtype">void</span> setContours(vector&lt;vector&lt;Point&gt; &gt; cont);
+<a name="l00033"></a>00033         Mat getContoursImage();
+<a name="l00034"></a>00034         <span class="keywordtype">void</span> setContoursImage(Mat img);
+<a name="l00035"></a>00035         vector&lt;vector&lt;Vec4f&gt;&gt; getLines();
+<a name="l00036"></a>00036         <span class="keywordtype">void</span> setLines(vector&lt;vector&lt;Vec4f&gt;&gt; l);
+<a name="l00037"></a>00037 
+<a name="l00038"></a>00038         <span class="keywordtype">void</span> findContours();
+<a name="l00039"></a>00039         <span class="keywordtype">void</span> approximateContour(vector&lt;vector&lt;Point&gt;&gt; input_contours, <span class="keywordtype">int</span> minimumLength, <span class="keywordtype">int</span> maximumLength, <span class="keywordtype">int</span> approxOrder);
+<a name="l00040"></a>00040         <span class="keywordtype">void</span> plotMyContours(vector&lt;vector&lt;Point&gt;&gt; contours);
+<a name="l00041"></a>00041         <span class="keywordtype">void</span> decomposeContours(vector&lt;vector&lt;Point&gt; &gt; contours, <span class="keywordtype">int</span> lineSize);
+<a name="l00042"></a>00042         <span class="keywordtype">void</span> plot();
+<a name="l00043"></a>00043         <span class="keywordtype">void</span> plotLines(vector&lt;vector&lt;Vec4f&gt;&gt; lines1, <span class="keywordtype">int</span> lineSize, Mat output_image);
+<a name="l00044"></a>00044         Mat plot1Line(Vec4f line1, <span class="keywordtype">int</span> lineSize, Scalar color, Mat output_image);
+<a name="l00045"></a>00045         <span class="keywordtype">double</span> getTimeNow();
+<a name="l00046"></a>00046 };
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048 <span class="preprocessor">#endif </span><span class="comment">/* CONTOURSANDLINES_H_ */</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -108,7 +112,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 2 2011 12:51:36 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 31 2012 22:13:08 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

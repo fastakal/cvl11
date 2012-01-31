@@ -5,9 +5,9 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classMyEllipses_a6e030ecf1da66ef051c9bae6698adc9f}{
-{\bfseries MyEllipses} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$$>$ lLines, cv::Mat lImage, cv::Mat eImage)}
-\label{classMyEllipses_a6e030ecf1da66ef051c9bae6698adc9f}
+\hypertarget{classMyEllipses_aebf082591d72e83462a75c569ed06bd1}{
+{\bfseries MyEllipses} (cv::vector$<$ cv::vector$<$ cv::Vec4f $>$$>$ lLines, cv::Mat eImage)}
+\label{classMyEllipses_aebf082591d72e83462a75c569ed06bd1}
 
 \item 
 void \hyperlink{classMyEllipses_ae3b80d1c6fa91ea4f79a248692221def}{ExtractPointsFromLines} ()
@@ -28,7 +28,15 @@ int \hyperlink{classMyEllipses_ae28837a96d0486b71aaf7796b34aae3f}{getPointsValue
 \item 
 cv::RotatedRect \hyperlink{classMyEllipses_a2e1afdde16509b2fe105fa9ecbd8e17c}{getBestEllipse} (cv::vector$<$ cv::RotatedRect $>$ filtEl, cv::vector$<$ double $>$ qualityOfEllipses)
 \item 
-void \hyperlink{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}{plotChosenEllipseOnEdgeImage} ()
+\hypertarget{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}{
+void {\bfseries plotChosenEllipseOnEdgeImage} ()}
+\label{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}
+
+\item 
+\hypertarget{classMyEllipses_ad40475585a2d054876e1a65131bb3813}{
+void {\bfseries plot} (cv::Mat lImage)}
+\label{classMyEllipses_ad40475585a2d054876e1a65131bb3813}
+
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -38,19 +46,9 @@ cv::Mat {\bfseries edgeImage}}
 \label{classMyEllipses_a5d00af69849dd1e6ef741605333a579f}
 
 \item 
-\hypertarget{classMyEllipses_a5e1fa370060bcb1aa5fa66488aba7da7}{
-cv::Mat {\bfseries linesImage}}
-\label{classMyEllipses_a5e1fa370060bcb1aa5fa66488aba7da7}
-
-\item 
 \hypertarget{classMyEllipses_a229b20b81bda1271ed7af085b482f84a}{
 cv::Mat {\bfseries ellipsesImage}}
 \label{classMyEllipses_a229b20b81bda1271ed7af085b482f84a}
-
-\item 
-\hypertarget{classMyEllipses_a82a483859edc940b8100c08e351bda43}{
-cv::Mat {\bfseries filteredEllipsesImage}}
-\label{classMyEllipses_a82a483859edc940b8100c08e351bda43}
 
 \item 
 \hypertarget{classMyEllipses_a9c6cb1c01422433b73e4e8f801ca1ca4}{
@@ -150,16 +148,7 @@ A function that takes a list of ellipses with their respective quality and retur
 \end{DoxyParamCaption}
 )}}
 \label{classMyEllipses_ae28837a96d0486b71aaf7796b34aae3f}
-A function that takes a position (x and y) and returns 1 if the value in that neighbourhood is 255, 0 otherwise. \hypertarget{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}{
-\index{MyEllipses@{MyEllipses}!plotChosenEllipseOnEdgeImage@{plotChosenEllipseOnEdgeImage}}
-\index{plotChosenEllipseOnEdgeImage@{plotChosenEllipseOnEdgeImage}!MyEllipses@{MyEllipses}}
-\subsubsection[{plotChosenEllipseOnEdgeImage}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::plotChosenEllipseOnEdgeImage (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}}
-\label{classMyEllipses_ad5304c2c7bc8a80ae31c657ebdd0577a}
-Plots the chosen ellipse. \hypertarget{classMyEllipses_a5da32ae0839fbbeb68eb100bc6e1a957}{
+A function that takes a position (x and y) and returns 1 if the value in that neighbourhood is 255, 0 otherwise. \hypertarget{classMyEllipses_a5da32ae0839fbbeb68eb100bc6e1a957}{
 \index{MyEllipses@{MyEllipses}!plotEllipsesOnEdgeImage@{plotEllipsesOnEdgeImage}}
 \index{plotEllipsesOnEdgeImage@{plotEllipsesOnEdgeImage}!MyEllipses@{MyEllipses}}
 \subsubsection[{plotEllipsesOnEdgeImage}]{\setlength{\rightskip}{0pt plus 5cm}void MyEllipses::plotEllipsesOnEdgeImage (

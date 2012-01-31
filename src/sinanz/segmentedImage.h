@@ -7,12 +7,6 @@
 
 #ifndef SEGMENTEDIMAGE_H_
 #define SEGMENTEDIMAGE_H_
-/*
- * segmentedImage.cc
- *
- *  Created on: Nov 11, 2011
- *      Author: root
- */
 
 #include <iostream>
 #include <opencv2/imgproc/imgproc.hpp>
