@@ -10,8 +10,8 @@
 WorldPlotter::WorldPlotter() {
 
 	// Initialization Phase.
-	plot_size_x = 800;
-	plot_size_y = 600;
+	plot_size_x = 600;
+	plot_size_y = 400;
 
 	real_size_x = 10;
 	real_size_y = 10;
@@ -166,7 +166,7 @@ void WorldPlotter::plotTopView(
 	cv::Vector<Point3f> coordinates;
 	vector<string> labels;
 
-	coordinates.resize(7);
+	coordinates.resize(5);
 
 	cv::Vec3f distanceVector = cv::Vec3f(objectPosition) - cv::Vec3f(quadPosition);
 	cv::Point3f distance = cv::Point3f(sqrt(distanceVector[0] * distanceVector[0] +
@@ -180,9 +180,6 @@ void WorldPlotter::plotTopView(
 	coordinates[2] = quadPosition;   labels.push_back("P.Quad Point");
 	coordinates[3] = quadOrientation;labels.push_back("O.Quad Orient.");
 	coordinates[4] = distance;labels.push_back("D.Distance.");
-	coordinates[5] = cv::Point3f(0, 0, new_yaw);
-			 labels.push_back("O.DestinationYaw");
-	coordinates[6] = cv::Point3f(golden_x, golden_y, 0); labels.push_back("P.khaltak");
 
 	plotCoordinates(&plot, coordinates, labels);
 //    plotCoordinates(NULL, coordinates, labels);

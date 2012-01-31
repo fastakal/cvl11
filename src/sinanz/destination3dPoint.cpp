@@ -84,25 +84,32 @@ cv::Point3f destination3dPoint::globalPoint(cv::Point3f point){
 	float cg = cos(roll);
 	float sg = sin(roll);
 
-	float H1t[4][4] = {
-			{ca * cb,  ca * sb * sg - sa * cg,  ca * sb * cg + sa * sg,  x * 1000},
-			{sa * cb,  sa * sb * sg + ca * cg,  sa * sb * cg - ca * sg,  y * 1000},
-			{-sb, 	   cb * sg, 				        cb * cg, 				         z * 1000},
-			{0, 	     0, 					            0, 					             1	     }
+  float H1r[4][4] = {
+    {ca * cb,  ca * sb * sg - sa * cg,  ca * sb * cg + sa * sg,  0},
+    {sa * cb,  sa * sb * sg + ca * cg,  sa * sb * cg - ca * sg,  0},
+    {-sb, 	   cb * sg, 				        cb * cg, 				         0},
+    {0, 	     0, 					            0, 					             1}
 	};
 
+  float H1t[4][4] = {
+    {1, 0, 0, x * 1000},
+    {0, 1, 0, y * 1000},
+    {0, 0, 1, z * 1000},
+    {0, 0, 0, 1	      }
+  };
 
 	float H2t[4][4] = {
-			{0, 1, 0, 0},
-			{0, 0, 1, 0},
-			{1, 0, 0, 0},
-			{0, 0, 0, 1}
+    {0, 0, 1, 0},
+    {1, 0, 0, 0},
+    {0, 1, 0, 0},
+    {0, 0, 0, 1}
 	};
 
-	cv::Mat H1(4, 4, CV_32FC1, H1t);
-	cv::Mat H2(4, 4, CV_32FC1, H2t);
+  cv::Mat H1R(4, 4, CV_32FC1, H1r);
+  cv::Mat H1T(4, 4, CV_32FC1, H1t);
+  cv::Mat H2 (4, 4, CV_32FC1, H2t);
 
-	cv::Mat H = H1 * H2.inv();
+  cv::Mat H = H1T * (H1R * H2);
 
 	cv::Mat intrinsic = inverseK.inv();
 	float focus = intrinsic.at<float>(0,0);

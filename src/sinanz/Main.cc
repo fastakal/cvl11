@@ -2,9 +2,7 @@
 This file is inspired from the project done by Lorenz.
 =====================================================================*/
 // Comments
-// validateNormal returns true always, check it.
-// validatePosition returns true always, check it.
-
+// keep is 1.5 meters away, no angle.
 
 #include <cstdio>
 #include <unistd.h>
@@ -18,6 +16,7 @@ This file is inspired from the project done by Lorenz.
 // Latency Benchmarking
 #include <sys/time.h>
 #include <time.h>
+
 
 // Timer for benchmarking & a counter vector for stats.
 struct timeval tv;
@@ -48,7 +47,7 @@ bool initialize = true;
 float init_yaw;
 float init_x, init_y, init_z;
 bool firstTime = true;
-float constant_z = -1.0f;
+float constant_z = -0.6f;
 
 double g_startOfExperiment;
 double g_current_time;
@@ -58,6 +57,9 @@ WorldPlotter plot;
 cv::Vec3f lastKnownPosition;
 int FLAG = 5555;
 cv::VideoWriter video;
+cv::VideoWriter imageVideo;
+
+std::ofstream logFile;
 
 //////// Functions and Structures
 float arcTan(float x, float y) {
@@ -93,7 +95,8 @@ int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 	pos.x   = p[0];
 	pos.y   = p[1];
 	pos.z   = p[2];
-	pos.yaw = yaw * 180 / M_PI;
+	//pos.yaw = yaw * 180 / M_PI;
+	pos.yaw = 0;
 	pos.target_system     = getSystemID();
 	pos.target_component  = 200;
 	pos.coordinate_frame = 1;
@@ -101,11 +104,12 @@ int flyToPos(cv::Vec3f p, float yaw, lcm_t *lcm, int compid) {
 	mavlink_msg_set_local_position_setpoint_encode(getSystemID(), compid, &msg,
 	                                               &pos);
 	sendMAVLinkMessage(lcm, &msg);
+	printf("flytopos: message sent\n");
 	return 0;
 }
 bool validateNormal(cv::Vec3f normal) {
 //return true;
-  float threshold = 0.2;
+  float threshold = 0.5f;
   if ( (abs(normal[0]) + abs(normal[1])) < threshold){
   printf("normal is ZERO");
   return false;
@@ -127,7 +131,7 @@ bool validatePosition(cv::Vec3f destination, float yaw, cv::Point3f quadPoint, c
 
     printf("diffInAngle: %f, yaw,%f relative, %f \n", diffInAngle, yaw, relativeAngle);
 //  if((currentDifference < difference) && (diffInAngle < 2.0f))
-    if(diffInAngle < 2.0f)
+    if(diffInAngle < 1.0f)
       return true;
   } 
   else {
@@ -141,7 +145,7 @@ int sendMessage(const mavlink_message_t *msg, PxSHMImageClient *client,
                        lcm_t *lcm, int compid, cv::Point3f                       quadPoint,
 cv::Point3f                       quadOrientation) {
 
-  float keep = 1.0f;
+  float keep = 1.5f;
   cv::Vec3f destination;
 
   float normalization = sqrt(normal[0] * normal[0] + normal[1] * normal[1]);
@@ -157,8 +161,13 @@ cv::Point3f                       quadOrientation) {
     flyToPos(destination, yaw, lcm, compid);
 
   plot.plotTopView(objectPosition, normal, quadPoint, quadOrientation);
-    
-    
+  video<<plot.outputPlot;
+  
+  logFile<<"objP:"<<objectPosition[0]<<","<<objectPosition[1]<<","<<objectPosition[2]<<std::endl;
+  logFile<<"dest:"<<destination[0]<<","<<destination[1]<<","<<destination[2]<<std::endl;
+  logFile<<"yawC:"<<yaw<<std::endl;
+  logFile<<"norm:"<<normal[0]<<","<<normal[1]<<","<<normal[2]<<std::endl;
+  
     printf("\nPosition VALIDATED...\n");
     }
     else {
@@ -255,7 +264,9 @@ void printTimingStats(){
 
 void signalHandler(int signal) {
 	if (signal == SIGINT) {
+	  logFile.close();
 		fprintf(stderr, "# INFO: Quitting...\n");
+		
 
 //		printTimingStats();
 
@@ -305,8 +316,10 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 	StereoProc imgproc;
   //imgproc.init("/home/sinan/src/data_sets/myTemplate/calib_stereo_bravo_bluefox.scf");
 	//imgproc.init("/home/sinan/src/data_sets/newData/20111122_112212/calib_stereo_bravo_bluefox.scf");
-	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
-	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/cmake/config/calib_stereo_bravo_firefly.scf");
+	//imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/calib_stereo_bravo_front.scf");
+	// new calibration.
+	imgproc.init("/home/pixhawk/pixhawk/ai_vision/release/config/sinan_new_calibration/calib_stereo.scf");
+
 
 	imgproc.getImageInfo(intrinsicMat);
 	cv::Mat inverseIntrinsicMat;
@@ -322,7 +335,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		g_current_time = getTimeNow();
 		double diffInTime = g_current_time - g_startOfExperiment;
 
-		if(diffInTime > 5.0f){
+		if(diffInTime > 1.0f){
 			initialize = false;
 		}
 
@@ -336,8 +349,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 			printf("\nTime: %f Seconds\n", diffInTime);
 	    flyToPos(cv::Vec3f(init_x, init_y, constant_z), init_yaw, lcm, compid);
 
-			printf("Lifting: x: %f, y: %f, z: %f, yaw: %f.\n",
-					init_x, init_y, constant_z, init_yaw * (180 / M_PI));
+			printf("Lifting\n");
 		}
 
 		double startTime, endTime;
@@ -405,6 +417,7 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
                        quadPoint,
                        quadOrientation
                        );
+   		
 		} else {
 			if(initialize == false)
 				printf("no message was sent.\n");
@@ -414,11 +427,16 @@ void imageHandler(const lcm_recv_buf_t* rbuf, const char* channel,
 		float factor = 3;
 		cv::ellipse(toto, myCode1.finalHoop, cv::Scalar(255, 255, 255), 5, 2);
 
-		cv::imwrite("5-inputWithDetection.png", toto);
+cv::Mat totoColor;
+cv::cvtColor(toto,totoColor,CV_GRAY2BGR); 
+imageVideo<<cv::Mat(totoColor);
+
+cv::imwrite("5-inputWithDetection.png", toto);
 
 		cv::resize(toto, toto, Size(), 1. / factor, 1. / factor);
     cv::namedWindow("Detection", 0);
- 		cv::imshow("Detection", toto);
+		cv::imshow("Detection", toto);
+
 
 //		timingHistory[globalFrameCounter] = time;
 		globalFrameCounter++;
@@ -547,14 +565,21 @@ static GOptionEntry entries[] = { { "sysid", 'a', 0, G_OPTION_ARG_INT, &sysid,
 
 int main(int argc, char* argv[]) {
 
-  double fps = 30;
-  cv::Size imgSize = cv::Size(800,600);
+  logFile.open ("logPoints.txt");
+  double fps = 5  ;
+  cv::Size imgSize = cv::Size(600,400);
+  cv::Size imgSize1 = cv::Size(640,480);
+  
+  imageVideo = cv::VideoWriter("imageOutput.avi", CV_FOURCC('M', 'J', 'P', 'G'),
+            fps,
+            imgSize1
+            );
 
-  video = cv::VideoWriter("output.avi", CV_FOURCC('M', 'J', 'P', 'G'),
+  video = cv::VideoWriter("plotOutput.avi", CV_FOURCC('M', 'J', 'P', 'G'),
             fps,
             imgSize
             );
-  
+
   lastKnownPosition[0] = FLAG;
   lastKnownPosition[1] = FLAG;
   lastKnownPosition[2] = FLAG;
